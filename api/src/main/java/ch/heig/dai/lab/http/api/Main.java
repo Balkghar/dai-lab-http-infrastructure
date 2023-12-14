@@ -1,7 +1,8 @@
 package ch.heig.dai.lab.http.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
-import org.bson.Document;
+import io.javalin.json.JavalinJackson;
 
 /**
  * Main class for the Javalin server.
@@ -20,6 +21,7 @@ public class Main {
 
         Javalin app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
+            config.jsonMapper(new JavalinJackson(new ObjectMapper()));
         }).start(7000);
 
         // Enable CORS for all requests
