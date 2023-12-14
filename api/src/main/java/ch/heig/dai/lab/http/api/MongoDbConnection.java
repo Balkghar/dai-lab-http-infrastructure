@@ -18,10 +18,10 @@ public class MongoDbConnection {
 
     static {
 //        final String uri = System.getenv("MONGODB_URI");
-        final String uri = "mongodb://user:pass@localhost:27017";
+        final String uri = "mongodb://root:password@localhost:27017";
         try {
             MongoClient mongoClient = MongoClients.create(uri);
-            database = mongoClient.getDatabase("notes");
+            database = mongoClient.getDatabase("dai");
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             throw e;
