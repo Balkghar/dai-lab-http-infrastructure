@@ -2,7 +2,12 @@ package ch.heig.dai.lab.http.api;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NotesService {
     private final MongoCollection<Document> notesCollection;
@@ -19,15 +24,21 @@ public class NotesService {
      * @return The created note.
      */
     public Document createNote(Note note) {
-        Document doc = new Document("title", note.title())
-                       .append("content", note.content());
+        Document doc = new Document("title", note.title()).append("content", note.content());
         notesCollection.insertOne(doc);
         return doc;
     }
 
     public Document getNote(String id) {
-        // Add logic to retrieve a note by id
-        return null;
+        return notesCollection.find(Filters.eq("_id", new ObjectId(id))).first();
+    }
+
+    public List<Document> getAllNotes() {
+        List<Document> notes = new ArrayList<>();
+        for (Document note : notesCollection.find()) {
+            notes.add(note);
+        }
+        return notes;
     }
 
     public Document updateNote(String id, Note note) {
@@ -37,16 +48,6 @@ public class NotesService {
 
     public Document deleteNote(String id) {
         // Add logic to delete a note
-        return null;
-    }
-
-    public Document getAllNotes() {
-        // Add logic to retrieve all notes
-        return null;
-    }
-
-    public Document getNotesByTitle(String title) {
-        // Add logic to retrieve notes by title
         return null;
     }
 }

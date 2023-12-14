@@ -4,6 +4,8 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.bson.Document;
 
+import java.util.List;
+
 /**
  * Routes for the notes API.
  *
@@ -72,12 +74,12 @@ public class NoteRoutes {
      * @param ctx The Javalin context.
      */
     private void getAllNotes(Context ctx) {
-        final Document allNotes = notesService.getAllNotes();
-        if (allNotes == null) {
+        List<Document> allNotes = notesService.getAllNotes();
+        if (allNotes == null || allNotes.isEmpty()) {
             ctx.status(404).result("No notes found");
             return;
         }
-        ctx.json(allNotes.toJson());
+        ctx.json(allNotes);
     }
 
     /**
