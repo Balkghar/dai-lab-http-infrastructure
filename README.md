@@ -2,7 +2,7 @@
 
 ## Static Website
 
-See at [frondend](./frontend/README.md) for the documentation of the static website.
+See at [frontend](./frontend/README.md) for the documentation of the static website.
 
 ## Docker compose
 
@@ -28,4 +28,3 @@ services:
     ports:
       - "8080:80" # the port to expose
 ```
-
