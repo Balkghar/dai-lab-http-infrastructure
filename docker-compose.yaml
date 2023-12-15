@@ -1,0 +1,6 @@
+services:
+  web:
+    image: web-image # name of the images
+    build: ./frontend # indicate the folder where the Dockerfile is
+    ports:
+      - "8080:80" # the port to expose
