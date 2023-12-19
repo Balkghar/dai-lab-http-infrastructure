@@ -17,7 +17,6 @@ public class MongoDbConnection {
     private static final MongoDatabase database;
 
     static {
-//        final String uri = System.getenv("MONGODB_URI");
         final String username = System.getenv("MONGO_INITDB_ROOT_USERNAME");
         final String password = System.getenv("MONGO_INITDB_ROOT_PASSWORD");
         final String host = System.getenv("MONGO_INITDB_ROOT_HOST");

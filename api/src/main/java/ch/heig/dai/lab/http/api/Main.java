@@ -17,7 +17,7 @@ public class Main {
      * @param args Command line arguments, not used.
      */
     public static void main(String[] args) {
-        final NotesService notesService = new NotesService();
+        final BlogService blogService = new BlogService();
 
         Javalin app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
@@ -37,7 +37,7 @@ public class Main {
         });
 
         // Register routes
-        final NoteRoutes noteRoutes = new NoteRoutes(notesService);
-        noteRoutes.registerRoutes(app);
+        final BlogRouter blogRouter = new BlogRouter(blogService);
+        blogRouter.registerRoutes(app);
     }
 }
