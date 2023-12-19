@@ -36,7 +36,7 @@ public class NoteRoutes {
      */
     public void registerRoutes(Javalin app) {
         path("api", () -> {
-            app.get("/notes/{id}", this::getNote);
+            app.get("/notes/{id}", this::getNoteById);
             app.get("/notes", this::getAllNotes);
             app.post("/notes", this::createNote);
             app.put("/notes/{id}", this::updateNote);
@@ -75,9 +75,9 @@ public class NoteRoutes {
      *
      * @param ctx The Javalin context.
      */
-    public void getNote(Context ctx) {
+    public void getNoteById(Context ctx) {
         String id = ctx.pathParam("id");
-        final Document foundNote = notesService.getNote(id);
+        final Document foundNote = notesService.getNoteById(id);
         if (foundNote != null) {
             ctx.status(200);
             ctx.json(foundNote.toJson());

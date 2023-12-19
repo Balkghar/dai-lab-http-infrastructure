@@ -29,6 +29,24 @@ public class NoteApiTest {
         ctx = mock(Context.class);
     }
 
+    @Test
+    public void createNote() {
+        // Arrange
+        Note testNote = new Note(); // Properly initialized Note object
+        Document createdNote = new Document();
+
+        when(ctx.bodyAsClass(Note.class)).thenReturn(testNote);
+        when(notesService.createNote(testNote)).thenReturn(createdNote);
+
+        // Act
+        noteRoutes.createNote(ctx);
+
+        // Assert
+        verify(notesService).createNote(testNote);
+        verify(ctx).status(201);
+        verify(ctx).json(createdNote);
+    }
+
     // FIXME: extend to test when no notes are present
     @Test
     public void getAllNotes() {
@@ -51,33 +69,15 @@ public class NoteApiTest {
         String id = new ObjectId().toString(); // Generate a random ObjectId
         String expectedNote = "{\"_id\": {\"$oid\": \"" + id + "\"}, \"title\": \"title1\", \"content\": \"content1\"}";
         when(ctx.pathParam("id")).thenReturn(id);
-        when(notesService.getNote(id)).thenReturn(Document.parse(expectedNote));
+        when(notesService.getNoteById(id)).thenReturn(Document.parse(expectedNote));
 
         // Act
-        noteRoutes.getNote(ctx);
+        noteRoutes.getNoteById(ctx);
 
         // Assert
-        verify(notesService).getNote(id);
+        verify(notesService).getNoteById(id);
         verify(ctx).json(expectedNote);
         verify(ctx).status(200);
-    }
-
-    @Test
-    public void createNote() {
-        // Arrange
-        Note testNote = new Note(); // Properly initialized Note object
-        Document createdNote = new Document();
-
-        when(ctx.bodyAsClass(Note.class)).thenReturn(testNote);
-        when(notesService.createNote(testNote)).thenReturn(createdNote);
-
-        // Act
-        noteRoutes.createNote(ctx);
-
-        // Assert
-        verify(notesService).createNote(testNote);
-        verify(ctx).status(201);
-        verify(ctx).json(createdNote);
     }
 
     @Test

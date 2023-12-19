@@ -32,7 +32,7 @@ public class NotesService {
         return doc;
     }
 
-    public Document getNote(String id) {
+    public Document getNoteById(String id) {
         return notesCollection.find(Filters.eq("_id", new ObjectId(id))).first();
     }
 
@@ -54,11 +54,11 @@ public class NotesService {
         } catch (Exception e) {
             return null;
         }
-        return getNote(id);
+        return getNoteById(id);
     }
 
     public Document deleteNote(String id) {
-        Document noteToDelete = getNote(id);
+        Document noteToDelete = getNoteById(id);
         if (noteToDelete != null) {
             notesCollection.deleteOne(Filters.eq("_id", new ObjectId(id)));
         }
