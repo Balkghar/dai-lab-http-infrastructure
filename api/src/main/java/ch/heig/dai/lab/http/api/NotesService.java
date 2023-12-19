@@ -24,6 +24,9 @@ public class NotesService {
      * @return The created note.
      */
     public Document createNote(Note note) {
+        if (note == null) {
+            return null;
+        }
         Document doc = new Document("title", note.title()).append("content", note.content());
         notesCollection.insertOne(doc);
         return doc;
@@ -42,12 +45,23 @@ public class NotesService {
     }
 
     public Document updateNote(String id, Note note) {
-        // Add logic to update a note
-        return null;
+        if (note == null) {
+            return null;
+        }
+        Document updatedNote = new Document("title", note.title()).append("content", note.content());
+        try {
+            notesCollection.updateOne(Filters.eq("_id", new ObjectId(id)), new Document("$set", updatedNote));
+        } catch (Exception e) {
+            return null;
+        }
+        return getNote(id);
     }
 
     public Document deleteNote(String id) {
-        // Add logic to delete a note
-        return null;
+        Document noteToDelete = getNote(id);
+        if (noteToDelete != null) {
+            notesCollection.deleteOne(Filters.eq("_id", new ObjectId(id)));
+        }
+        return noteToDelete;
     }
 }
