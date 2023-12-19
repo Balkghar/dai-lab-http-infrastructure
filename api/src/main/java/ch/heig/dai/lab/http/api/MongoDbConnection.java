@@ -18,7 +18,10 @@ public class MongoDbConnection {
 
     static {
 //        final String uri = System.getenv("MONGODB_URI");
-        final String uri = "mongodb://root:password@localhost:27017";
+        final String username = System.getenv("MONGO_INITDB_ROOT_USERNAME");
+        final String password = System.getenv("MONGO_INITDB_ROOT_PASSWORD");
+        final String host = System.getenv("MONGO_INITDB_ROOT_HOST");
+        final String uri = String.format("mongodb://%s:%s@%s", username, password, host);
         try {
             MongoClient mongoClient = MongoClients.create(uri);
             database = mongoClient.getDatabase("dai");
