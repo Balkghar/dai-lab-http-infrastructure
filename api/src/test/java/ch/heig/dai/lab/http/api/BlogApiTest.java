@@ -33,7 +33,7 @@ public class BlogApiTest {
     }
 
     @Test
-    public void createBlog() {
+    public void createResource_whenResourceIsValid_addsNewResource() {
         // Arrange
         Blog testBlog = new Blog();
         Document createdBlog = new Document();
@@ -51,7 +51,7 @@ public class BlogApiTest {
     }
 
     @Test
-    public void getBlog() {
+    public void getResource_WhenIdIsValid_ReturnsResource() {
         // Arrange
         String id = new ObjectId().toString();
         String expectedBlog = "{\"_id\": {\"$oid\": \"" + id + "\"}, \"title\": \"title1\", \"content\": \"content1\"}";
@@ -69,7 +69,7 @@ public class BlogApiTest {
 
     // FIXME: extend to test when no blogs are present
     @Test
-    public void getAllBlogs() {
+    public void getAllResources_withExistingResources_returnsResources() {
         // Arrange
         List<Document> expectedDocs = Arrays.asList(new Document("title", "title1").append("content", "content1"), new Document("title", "title2").append("content", "content2"));
         when(blogService.getAllBlogs()).thenReturn(expectedDocs);
@@ -84,7 +84,21 @@ public class BlogApiTest {
     }
 
     @Test
-    public void updateBlog() {
+    public void getAllResources_withNoResources_returnsNotFound() {
+        // Arrange
+        when(blogService.getAllBlogs()).thenReturn(null);
+
+        // Act
+        blogRouter.getAllBlogs(ctx);
+
+        // Assert
+        verify(blogService).getAllBlogs();
+        verify(ctx).status(404);
+        verify(ctx).result("No blogs found");
+    }
+
+    @Test
+    public void updateResource_whenResourceExists_updatesResource() {
         // Arrange
         String blogId = "123";
         Blog updatedBlog = new Blog("updatedTitle", "updatedContent", null, null);
@@ -104,7 +118,7 @@ public class BlogApiTest {
     }
 
     @Test
-    public void deleteBlog_SuccessfulDeletion() {
+    public void deleteResource_WhenIdIsValid_RemovesResource() {
         // Arrange
         String blogId = "123";
         Document deletedBlog = new Document();
@@ -121,7 +135,7 @@ public class BlogApiTest {
     }
 
     @Test
-    public void deleteBlog_NotFound() {
+    public void deleteResource_WhenIdIsInvalid_returnsNotFound() {
         // Arrange
         String blogId = "nonExistingId";
         when(ctx.pathParam("id")).thenReturn(blogId);
