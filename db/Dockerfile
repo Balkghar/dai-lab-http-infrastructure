@@ -10,6 +10,6 @@ ENV MONGODB_USERNAME ${MONGODB_USERNAME}
 ENV MONGODB_PASSOWRD ${MONGODB_PASSWORD}
 ENV MONGODB_HOST ${MONGODB_HOST}
 
-COPY seed_data.json /seed_data.json
+COPY blog_data.json /blog_data.json
 
-CMD mongoimport --authenticationDatabase=admin --username ${MONGODB_USERNAME} --password ${MONGODB_PASSOWRD} --uri ${MONGODB_URI} --collection blogs --drop --jsonArray --file /seed_data.json
+CMD mongoimport --authenticationDatabase=admin --username ${MONGODB_USERNAME} --password ${MONGODB_PASSOWRD} --uri ${MONGODB_URI} --collection blogs --drop --jsonArray --file /blog_data.json
