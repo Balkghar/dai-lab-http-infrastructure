@@ -6,6 +6,8 @@ import org.bson.Document;
 
 import java.util.List;
 
+import static io.javalin.apibuilder.ApiBuilder.path;
+
 /**
  * Routes for the notes API.
  *
@@ -33,12 +35,13 @@ public class NoteRoutes {
      * @param app The Javalin app to register the routes with.
      */
     public void registerRoutes(Javalin app) {
-        app.get("/notes/{id}", this::getNote);
-        app.get("/notes", this::getAllNotes);
-        app.post("/notes", this::createNote);
-        app.put("/notes/{id}", this::updateNote);
-        app.delete("/notes/{id}", this::deleteNote);
-        app.get("/notes/search/{title}", this::searchNotes);
+        path("api", () -> {
+            app.get("/notes/{id}", this::getNote);
+            app.get("/notes", this::getAllNotes);
+            app.post("/notes", this::createNote);
+            app.put("/notes/{id}", this::updateNote);
+            app.delete("/notes/{id}", this::deleteNote);
+        });
     }
 
     /**
@@ -47,8 +50,23 @@ public class NoteRoutes {
      * @param ctx The Javalin context.
      */
     public void createNote(Context ctx) {
-        Note note = ctx.bodyAsClass(Note.class);
+        Note note;
+        try {
+            note = ctx.bodyAsClass(Note.class);
+        } catch (Exception e) {
+            ctx.status(400);
+            ctx.result("Invalid note format");
+            return;
+        }
+
         Document createdNote = notesService.createNote(note);
+        if (createdNote == null) {
+            ctx.status(500);
+            ctx.result("Note creation failed");
+            return;
+        }
+
+        ctx.status(201);
         ctx.json(createdNote);
     }
 
@@ -61,9 +79,11 @@ public class NoteRoutes {
         String id = ctx.pathParam("id");
         final Document foundNote = notesService.getNote(id);
         if (foundNote != null) {
+            ctx.status(200);
             ctx.json(foundNote.toJson());
         } else {
-            ctx.status(404).result("Note not found");
+            ctx.status(404);
+            ctx.result("Note not found");
         }
     }
 
@@ -87,10 +107,17 @@ public class NoteRoutes {
      * @param ctx The Javalin context.
      */
     public void updateNote(Context ctx) {
-        String id = ctx.pathParam("id");
+        String noteId = ctx.pathParam("id");
         Note note = ctx.bodyAsClass(Note.class);
-        Document updatedNote = notesService.updateNote(id, note);
-        ctx.json(updatedNote);
+
+        Document updatedDocument = notesService.updateNote(noteId, note);
+        if (updatedDocument != null) {
+            ctx.status(200);
+            ctx.json(updatedDocument);
+        } else {
+            ctx.status(500);
+            ctx.result("Note update failed");
+        }
     }
 
     /**
@@ -101,17 +128,13 @@ public class NoteRoutes {
     public void deleteNote(Context ctx) {
         String id = ctx.pathParam("id");
         Document deletedNote = notesService.deleteNote(id);
-        ctx.json(deletedNote);
+        if (deletedNote != null) {
+            ctx.status(200);
+            ctx.json(deletedNote);
+        } else {
+            ctx.status(404);
+            ctx.result("Note not found");
+        }
     }
 
-    /**
-     * Search notes by title.
-     *
-     * @param ctx The Javalin context.
-     */
-    public void searchNotes(Context ctx) {
-        String title = ctx.pathParam("title");
-//        Document foundNotes = notesService.searchNotes(title);
-//        ctx.json(foundNotes);
-    }
 }
