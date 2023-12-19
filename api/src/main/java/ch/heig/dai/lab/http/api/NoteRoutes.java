@@ -47,7 +47,7 @@ public class NoteRoutes {
      *
      * @param ctx The Javalin context.
      */
-    private void createNote(Context ctx) {
+    public void createNote(Context ctx) {
         Note note = ctx.bodyAsClass(Note.class);
         Document createdNote = notesService.createNote(note);
         ctx.json(createdNote);
@@ -58,7 +58,7 @@ public class NoteRoutes {
      *
      * @param ctx The Javalin context.
      */
-    private void getNote(Context ctx) {
+    public void getNote(Context ctx) {
         String id = ctx.pathParam("id");
         final Document foundNote = notesService.getNote(id);
         if (foundNote != null) {
@@ -73,7 +73,7 @@ public class NoteRoutes {
      *
      * @param ctx The Javalin context.
      */
-    private void getAllNotes(Context ctx) {
+    public void getAllNotes(Context ctx) {
         List<Document> allNotes = notesService.getAllNotes();
         if (allNotes == null || allNotes.isEmpty()) {
             ctx.status(404).result("No notes found");
@@ -87,7 +87,7 @@ public class NoteRoutes {
      *
      * @param ctx The Javalin context.
      */
-    private void updateNote(Context ctx) {
+    public void updateNote(Context ctx) {
         String id = ctx.pathParam("id");
         Note note = ctx.bodyAsClass(Note.class);
         Document updatedNote = notesService.updateNote(id, note);
@@ -99,7 +99,7 @@ public class NoteRoutes {
      *
      * @param ctx The Javalin context.
      */
-    private void partialUpdateNote(Context ctx) {
+    public void partialUpdateNote(Context ctx) {
         String id = ctx.pathParam("id");
         Note note = ctx.bodyAsClass(Note.class);
 //        Document updatedNote = notesService.partialUpdateNote(id, note);
@@ -111,7 +111,7 @@ public class NoteRoutes {
      *
      * @param ctx The Javalin context.
      */
-    private void deleteNote(Context ctx) {
+    public void deleteNote(Context ctx) {
         String id = ctx.pathParam("id");
         Document deletedNote = notesService.deleteNote(id);
         ctx.json(deletedNote);
@@ -122,7 +122,7 @@ public class NoteRoutes {
      *
      * @param ctx The Javalin context.
      */
-    private void searchNotes(Context ctx) {
+    public void searchNotes(Context ctx) {
         String title = ctx.pathParam("title");
 //        Document foundNotes = notesService.searchNotes(title);
 //        ctx.json(foundNotes);
