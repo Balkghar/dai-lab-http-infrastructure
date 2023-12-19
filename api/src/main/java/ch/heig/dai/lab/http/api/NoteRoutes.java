@@ -37,7 +37,6 @@ public class NoteRoutes {
         app.get("/notes", this::getAllNotes);
         app.post("/notes", this::createNote);
         app.put("/notes/{id}", this::updateNote);
-        app.patch("/notes/{id}", this::partialUpdateNote);
         app.delete("/notes/{id}", this::deleteNote);
         app.get("/notes/search/{title}", this::searchNotes);
     }
@@ -92,18 +91,6 @@ public class NoteRoutes {
         Note note = ctx.bodyAsClass(Note.class);
         Document updatedNote = notesService.updateNote(id, note);
         ctx.json(updatedNote);
-    }
-
-    /**
-     * Partially update a note.
-     *
-     * @param ctx The Javalin context.
-     */
-    public void partialUpdateNote(Context ctx) {
-        String id = ctx.pathParam("id");
-        Note note = ctx.bodyAsClass(Note.class);
-//        Document updatedNote = notesService.partialUpdateNote(id, note);
-//        ctx.json(updatedNote);
     }
 
     /**
