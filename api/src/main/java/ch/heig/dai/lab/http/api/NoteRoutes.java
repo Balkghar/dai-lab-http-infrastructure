@@ -95,9 +95,11 @@ public class NoteRoutes {
     public void getAllNotes(Context ctx) {
         List<Document> allNotes = notesService.getAllNotes();
         if (allNotes == null || allNotes.isEmpty()) {
-            ctx.status(404).result("No notes found");
+            ctx.status(404);
+            ctx.result("No notes found");
             return;
         }
+        ctx.status(200);
         ctx.json(allNotes);
     }
 
