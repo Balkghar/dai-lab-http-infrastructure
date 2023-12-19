@@ -25,9 +25,10 @@ public class Main {
         }).start(7000);
 
         // Enable CORS for all requests
+        // TODO write tests
         app.before(ctx -> {
             ctx.header("Access-Control-Allow-Origin", "*");
-            ctx.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+            ctx.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         });
 
         // Register 404
