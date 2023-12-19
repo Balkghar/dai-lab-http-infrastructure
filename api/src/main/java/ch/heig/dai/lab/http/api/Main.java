@@ -30,6 +30,12 @@ public class Main {
             ctx.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
         });
 
+        // Register 404
+        app.error(404, ctx -> {
+            ctx.result("Page not found");
+            ctx.contentType("text/plain");
+        });
+
         // Register routes
         final NoteRoutes noteRoutes = new NoteRoutes(notesService);
         noteRoutes.registerRoutes(app);
