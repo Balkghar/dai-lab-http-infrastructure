@@ -62,11 +62,7 @@ public class BlogService {
      * @return All blogs.
      */
     public List<Document> getAllBlogs() {
-        List<Document> blogs = new ArrayList<>();
-        for (Document blog : blogsCollection.find()) {
-            blogs.add(blog);
-        }
-        return blogs;
+        return blogsCollection.find().into(new ArrayList<>());
     }
 
     /**
