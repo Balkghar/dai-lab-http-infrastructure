@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
  * @author Aubry Mangold <aubry.mangold@heig-vd.ch>
  * @author Hugo Germano <hugo.germano@heig-vd.ch>
  */
-public record Blog(String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
+public record Blog(String _id, String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
     public Blog() {
-        this(null, null, null, null);
+        this(null, null, null, null, null);
     }
 }

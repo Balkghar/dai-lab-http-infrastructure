@@ -2,7 +2,6 @@ package ch.heig.dai.lab.http.api;
 
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
-import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,15 +34,14 @@ public class BlogApiTest {
 
     @Test
     public void createResource_whenResourceIsValid_addsNewResource() {
-        Blog testBlog = new Blog();
-        Document createdBlog = new Document();
+        Blog createdBlog = new Blog();
 
-        when(ctx.bodyAsClass(Blog.class)).thenReturn(testBlog);
-        when(blogService.createBlog(testBlog)).thenReturn(createdBlog);
+        when(ctx.bodyAsClass(Blog.class)).thenReturn(createdBlog);
+        when(blogService.createBlog(createdBlog)).thenReturn(createdBlog);
 
         blogController.create(ctx);
 
-        verify(blogService).createBlog(testBlog);
+        verify(blogService).createBlog(createdBlog);
         verify(ctx).status(201);
         verify(ctx).json(createdBlog);
     }
@@ -60,9 +58,9 @@ public class BlogApiTest {
     @Test
     public void getResource_whenIdIsValid_returnsResource() {
         String id = new ObjectId().toString();
-        String expectedBlog = "{\"_id\": {\"$oid\": \"" + id + "\"}, \"title\": \"title1\", \"content\": \"content1\"}";
+        Blog expectedBlog = new Blog(id, "title", "content", null, null);
         when(ctx.pathParam("id")).thenReturn(id);
-        when(blogService.getBlogById(id)).thenReturn(Document.parse(expectedBlog));
+        when(blogService.getBlogById(id)).thenReturn(expectedBlog);
 
         blogController.getOne(ctx, id);
 
@@ -85,15 +83,15 @@ public class BlogApiTest {
     @Test
     public void getAllResources_withExistingResources_returnsResources() {
         // Arrange
-        List<Document> expectedDocs = Arrays.asList(new Document("title", "title1").append("content", "content1"), new Document("title", "title2").append("content", "content2"));
-        when(blogService.getAllBlogs()).thenReturn(expectedDocs);
+        List<Blog> expectedBlogs = Arrays.asList(new Blog("1", "title1", "content1", null, null), new Blog("2", "title2", "content2", null, null));
+        when(blogService.getAllBlogs()).thenReturn(expectedBlogs);
 
         // Act
         blogController.getAll(ctx);
 
         // Assert
         verify(blogService).getAllBlogs();
-        verify(ctx).json(expectedDocs);
+        verify(ctx).json(expectedBlogs);
         verify(ctx).status(200);
     }
 
@@ -122,24 +120,23 @@ public class BlogApiTest {
 
     @Test
     public void updateResource_whenResourceExists_updatesResource() {
-        String blogId = "123";
-        Blog updatedBlog = new Blog("updatedTitle", "updatedContent", null, null);
-        Document updatedDocument = new Document();
-        when(ctx.pathParam("id")).thenReturn(blogId);
+        String id = "123";
+        Blog updatedBlog = new Blog(id, "updatedTitle", "updatedContent", null, null);
+        when(ctx.pathParam("id")).thenReturn(id);
         when(ctx.bodyAsClass(Blog.class)).thenReturn(updatedBlog);
-        when(blogService.updateBlog(blogId, updatedBlog)).thenReturn(updatedDocument);
+        when(blogService.updateBlog(id, updatedBlog)).thenReturn(updatedBlog);
 
-        blogController.update(ctx, blogId);
+        blogController.update(ctx, id);
 
-        verify(blogService).updateBlog(blogId, updatedBlog);
+        verify(blogService).updateBlog(id, updatedBlog);
         verify(ctx).status(200); // Verify that status 200 is set
-        verify(ctx).json(updatedDocument); // Verify that the response is JSON
+        verify(ctx).json(updatedBlog); // Verify that the response is JSON
     }
 
     @Test
     public void updateResource_whenIdIsInvalid_returnsNotFound() {
         String id = "invalidId";
-        Blog updatedBlog = new Blog("updatedTitle", "updatedContent", null, null);
+        Blog updatedBlog = new Blog(id, "updatedTitle", "updatedContent", null, null);
         when(ctx.pathParam("id")).thenReturn(id);
         when(ctx.bodyAsClass(Blog.class)).thenReturn(updatedBlog);
         when(blogService.updateBlog(id, updatedBlog)).thenReturn(null);
@@ -162,27 +159,27 @@ public class BlogApiTest {
 
     @Test
     public void deleteResource_whenIdIsValid_removesResource() {
-        String blogId = "123";
-        Document deletedBlog = new Document();
-        when(ctx.pathParam("id")).thenReturn(blogId);
-        when(blogService.deleteBlog(blogId)).thenReturn(deletedBlog);
+        String id = "123";
+        Blog deletedBlog = new Blog();
+        when(ctx.pathParam("id")).thenReturn(id);
+        when(blogService.deleteBlog(id)).thenReturn(deletedBlog);
 
-        blogController.delete(ctx, blogId);
+        blogController.delete(ctx, id);
 
-        verify(blogService).deleteBlog(blogId);
+        verify(blogService).deleteBlog(id);
         verify(ctx).status(200);
         verify(ctx).json(deletedBlog);
     }
 
     @Test
     public void deleteResource_whenIdIsInvalid_returnsNotFound() {
-        String blogId = "nonExistingId";
-        when(ctx.pathParam("id")).thenReturn(blogId);
-        when(blogService.deleteBlog(blogId)).thenReturn(null);
+        String id = "nonExistingId";
+        when(ctx.pathParam("id")).thenReturn(id);
+        when(blogService.deleteBlog(id)).thenReturn(null);
 
-        blogController.delete(ctx, blogId);
+        blogController.delete(ctx, id);
 
-        verify(blogService).deleteBlog(blogId);
+        verify(blogService).deleteBlog(id);
         verify(ctx).status(404);
         verify(ctx).result("Blog not found");
     }

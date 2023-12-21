@@ -5,7 +5,6 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -18,16 +17,16 @@ import java.util.UUID;
  */
 public class BlogService {
     /**
-     * The blogs collection.
+     * The blog collection.
      */
-    private final MongoCollection<Document> blogsCollection;
+    private final MongoCollection<Blog> blogCollection;
 
     /**
      * Constructor.
      */
     public BlogService() {
         MongoDatabase database = MongoDbConnection.getDatabase();
-        blogsCollection = database.getCollection("blogs");
+        blogCollection = database.getCollection("blogs", Blog.class);
     }
 
     /**
@@ -36,14 +35,14 @@ public class BlogService {
      * @param blog The blog to create.
      * @return The created blog.
      */
-    public Document createBlog(Blog blog) {
+    public Blog createBlog(Blog blog) {
         if (blog == null) {
             return null;
         }
         String uuid = UUID.randomUUID().toString();
-        Document doc = new Document("_id", uuid).append("title", blog.title()).append("content", blog.content());
-        blogsCollection.insertOne(doc);
-        return doc;
+        Blog blogWithId = new Blog(uuid, blog.title(), blog.content(), blog.createdAt(), blog.updatedAt());
+        blogCollection.insertOne(blogWithId);
+        return blog;
     }
 
     /**
@@ -52,8 +51,8 @@ public class BlogService {
      * @param id The ID of the blog to get.
      * @return The blog.
      */
-    public Document getBlogById(String id) {
-        return blogsCollection.find(Filters.eq("_id", id)).first();
+    public Blog getBlogById(String id) {
+        return blogCollection.find(Filters.eq("_id", id)).first();
     }
 
     /**
@@ -61,8 +60,8 @@ public class BlogService {
      *
      * @return All blogs.
      */
-    public List<Document> getAllBlogs() {
-        return blogsCollection.find().into(new ArrayList<>());
+    public List<Blog> getAllBlogs() {
+        return blogCollection.find().into(new ArrayList<>());
     }
 
     /**
@@ -72,12 +71,12 @@ public class BlogService {
      * @param blog The blog to update.
      * @return The updated blog.
      */
-    public Document updateBlog(String id, Blog blog) {
+    public Blog updateBlog(String id, Blog blog) {
         if (blog == null) {
             return null;
         }
         Document updatedBlog = new Document("title", blog.title()).append("content", blog.content());
-        blogsCollection.updateOne(Filters.eq("_id", id), new Document("$set", updatedBlog));
+        blogCollection.updateOne(Filters.eq("_id", id), new Document("$set", updatedBlog));
         return getBlogById(id);
     }
 
@@ -87,10 +86,10 @@ public class BlogService {
      * @param id The ID of the blog to delete.
      * @return The deleted blog.
      */
-    public Document deleteBlog(String id) {
-        Document blogToDelete = getBlogById(id);
+    public Blog deleteBlog(String id) {
+        Blog blogToDelete = getBlogById(id);
         if (blogToDelete != null) {
-            blogsCollection.deleteOne(Filters.eq("_id", id));
+            blogCollection.deleteOne(Filters.eq("_id", id));
         }
         return blogToDelete;
     }

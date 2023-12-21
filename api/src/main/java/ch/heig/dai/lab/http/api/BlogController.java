@@ -2,7 +2,6 @@ package ch.heig.dai.lab.http.api;
 
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
-import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -36,9 +35,9 @@ public class BlogController implements CrudHandler {
      */
     @Override
     public void create(@NotNull Context ctx) {
-        Blog blog = ctx.bodyAsClass(Blog.class);
+        final Blog blog = ctx.bodyAsClass(Blog.class);
 
-        Optional<Document> createdBlog = Optional.ofNullable(blogService.createBlog(blog));
+        final Optional<Blog> createdBlog = Optional.ofNullable(blogService.createBlog(blog));
 
         if (createdBlog.isPresent()) {
             ctx.status(201);
@@ -56,14 +55,14 @@ public class BlogController implements CrudHandler {
      */
     @Override
     public void getOne(@NotNull Context ctx, @NotNull String id) {
-        final Document blog = blogService.getBlogById(id);
+        final Blog blog = blogService.getBlogById(id);
         if (blog == null) {
             ctx.status(404);
             ctx.result("Blog not found");
             return;
         }
         ctx.status(200);
-        ctx.json(blog.toJson());
+        ctx.json(blog);
     }
 
     /**
@@ -73,7 +72,7 @@ public class BlogController implements CrudHandler {
      */
     @Override
     public void getAll(@NotNull Context ctx) {
-        List<Document> allBlogs = blogService.getAllBlogs();
+        final List<Blog> allBlogs = blogService.getAllBlogs();
         if (allBlogs == null || allBlogs.isEmpty()) {
             ctx.status(404);
             ctx.result("No blogs found");
@@ -90,10 +89,10 @@ public class BlogController implements CrudHandler {
      */
     @Override
     public void update(Context ctx, @NotNull String id) {
-        String blogId = ctx.pathParam("id");
-        Blog blog = ctx.bodyAsClass(Blog.class);
+        final String blogId = ctx.pathParam("id");
+        final Blog blog = ctx.bodyAsClass(Blog.class);
 
-        Document updatedBlog = blogService.updateBlog(blogId, blog);
+        Blog updatedBlog = blogService.updateBlog(blogId, blog);
         if (updatedBlog == null) {
             ctx.status(500);
             ctx.result("Blog update failed");
@@ -110,7 +109,7 @@ public class BlogController implements CrudHandler {
      */
     @Override
     public void delete(@NotNull Context ctx, @NotNull String id) {
-        Document deletedBlog = blogService.deleteBlog(id);
+        final Blog deletedBlog = blogService.deleteBlog(id);
         if (deletedBlog != null) {
             ctx.status(200);
             ctx.json(deletedBlog);
