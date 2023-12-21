@@ -29,7 +29,6 @@ public class BlogController implements CrudHandler {
         this.blogService = blogService;
     }
 
-
     /**
      * Create a new blog.
      *

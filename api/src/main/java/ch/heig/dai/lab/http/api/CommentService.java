@@ -37,12 +37,12 @@ public class CommentService {
      * @param comment The comment to create.
      * @return The created comment.
      */
-    public Document createComment(Comment comment){
+    public Document createComment(Comment comment) {
         if (comment == null) {
             return null;
         }
         String uuid = UUID.randomUUID().toString();
-        Document doc = new Document("_id",uuid).append("blogId", comment.blogId()).append("username", comment.username()).append("content", comment.content());
+        Document doc = new Document("_id", uuid).append("blogId", comment.blogId()).append("username", comment.username()).append("content", comment.content());
         commentsCollection.insertOne(doc);
         return doc;
     }
@@ -77,13 +77,13 @@ public class CommentService {
      * @return A list of the comments for the blog.
      */
     public List<Document> getCommentsForBlog(String id) {
-        return commentsCollection.find(eq("blogId", id )).into(new ArrayList<>());
+        return commentsCollection.find(eq("blogId", id)).into(new ArrayList<>());
     }
 
     /**
      * Update a comment
      *
-     * @param id The ID of the comment to update.
+     * @param id      The ID of the comment to update.
      * @param comment The comment to update.
      * @return The updated comment.
      */
