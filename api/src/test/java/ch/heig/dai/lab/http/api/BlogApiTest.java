@@ -34,7 +34,7 @@ public class BlogApiTest {
 
     @Test
     public void createResource_whenResourceIsValid_addsNewResource() {
-        Blog createdBlog = new Blog();
+        Blog createdBlog = new Blog("1", "title", "content", null, null);
 
         when(ctx.bodyAsClass(Blog.class)).thenReturn(createdBlog);
         when(blogService.createBlog(createdBlog)).thenReturn(createdBlog);
@@ -160,7 +160,7 @@ public class BlogApiTest {
     @Test
     public void deleteResource_whenIdIsValid_removesResource() {
         String id = "123";
-        Blog deletedBlog = new Blog();
+        Blog deletedBlog = new Blog("1", "title", "content", null, null);
         when(ctx.pathParam("id")).thenReturn(id);
         when(blogService.deleteBlog(id)).thenReturn(deletedBlog);
 

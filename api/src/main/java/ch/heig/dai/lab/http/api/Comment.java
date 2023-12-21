@@ -7,7 +7,4 @@ package ch.heig.dai.lab.http.api;
  * @author Hugo Germano <hugo.germano@heig-vd.ch>
  */
 public record Comment(String _id, String _blogId, String author, String content, String createdAt, String updatedAt) {
-    public Comment(){
-        this(null, null, null, null, null, null);
-    }
 }
