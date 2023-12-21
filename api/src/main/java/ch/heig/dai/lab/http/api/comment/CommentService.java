@@ -1,5 +1,6 @@
-package ch.heig.dai.lab.http.api;
+package ch.heig.dai.lab.http.api.comment;
 
+import ch.heig.dai.lab.http.api.MongoDbConnection;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;

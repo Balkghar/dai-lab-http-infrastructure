@@ -1,4 +1,4 @@
-package ch.heig.dai.lab.http.api;
+package ch.heig.dai.lab.http.api.blog;
 
 import org.bson.*;
 import org.bson.codecs.Codec;

@@ -1,5 +1,9 @@
 package ch.heig.dai.lab.http.api;
 
+import ch.heig.dai.lab.http.api.blog.BlogController;
+import ch.heig.dai.lab.http.api.blog.BlogService;
+import ch.heig.dai.lab.http.api.comment.CommentController;
+import ch.heig.dai.lab.http.api.comment.CommentService;
 import io.javalin.Javalin;
 
 import static io.javalin.apibuilder.ApiBuilder.*;

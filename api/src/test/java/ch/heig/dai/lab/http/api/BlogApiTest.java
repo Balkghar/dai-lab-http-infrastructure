@@ -1,5 +1,8 @@
 package ch.heig.dai.lab.http.api;
 
+import ch.heig.dai.lab.http.api.blog.Blog;
+import ch.heig.dai.lab.http.api.blog.BlogController;
+import ch.heig.dai.lab.http.api.blog.BlogService;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import org.bson.types.ObjectId;

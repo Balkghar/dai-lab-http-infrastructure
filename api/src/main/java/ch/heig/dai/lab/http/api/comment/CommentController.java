@@ -1,8 +1,7 @@
-package ch.heig.dai.lab.http.api;
+package ch.heig.dai.lab.http.api.comment;
 
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
-import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

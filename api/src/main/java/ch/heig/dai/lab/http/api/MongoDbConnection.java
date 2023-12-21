@@ -1,5 +1,7 @@
 package ch.heig.dai.lab.http.api;
 
+import ch.heig.dai.lab.http.api.blog.BlogCodec;
+import ch.heig.dai.lab.http.api.comment.CommentCodec;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
