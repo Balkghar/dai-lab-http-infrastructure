@@ -43,6 +43,8 @@ public class CommentCodec implements CollectibleCodec<Comment> {
         document.put("blogId", comment.blogId());
         document.put("content", comment.content());
         document.put("author", comment.author());
+        document.put("createdAt", comment.createdAt());
+        document.put("updatedAt", comment.updatedAt());
         documentCodec.encode(writer, document, encoderContext);
     }
 
@@ -67,7 +69,8 @@ public class CommentCodec implements CollectibleCodec<Comment> {
     public Comment decode(BsonReader reader, DecoderContext decoderContext) {
         Document document = documentCodec.decode(reader, decoderContext);
         return new Comment(document.getString("_id"), document.getString("blogId"), document.getString("content"),
-                           document.getString("author"));
+                           document.getString("author"), document.getString("createdAt"),
+                           document.getString("updatedAt"));
     }
 
     /**
@@ -79,7 +82,8 @@ public class CommentCodec implements CollectibleCodec<Comment> {
     @Override
     public Comment generateIdIfAbsentFromDocument(Comment comment) {
         if (!documentHasId(comment)) {
-            return new Comment(UUID.randomUUID().toString(), comment.blogId(), comment.content(), comment.author());
+            return new Comment(UUID.randomUUID().toString(), comment.blogId(), comment.content(), comment.author(),
+                               comment.createdAt(), comment.updatedAt());
         }
         return comment;
     }

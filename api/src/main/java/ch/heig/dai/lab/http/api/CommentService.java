@@ -42,7 +42,8 @@ public class CommentService {
             return null;
         }
         String uuid = UUID.randomUUID().toString();
-        Comment commentWithId = new Comment(uuid, comment.blogId(), comment.author(), comment.content());
+        Comment commentWithId = new Comment(uuid, comment.blogId(), comment.author(), comment.content(),
+                                            comment.createdAt(), comment.updatedAt());
         commentsCollection.insertOne(commentWithId);
         return commentWithId;
     }
