@@ -34,7 +34,7 @@ public class BlogController implements CrudHandler {
      *
      * @param ctx The Javalin context.
      */
-    public void create(Context ctx) {
+    public void create(@NotNull Context ctx) {
         Blog blog;
         // FIXME: remove try/catch
         try {
@@ -61,7 +61,7 @@ public class BlogController implements CrudHandler {
      *
      * @param ctx The Javalin context.
      */
-    public void getOne(Context ctx, String id) {
+    public void getOne(@NotNull Context ctx, @NotNull String id) {
         final Document blog = blogService.getBlogById(id);
         if (blog == null) {
             ctx.status(404);
@@ -77,7 +77,7 @@ public class BlogController implements CrudHandler {
      *
      * @param ctx The Javalin context.
      */
-    public void getAll(Context ctx) {
+    public void getAll(@NotNull Context ctx) {
         List<Document> allBlogs = blogService.getAllBlogs();
         if (allBlogs == null || allBlogs.isEmpty()) {
             ctx.status(404);
@@ -93,7 +93,7 @@ public class BlogController implements CrudHandler {
      *
      * @param ctx The Javalin context.
      */
-    public void update(Context ctx, String id) {
+    public void update(Context ctx, @NotNull String id) {
         String blogId = ctx.pathParam("id");
         Blog blog = ctx.bodyAsClass(Blog.class);
 
