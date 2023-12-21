@@ -12,11 +12,4 @@ public record Blog(String title, String content, LocalDateTime createdAt, LocalD
     public Blog() {
         this(null, null, null, null);
     }
-
-    public Blog(String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.title = title;
-        this.content = content;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
 }
