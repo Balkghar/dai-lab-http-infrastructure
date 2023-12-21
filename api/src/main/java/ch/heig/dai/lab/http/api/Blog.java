@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 /**
  * Blog model.
- * FIXME: add author field
  *
  * @author Aubry Mangold <aubry.mangold@heig-vd.ch>
  * @author Hugo Germano <hugo.germano@heig-vd.ch>
