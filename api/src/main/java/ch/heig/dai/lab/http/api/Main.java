@@ -1,8 +1,6 @@
 package ch.heig.dai.lab.http.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
-import io.javalin.json.JavalinJackson;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
@@ -23,11 +21,9 @@ public class Main {
 
         Javalin app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
-            config.jsonMapper(new JavalinJackson(new ObjectMapper()));
         }).start(7000);
 
         // Enable CORS for all requests
-        // TODO write tests
         app.before(ctx -> {
             ctx.header("Access-Control-Allow-Origin", "*");
             ctx.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");

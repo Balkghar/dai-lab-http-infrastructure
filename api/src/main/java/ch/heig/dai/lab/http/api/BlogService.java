@@ -71,7 +71,6 @@ public class BlogService {
 
     /**
      * Update a blog.
-     * FIXME: remove try/catch
      *
      * @param id   The ID of the blog to update.
      * @param blog The blog to update.
