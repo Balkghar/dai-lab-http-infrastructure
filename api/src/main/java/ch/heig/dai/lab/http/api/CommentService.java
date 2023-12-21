@@ -45,7 +45,7 @@ public class CommentService {
         String uuid = UUID.randomUUID().toString();
         String now = LocalDateTime.now().toString();
 
-        Comment commentWithId = new Comment(uuid, comment.blogId(), comment.author(), comment.content(), now, now);
+        Comment commentWithId = new Comment(uuid, comment._blogId(), comment.author(), comment.content(), now, now);
         commentsCollection.insertOne(commentWithId);
         return commentWithId;
     }
@@ -76,7 +76,7 @@ public class CommentService {
      * @return A list of the comments for the blog.
      */
     public List<Comment> getCommentsForBlog(String id) {
-        return commentsCollection.find(eq("blogId", id)).into(new ArrayList<>());
+        return commentsCollection.find(eq("_blogId", id)).into(new ArrayList<>());
     }
 
     /**
