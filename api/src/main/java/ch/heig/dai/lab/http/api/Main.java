@@ -20,18 +20,20 @@ public class Main {
         final BlogService blogService = new BlogService();
         final CommentService commentService = new CommentService();
 
-        try (Javalin app = Javalin.create(config -> config.plugins.enableDevLogging()).start(7000)) {
-            // Enable CORS for all requests
-            app.before(ctx -> {
-                ctx.header("Access-Control-Allow-Origin", "*");
-                ctx.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-            });
+        // Create the Javalin app
+        Javalin app = Javalin.create(config -> config.plugins.enableDevLogging()).start(7000);
 
-            // Register 404
-            app.error(404, ctx -> {
-                ctx.result("Page not found");
-                ctx.contentType("text/plain");
-            });
+        // Enable CORS for all requests
+        app.before(ctx -> {
+            ctx.header("Access-Control-Allow-Origin", "*");
+            ctx.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        });
+
+        // Register 404
+        app.error(404, ctx -> {
+            ctx.result("Page not found");
+            ctx.contentType("text/plain");
+        });
 
         // Register routes
         app.routes(() -> {
