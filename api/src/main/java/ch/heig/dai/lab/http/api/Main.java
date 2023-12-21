@@ -20,6 +20,7 @@ public class Main {
      */
     public static void main(String[] args) {
         final BlogService blogService = new BlogService();
+        final CommentService commentService = new CommentService();
 
         Javalin app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
@@ -42,6 +43,7 @@ public class Main {
         // Register routes
         app.routes(() -> {
             crud("api/blogs/{id}", new BlogController(blogService));
+            crud("api/comments/{id}", new CommentController(commentService));
         });
     }
 }
