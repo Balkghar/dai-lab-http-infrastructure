@@ -5,6 +5,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -40,9 +41,10 @@ public class BlogService {
             return null;
         }
         String uuid = UUID.randomUUID().toString();
-        Blog blogWithId = new Blog(uuid, blog.title(), blog.content(), blog.createdAt(), blog.updatedAt());
+        String now = LocalDateTime.now().toString();
+        Blog blogWithId = new Blog(uuid, blog.title(), blog.content(), now, now);
         blogCollection.insertOne(blogWithId);
-        return blog;
+        return blogWithId;
     }
 
     /**
@@ -76,6 +78,7 @@ public class BlogService {
             return null;
         }
         Document updatedBlog = new Document("title", blog.title()).append("content", blog.content());
+        updatedBlog.append("updatedAt", LocalDateTime.now().toString());
         blogCollection.updateOne(Filters.eq("_id", id), new Document("$set", updatedBlog));
         return getBlogById(id);
     }

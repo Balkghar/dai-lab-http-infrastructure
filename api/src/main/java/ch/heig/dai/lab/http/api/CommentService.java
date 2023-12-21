@@ -5,6 +5,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -42,8 +43,9 @@ public class CommentService {
             return null;
         }
         String uuid = UUID.randomUUID().toString();
-        Comment commentWithId = new Comment(uuid, comment.blogId(), comment.author(), comment.content(),
-                                            comment.createdAt(), comment.updatedAt());
+        String now = LocalDateTime.now().toString();
+
+        Comment commentWithId = new Comment(uuid, comment.blogId(), comment.author(), comment.content(), now, now);
         commentsCollection.insertOne(commentWithId);
         return commentWithId;
     }
@@ -89,6 +91,8 @@ public class CommentService {
             return null;
         }
         Document updatedComment = new Document("author", comment.author()).append("content", comment.content());
+        // Set the updatedAt field to the current time.
+        updatedComment.append("updatedAt", LocalDateTime.now().toString());
         commentsCollection.updateOne(Filters.eq("_id", id), new Document("$set", updatedComment));
         return getCommentById(id);
     }
