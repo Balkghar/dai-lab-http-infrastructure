@@ -16,14 +16,14 @@ import java.util.Optional;
  */
 public class CommentController implements CrudHandler {
     /**
-     * The blog service.
+     * The comment service.
      */
     private final CommentService commentService;
 
     /**
      * Constructor.
      *
-     * @param commentService The blog service to use.
+     * @param commentService The comment service to use.
      */
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
@@ -59,7 +59,7 @@ public class CommentController implements CrudHandler {
         final Document comment = commentService.getCommentById(id);
         if (comment == null) {
             ctx.status(404);
-            ctx.result("Blog not found");
+            ctx.result("Comment not found");
             return;
         }
         ctx.status(200);
@@ -76,7 +76,7 @@ public class CommentController implements CrudHandler {
         List<Document> allComments = commentService.getAllComments();
         if (allComments == null || allComments.isEmpty()) {
             ctx.status(404);
-            ctx.result("No blogs found");
+            ctx.result("No comments found");
             return;
         }
         ctx.status(200);
@@ -94,14 +94,14 @@ public class CommentController implements CrudHandler {
         String commentId = ctx.pathParam("id");
         Comment comment = ctx.bodyAsClass(Comment.class);
 
-        Document updatedBlog = commentService.updateComment(commentId, comment);
-        if (updatedBlog == null) {
+        Document updatedComment = commentService.updateComment(commentId, comment);
+        if (updatedComment == null) {
             ctx.status(500);
-            ctx.result("Blog update failed");
+            ctx.result("Comment update failed");
             return;
         }
         ctx.status(200);
-        ctx.json(updatedBlog);
+        ctx.json(updatedComment);
     }
 
     /**
@@ -118,7 +118,7 @@ public class CommentController implements CrudHandler {
             ctx.json(deletedComment);
         } else {
             ctx.status(404);
-            ctx.result("Blog not found");
+            ctx.result("Comment not found");
         }
     }
 }
