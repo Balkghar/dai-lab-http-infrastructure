@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
 import io.javalin.json.JavalinJackson;
 
+import static io.javalin.apibuilder.ApiBuilder.*;
+
 /**
  * Main class for the Javalin server.
  *
@@ -38,7 +40,8 @@ public class Main {
         });
 
         // Register routes
-        final BlogRouter blogRouter = new BlogRouter(blogService);
-        blogRouter.registerRoutes(app);
+        app.routes(() -> {
+            crud("api/blogs/{id}", new BlogController(blogService));
+        });
     }
 }

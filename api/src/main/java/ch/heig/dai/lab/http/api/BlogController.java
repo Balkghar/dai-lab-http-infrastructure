@@ -1,20 +1,19 @@
 package ch.heig.dai.lab.http.api;
 
-import io.javalin.Javalin;
+import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
 import org.bson.Document;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static io.javalin.apibuilder.ApiBuilder.*;
-
 /**
- * Routes for the blog API.
+ * Blog controller class.
  *
  * @author Aubry Mangold <aubry.mangold@heig-vd.ch>
  * @author Hugo Germano <hugo.germano@heig-vd.ch>
  */
-public class BlogRouter {
+public class BlogController implements CrudHandler {
     /**
      * The blog service to use.
      */
@@ -25,35 +24,17 @@ public class BlogRouter {
      *
      * @param blogService The blog service to use.
      */
-    public BlogRouter(BlogService blogService) {
+    public BlogController(BlogService blogService) {
         this.blogService = blogService;
     }
 
-    /**
-     * Register the routes for the blog API.
-     *
-     * @param app The Javalin app to register the routes with.
-     */
-    public void registerRoutes(Javalin app) {
-        app.routes(() -> {
-            path("api/blogs", () -> {
-                post(this::createBlog);
-                get(this::getAllBlogs);
-                path("{id}", () -> {
-                    get(this::getBlogById);
-                    put(this::updateBlog);
-                    delete(this::deleteBlog);
-                });
-            });
-        });
-    }
 
     /**
      * Create a new blog.
      *
      * @param ctx The Javalin context.
      */
-    public void createBlog(Context ctx) {
+    public void create(Context ctx) {
         Blog blog;
         // FIXME: remove try/catch
         try {
@@ -80,8 +61,7 @@ public class BlogRouter {
      *
      * @param ctx The Javalin context.
      */
-    public void getBlogById(Context ctx) {
-        String id = ctx.pathParam("id");
+    public void getOne(Context ctx, String id) {
         final Document blog = blogService.getBlogById(id);
         if (blog == null) {
             ctx.status(404);
@@ -97,7 +77,7 @@ public class BlogRouter {
      *
      * @param ctx The Javalin context.
      */
-    public void getAllBlogs(Context ctx) {
+    public void getAll(Context ctx) {
         List<Document> allBlogs = blogService.getAllBlogs();
         if (allBlogs == null || allBlogs.isEmpty()) {
             ctx.status(404);
@@ -113,7 +93,7 @@ public class BlogRouter {
      *
      * @param ctx The Javalin context.
      */
-    public void updateBlog(Context ctx) {
+    public void update(Context ctx, String id) {
         String blogId = ctx.pathParam("id");
         Blog blog = ctx.bodyAsClass(Blog.class);
 
@@ -132,8 +112,7 @@ public class BlogRouter {
      *
      * @param ctx The Javalin context.
      */
-    public void deleteBlog(Context ctx) {
-        String id = ctx.pathParam("id");
+    public void delete(@NotNull Context ctx, @NotNull String id) {
         Document deletedBlog = blogService.deleteBlog(id);
         if (deletedBlog != null) {
             ctx.status(200);

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
  */
 public class BlogApiTest {
     private BlogService blogService;
-    private BlogRouter blogRouter;
+    private BlogController blogController;
     private Context ctx;
 
     /**
@@ -28,7 +28,7 @@ public class BlogApiTest {
     @BeforeEach
     public void setUp() {
         blogService = mock(BlogService.class);
-        blogRouter = new BlogRouter(blogService);
+        blogController = new BlogController(blogService);
         ctx = mock(Context.class);
     }
 
@@ -42,7 +42,7 @@ public class BlogApiTest {
         when(blogService.createBlog(testBlog)).thenReturn(createdBlog);
 
         // Act
-        blogRouter.createBlog(ctx);
+        blogController.create(ctx);
 
         // Assert
         verify(blogService).createBlog(testBlog);
@@ -59,7 +59,7 @@ public class BlogApiTest {
         when(blogService.getBlogById(id)).thenReturn(Document.parse(expectedBlog));
 
         // Act
-        blogRouter.getBlogById(ctx);
+        blogController.getOne(ctx, id);
 
         // Assert
         verify(blogService).getBlogById(id);
@@ -75,7 +75,7 @@ public class BlogApiTest {
         when(blogService.getAllBlogs()).thenReturn(expectedDocs);
 
         // Act
-        blogRouter.getAllBlogs(ctx);
+        blogController.getAll(ctx);
 
         // Assert
         verify(blogService).getAllBlogs();
@@ -89,7 +89,7 @@ public class BlogApiTest {
         when(blogService.getAllBlogs()).thenReturn(null);
 
         // Act
-        blogRouter.getAllBlogs(ctx);
+        blogController.getAll(ctx);
 
         // Assert
         verify(blogService).getAllBlogs();
@@ -109,7 +109,7 @@ public class BlogApiTest {
         when(blogService.updateBlog(blogId, updatedBlog)).thenReturn(updatedDocument);
 
         // Act
-        blogRouter.updateBlog(ctx);
+        blogController.update(ctx, blogId);
 
         // Assert
         verify(blogService).updateBlog(blogId, updatedBlog);
@@ -126,7 +126,7 @@ public class BlogApiTest {
         when(blogService.deleteBlog(blogId)).thenReturn(deletedBlog);
 
         // Act
-        blogRouter.deleteBlog(ctx);
+        blogController.delete(ctx, blogId);
 
         // Assert
         verify(blogService).deleteBlog(blogId);
@@ -142,7 +142,7 @@ public class BlogApiTest {
         when(blogService.deleteBlog(blogId)).thenReturn(null);
 
         // Act
-        blogRouter.deleteBlog(ctx);
+        blogController.delete(ctx, blogId);
 
         // Assert
         verify(blogService).deleteBlog(blogId);
