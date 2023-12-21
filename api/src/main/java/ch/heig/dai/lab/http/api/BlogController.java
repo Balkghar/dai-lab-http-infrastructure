@@ -35,6 +35,7 @@ public class BlogController implements CrudHandler {
      *
      * @param ctx The Javalin context.
      */
+    @Override
     public void create(@NotNull Context ctx) {
         Blog blog = ctx.bodyAsClass(Blog.class);
 
@@ -54,6 +55,7 @@ public class BlogController implements CrudHandler {
      *
      * @param ctx The Javalin context.
      */
+    @Override
     public void getOne(@NotNull Context ctx, @NotNull String id) {
         final Document blog = blogService.getBlogById(id);
         if (blog == null) {
@@ -70,6 +72,7 @@ public class BlogController implements CrudHandler {
      *
      * @param ctx The Javalin context.
      */
+    @Override
     public void getAll(@NotNull Context ctx) {
         List<Document> allBlogs = blogService.getAllBlogs();
         if (allBlogs == null || allBlogs.isEmpty()) {
@@ -86,6 +89,7 @@ public class BlogController implements CrudHandler {
      *
      * @param ctx The Javalin context.
      */
+    @Override
     public void update(Context ctx, @NotNull String id) {
         String blogId = ctx.pathParam("id");
         Blog blog = ctx.bodyAsClass(Blog.class);
@@ -105,6 +109,7 @@ public class BlogController implements CrudHandler {
      *
      * @param ctx The Javalin context.
      */
+    @Override
     public void delete(@NotNull Context ctx, @NotNull String id) {
         Document deletedBlog = blogService.deleteBlog(id);
         if (deletedBlog != null) {
