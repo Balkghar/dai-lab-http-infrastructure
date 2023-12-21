@@ -1,41 +1,182 @@
 [
-    {"blogId": "ed4cc555-2d96-48ad-94e0-1c27ae44014c", "username": "CryptoCruncher92", "content": "Haha, encrypted cereal sounds like a new breakfast trend!"},
-    {"blogId": "ed4cc555-2d96-48ad-94e0-1c27ae44014c", "username": "MunchMaster", "content": "Brute-forcing breakfast? I prefer a more elegant decryption with coffee."},
-    {"blogId": "ed4cc555-2d96-48ad-94e0-1c27ae44014c", "username": "CodeChef", "content": "I tried hashing my pancakes, but they just ended up too crispy."},
-
-    {"blogId": "b06dce82-4673-492c-b3b7-d1146fdfc309", "username": "PizzaPioneer", "content": "Ping to pizza? Maybe it's on a cosmic delivery route."},
-    {"blogId": "b06dce82-4673-492c-b3b7-d1146fdfc309", "username": "SliceSeeker", "content": "No response from the pizza? Must be in stealth mode."},
-    {"blogId": "b06dce82-4673-492c-b3b7-d1146fdfc309", "username": "TechToppings", "content": "Did you try rebooting the pizza? Works for tech, might work for pizza."},
-
-    {"blogId": "390830e6-bee3-4b11-9757-c5664f7e435d", "username": "FlameMaster", "content": "Campfire with a firewall? Maybe the logs need an update."},
-    {"blogId": "390830e6-bee3-4b11-9757-c5664f7e435d", "username": "WildCoder", "content": "Have you considered a VPN for your campfire connection?"},
-    {"blogId": "390830e6-bee3-4b11-9757-c5664f7e435d", "username": "HeatHacker", "content": "Firewall issues with a campfire? Sounds like a hot problem to solve."},
-
-    {"blogId": "8226d1b6-dcc5-4a74-b322-57596a457763", "username": "GreenThumb", "content": "Root access denied in the garden? The plants have become sentient!"},
-    {"blogId": "8226d1b6-dcc5-4a74-b322-57596a457763", "username": "BotanistByte", "content": "Did you try a firmware update for your garden?"},
-    {"blogId": "8226d1b6-dcc5-4a74-b322-57596a457763", "username": "AccessArborist", "content": "Garden admin privileges? That's reserved for the wise old oak."},
-
-    {"blogId": "e84a707b-eb06-4957-be08-3f04bbcb88a7", "username": "DreamWeaver", "content": "Using a proxy to sleep? That's some next-level REM security!"},
-    {"blogId": "e84a707b-eb06-4957-be08-3f04bbcb88a7", "username": "SleepScripter", "content": "Dream server couldn't locate you? Must have a strict sleep firewall."},
-    {"blogId": "e84a707b-eb06-4957-be08-3f04bbcb88a7", "username": "SandmanSysadmin", "content": "Dream server admin here. Sorry about the mix-up, we'll find you next time."},
-
-    {"blogId": "5e530cc6-66c4-4c74-9323-1f0b3ff6ea4a", "username": "HungryHacker", "content": "DDoSed dinner? Sounds like a tasty cyber-attack!"},
-    {"blogId": "5e530cc6-66c4-4c74-9323-1f0b3ff6ea4a", "username": "FoodieFirewall", "content": "Too many requests at the dinner table? Must be a popular menu!"},
-    {"blogId": "5e530cc6-66c4-4c74-9323-1f0b3ff6ea4a", "username": "BytesAndBites", "content": "Dinner got DDoSed? Did you try serving it with a side of encryption?"},
-
-    {"blogId": "bba7f5e9-266f-4d5c-b4e2-561c2638bed9", "username": "SnackSeeker", "content": "Hacking into a snack bar? Hope you got the secret recipe!"},
-    {"blogId": "bba7f5e9-266f-4d5c-b4e2-561c2638bed9", "username": "SnackScripter", "content": "Mouthful of data from a snack bar? Must be a delicious breach!"},
-    {"blogId": "bba7f5e9-266f-4d5c-b4e2-561c2638bed9", "username": "CrunchyCoder", "content": "Snack bar hack? Did you find the hidden Easter egg?"},
-
-    {"blogId": "61f6a9e3-0a90-4e9b-b44a-9591914a041e", "username": "PhishingPro", "content": "Phishing in a lake and catching spam? The fish must be trolling you!"},
-    {"blogId": "61f6a9e3-0a90-4e9b-b44a-9591914a041e", "username": "LakeLurker", "content": "Catching spam while fishing? That lake needs better filters!"},
-    {"blogId": "61f6a9e3-0a90-4e9b-b44a-9591914a041e", "username": "PhishWhisperer", "content": "Phishing with spam? That's a new angle on a classic move!"},
-
-    {"blogId": "b4a77a62-ac77-4a4f-a3d6-2861058c5b5c", "username": "MelodyMaster", "content": "Keylogger on a piano recording Bach? The original music hacker!"},
-    {"blogId": "b4a77a62-ac77-4a4f-a3d6-2861058c5b5c", "username": "PianoPioneer", "content": "Recording Bach with a keylogger? That's a symphony of data!"},
-    {"blogId": "b4a77a62-ac77-4a4f-a3d6-2861058c5b5c", "username": "NoteNinja", "content": "Installed a keylogger on your piano? Musical espionage at its finest!"},
-
-    {"blogId": "5443d1af-1b7b-47b7-b853-d9e9923e1abf", "username": "SaladScripter", "content": "SQL injection in a salad returning unexpected carrots? Veggie coding gone wild!"},
-    {"blogId": "5443d1af-1b7b-47b7-b853-d9e9923e1abf", "username": "GreenCuisineCoder", "content": "Unexpected carrots from SQL injection? Time to patch the salad server!"},
-    {"blogId": "5443d1af-1b7b-47b7-b853-d9e9923e1abf", "username": "HealthyHacker", "content": "SQL injection in a salad? Hope it didn't compromise the dressing algorithm!"}
+  {
+    "_id": "30e9f88c-5d13-420e-a49d-0b73f303d0d9",
+    "blogId": "ed4cc555-2d96-48ad-94e0-1c27ae44014c",
+    "username": "CryptoCruncher92",
+    "content": "Haha, encrypted cereal sounds like a new breakfast trend!"
+  },
+  {
+    "_id": "63546c4a-974e-462c-9fab-43eee16d7802",
+    "blogId": "ed4cc555-2d96-48ad-94e0-1c27ae44014c",
+    "username": "MunchMaster",
+    "content": "Brute-forcing breakfast? I prefer a more elegant decryption with coffee."
+  },
+  {
+    "_id": "821ad835-e0c0-42d3-a34d-f70923a46819",
+    "blogId": "ed4cc555-2d96-48ad-94e0-1c27ae44014c",
+    "username": "CodeChef",
+    "content": "I tried hashing my pancakes, but they just ended up too crispy."
+  },
+  {
+    "_id": "f80cbbdb-a253-4a78-b015-753f10d8034e",
+    "blogId": "b06dce82-4673-492c-b3b7-d1146fdfc309",
+    "username": "PizzaPioneer",
+    "content": "Ping to pizza? Maybe it's on a cosmic delivery route."
+  },
+  {
+    "_id": "b36b83c7-292a-408f-9212-ac60b7e97540",
+    "blogId": "b06dce82-4673-492c-b3b7-d1146fdfc309",
+    "username": "SliceSeeker",
+    "content": "No response from the pizza? Must be in stealth mode."
+  },
+  {
+    "_id": "c134271c-df98-4765-ba63-62b30e09d140",
+    "blogId": "b06dce82-4673-492c-b3b7-d1146fdfc309",
+    "username": "TechToppings",
+    "content": "Did you try rebooting the pizza? Works for tech, might work for pizza."
+  },
+  {
+    "_id": "e27fa8eb-0ecf-47b6-907c-b929e838b365",
+    "blogId": "390830e6-bee3-4b11-9757-c5664f7e435d",
+    "username": "FlameMaster",
+    "content": "Campfire with a firewall? Maybe the logs need an update."
+  },
+  {
+    "_id": "d1fffadc-2465-491e-b0f3-62a8bf5396e6",
+    "blogId": "390830e6-bee3-4b11-9757-c5664f7e435d",
+    "username": "WildCoder",
+    "content": "Have you considered a VPN for your campfire connection?"
+  },
+  {
+    "_id": "6e9b6523-0e30-4297-b3bb-635ba09a04d6",
+    "blogId": "390830e6-bee3-4b11-9757-c5664f7e435d",
+    "username": "HeatHacker",
+    "content": "Firewall issues with a campfire? Sounds like a hot problem to solve."
+  },
+  {
+    "_id": "dd4f3f31-193d-4754-be87-e1f4bb7102a4",
+    "blogId": "8226d1b6-dcc5-4a74-b322-57596a457763",
+    "username": "GreenThumb",
+    "content": "Root access denied in the garden? The plants have become sentient!"
+  },
+  {
+    "_id": "19a461c0-114f-4110-8b91-f2c8104f3acc",
+    "blogId": "8226d1b6-dcc5-4a74-b322-57596a457763",
+    "username": "BotanistByte",
+    "content": "Did you try a firmware update for your garden?"
+  },
+  {
+    "_id": "c69cb45b-8554-43f1-9b4e-63b247007f96",
+    "blogId": "8226d1b6-dcc5-4a74-b322-57596a457763",
+    "username": "AccessArborist",
+    "content": "Garden admin privileges? That's reserved for the wise old oak."
+  },
+  {
+    "_id": "916b6c21-7328-47d6-80e1-93c53ba2c728",
+    "blogId": "e84a707b-eb06-4957-be08-3f04bbcb88a7",
+    "username": "DreamWeaver",
+    "content": "Using a proxy to sleep? That's some next-level REM security!"
+  },
+  {
+    "_id": "b85bd5ae-d23a-4e4b-9c6d-09c8cf58ec4f",
+    "blogId": "e84a707b-eb06-4957-be08-3f04bbcb88a7",
+    "username": "SleepScripter",
+    "content": "Dream server couldn't locate you? Must have a strict sleep firewall."
+  },
+  {
+    "_id": "97055d98-6dfa-4aa2-826f-4344c7a4ba67",
+    "blogId": "e84a707b-eb06-4957-be08-3f04bbcb88a7",
+    "username": "SandmanSysadmin",
+    "content": "Dream server admin here. Sorry about the mix-up, we'll find you next time."
+  },
+  {
+    "_id": "5e311c74-7ea8-48f9-a6f4-988c5ffdeeb9",
+    "blogId": "5e530cc6-66c4-4c74-9323-1f0b3ff6ea4a",
+    "username": "HungryHacker",
+    "content": "DDoSed dinner? Sounds like a tasty cyber-attack!"
+  },
+  {
+    "_id": "fa4e4c5b-d2ef-47a2-a1e5-0ebd8369f91c",
+    "blogId": "5e530cc6-66c4-4c74-9323-1f0b3ff6ea4a",
+    "username": "FoodieFirewall",
+    "content": "Too many requests at the dinner table? Must be a popular menu!"
+  },
+  {
+    "_id": "b8097f7c-e99e-4bee-bdf0-add62a2e8155",
+    "blogId": "5e530cc6-66c4-4c74-9323-1f0b3ff6ea4a",
+    "username": "BytesAndBites",
+    "content": "Dinner got DDoSed? Did you try serving it with a side of encryption?"
+  },
+  {
+    "_id": "25ba8f77-1c09-4907-ba2e-c7adaf1f0376",
+    "blogId": "bba7f5e9-266f-4d5c-b4e2-561c2638bed9",
+    "username": "SnackSeeker",
+    "content": "Hacking into a snack bar? Hope you got the secret recipe!"
+  },
+  {
+    "_id": "db0828d9-eae2-4bf5-a219-b10dad79a339",
+    "blogId": "bba7f5e9-266f-4d5c-b4e2-561c2638bed9",
+    "username": "SnackScripter",
+    "content": "Mouthful of data from a snack bar? Must be a delicious breach!"
+  },
+  {
+    "_id": "52c93b5c-59af-457c-bb50-f5c745e2ca58",
+    "blogId": "bba7f5e9-266f-4d5c-b4e2-561c2638bed9",
+    "username": "CrunchyCoder",
+    "content": "Snack bar hack? Did you find the hidden Easter egg?"
+  },
+  {
+    "_id": "cb0f9abc-cdf7-4cd9-b91e-1e62d7db295c",
+    "blogId": "61f6a9e3-0a90-4e9b-b44a-9591914a041e",
+    "username": "PhishingPro",
+    "content": "Phishing in a lake and catching spam? The fish must be trolling you!"
+  },
+  {
+    "_id": "cde8ee28-9066-4490-9468-47087c8da318",
+    "blogId": "61f6a9e3-0a90-4e9b-b44a-9591914a041e",
+    "username": "LakeLurker",
+    "content": "Catching spam while fishing? That lake needs better filters!"
+  },
+  {
+    "_id": "e273ccda-ffa9-4741-9390-e9d509ef5123",
+    "blogId": "61f6a9e3-0a90-4e9b-b44a-9591914a041e",
+    "username": "PhishWhisperer",
+    "content": "Phishing with spam? That's a new angle on a classic move!"
+  },
+  {
+    "_id": "5a2b7ab4-5074-425e-81b4-151dedb407d2",
+    "blogId": "b4a77a62-ac77-4a4f-a3d6-2861058c5b5c",
+    "username": "MelodyMaster",
+    "content": "Keylogger on a piano recording Bach? The original music hacker!"
+  },
+  {
+    "_id": "470e2a8a-4b3c-4104-aacb-a07e730f0183",
+    "blogId": "b4a77a62-ac77-4a4f-a3d6-2861058c5b5c",
+    "username": "PianoPioneer",
+    "content": "Recording Bach with a keylogger? That's a symphony of data!"
+  },
+  {
+    "_id": "0266a1e9-80d3-4998-a381-9415d68b02db",
+    "blogId": "b4a77a62-ac77-4a4f-a3d6-2861058c5b5c",
+    "username": "NoteNinja",
+    "content": "Installed a keylogger on your piano? Musical espionage at its finest!"
+  },
+  {
+    "_id": "e0d1361f-a44d-4fc2-bcca-8963dc81c307",
+    "blogId": "5443d1af-1b7b-47b7-b853-d9e9923e1abf",
+    "username": "SaladScripter",
+    "content": "SQL injection in a salad returning unexpected carrots? Veggie coding gone wild!"
+  },
+  {
+    "_id": "278cc835-aa75-462d-8b35-5ce3970ec0bf",
+    "blogId": "5443d1af-1b7b-47b7-b853-d9e9923e1abf",
+    "username": "GreenCuisineCoder",
+    "content": "Unexpected carrots from SQL injection? Time to patch the salad server!"
+  },
+  {
+    "_id": "1d3f1595-1413-4760-bf8c-5b70e06655c9",
+    "blogId": "5443d1af-1b7b-47b7-b853-d9e9923e1abf",
+    "username": "HealthyHacker",
+    "content": "SQL injection in a salad? Hope it didn't compromise the dressing algorithm!"
+  }
 ]
