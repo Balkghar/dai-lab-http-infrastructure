@@ -6,7 +6,7 @@ import org.bson.Document;
 
 import java.util.List;
 
-import static io.javalin.apibuilder.ApiBuilder.path;
+import static io.javalin.apibuilder.ApiBuilder.*;
 
 /**
  * Routes for the blog API.
@@ -35,12 +35,16 @@ public class BlogRouter {
      * @param app The Javalin app to register the routes with.
      */
     public void registerRoutes(Javalin app) {
-        path("api", () -> {
-            app.get("/blog/{id}", this::getBlogById);
-            app.get("/blog", this::getAllBlogs);
-            app.post("/blog", this::createBlog);
-            app.put("/blog/{id}", this::updateBlog);
-            app.delete("/blog/{id}", this::deleteBlog);
+        app.routes(() -> {
+            path("api/blogs", () -> {
+                post(this::createBlog);
+                get(this::getAllBlogs);
+                path("{id}", () -> {
+                    get(this::getBlogById);
+                    put(this::updateBlog);
+                    delete(this::deleteBlog);
+                });
+            });
         });
     }
 
