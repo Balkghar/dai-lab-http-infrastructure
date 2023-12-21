@@ -6,6 +6,7 @@ import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Blog controller class.
@@ -35,25 +36,17 @@ public class BlogController implements CrudHandler {
      * @param ctx The Javalin context.
      */
     public void create(@NotNull Context ctx) {
-        Blog blog;
-        // FIXME: remove try/catch
-        try {
-            blog = ctx.bodyAsClass(Blog.class);
-        } catch (Exception e) {
-            ctx.status(400);
-            ctx.result("Invalid blog format");
-            return;
-        }
+        Blog blog = ctx.bodyAsClass(Blog.class);
 
-        Document createdBlog = blogService.createBlog(blog);
-        if (createdBlog == null) {
+        Optional<Document> createdBlog = Optional.ofNullable(blogService.createBlog(blog));
+
+        if (createdBlog.isPresent()) {
+            ctx.status(201);
+            ctx.json(createdBlog.get());
+        } else {
             ctx.status(500);
             ctx.result("Blog creation failed");
-            return;
         }
-
-        ctx.status(201);
-        ctx.json(createdBlog);
     }
 
     /**
