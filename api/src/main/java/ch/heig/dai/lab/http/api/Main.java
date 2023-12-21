@@ -1,8 +1,6 @@
 package ch.heig.dai.lab.http.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
-import io.javalin.json.JavalinJackson;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
@@ -22,23 +20,18 @@ public class Main {
         final BlogService blogService = new BlogService();
         final CommentService commentService = new CommentService();
 
-        Javalin app = Javalin.create(config -> {
-            config.plugins.enableDevLogging();
-            config.jsonMapper(new JavalinJackson(new ObjectMapper()));
-        }).start(7000);
+        try (Javalin app = Javalin.create(config -> config.plugins.enableDevLogging()).start(7000)) {
+            // Enable CORS for all requests
+            app.before(ctx -> {
+                ctx.header("Access-Control-Allow-Origin", "*");
+                ctx.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            });
 
-        // Enable CORS for all requests
-        // TODO write tests
-        app.before(ctx -> {
-            ctx.header("Access-Control-Allow-Origin", "*");
-            ctx.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        });
-
-        // Register 404
-        app.error(404, ctx -> {
-            ctx.result("Page not found");
-            ctx.contentType("text/plain");
-        });
+            // Register 404
+            app.error(404, ctx -> {
+                ctx.result("Page not found");
+                ctx.contentType("text/plain");
+            });
 
         // Register routes
         app.routes(() -> {

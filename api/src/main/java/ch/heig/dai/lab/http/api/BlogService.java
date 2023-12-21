@@ -62,16 +62,11 @@ public class BlogService {
      * @return All blogs.
      */
     public List<Document> getAllBlogs() {
-        List<Document> blogs = new ArrayList<>();
-        for (Document blog : blogsCollection.find()) {
-            blogs.add(blog);
-        }
-        return blogs;
+        return blogsCollection.find().into(new ArrayList<>());
     }
 
     /**
      * Update a blog.
-     * FIXME: remove try/catch
      *
      * @param id   The ID of the blog to update.
      * @param blog The blog to update.

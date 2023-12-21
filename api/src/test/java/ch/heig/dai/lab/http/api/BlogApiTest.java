@@ -67,7 +67,6 @@ public class BlogApiTest {
         verify(ctx).status(200);
     }
 
-    // FIXME: extend to test when no blogs are present
     @Test
     public void getAllResources_withExistingResources_returnsResources() {
         // Arrange
