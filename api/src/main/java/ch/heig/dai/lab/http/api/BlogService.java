@@ -4,10 +4,11 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
-import org.bson.types.ObjectId;
+
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Storage service for the blog API.
@@ -39,7 +40,8 @@ public class BlogService {
         if (blog == null) {
             return null;
         }
-        Document doc = new Document("title", blog.title()).append("content", blog.content());
+        String uuid = UUID.randomUUID().toString();
+        Document doc = new Document("_id", uuid).append("title", blog.title()).append("content", blog.content());
         blogsCollection.insertOne(doc);
         return doc;
     }
@@ -51,7 +53,7 @@ public class BlogService {
      * @return The blog.
      */
     public Document getBlogById(String id) {
-        return blogsCollection.find(Filters.eq("_id", new ObjectId(id))).first();
+        return blogsCollection.find(Filters.eq("_id", id)).first();
     }
 
     /**
@@ -80,11 +82,7 @@ public class BlogService {
             return null;
         }
         Document updatedBlog = new Document("title", blog.title()).append("content", blog.content());
-        try {
-            blogsCollection.updateOne(Filters.eq("_id", new ObjectId(id)), new Document("$set", updatedBlog));
-        } catch (Exception e) {
-            return null;
-        }
+        blogsCollection.updateOne(Filters.eq("_id", id), new Document("$set", updatedBlog));
         return getBlogById(id);
     }
 
@@ -97,7 +95,7 @@ public class BlogService {
     public Document deleteBlog(String id) {
         Document blogToDelete = getBlogById(id);
         if (blogToDelete != null) {
-            blogsCollection.deleteOne(Filters.eq("_id", new ObjectId(id)));
+            blogsCollection.deleteOne(Filters.eq("_id", id));
         }
         return blogToDelete;
     }
