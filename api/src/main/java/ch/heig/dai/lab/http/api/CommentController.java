@@ -36,8 +36,8 @@ public class CommentController implements CrudHandler {
      */
     @Override
     public void create(@NotNull Context ctx) {
-        Comment comment = ctx.bodyAsClass(Comment.class);
-        Optional<Document> createdComment = Optional.ofNullable(commentService.createComment(comment));
+        final Comment comment = ctx.bodyAsClass(Comment.class);
+        final Optional<Comment> createdComment = Optional.ofNullable(commentService.createComment(comment));
 
         if (createdComment.isPresent()) {
             ctx.status(201);
@@ -56,14 +56,14 @@ public class CommentController implements CrudHandler {
      */
     @Override
     public void getOne(@NotNull Context ctx, @NotNull String id) {
-        final Document comment = commentService.getCommentById(id);
+        final Comment comment = commentService.getCommentById(id);
         if (comment == null) {
             ctx.status(404);
             ctx.result("Comment not found");
             return;
         }
         ctx.status(200);
-        ctx.json(comment.toJson());
+        ctx.json(comment);
     }
 
     /**
@@ -73,7 +73,7 @@ public class CommentController implements CrudHandler {
      */
     @Override
     public void getAll(@NotNull Context ctx) {
-        List<Document> allComments = commentService.getAllComments();
+        List<Comment> allComments = commentService.getAllComments();
         if (allComments == null || allComments.isEmpty()) {
             ctx.status(404);
             ctx.result("No comments found");
@@ -94,7 +94,7 @@ public class CommentController implements CrudHandler {
         String commentId = ctx.pathParam("id");
         Comment comment = ctx.bodyAsClass(Comment.class);
 
-        Document updatedComment = commentService.updateComment(commentId, comment);
+        Comment updatedComment = commentService.updateComment(commentId, comment);
         if (updatedComment == null) {
             ctx.status(500);
             ctx.result("Comment update failed");
@@ -112,7 +112,7 @@ public class CommentController implements CrudHandler {
      */
     @Override
     public void delete(@NotNull Context ctx, @NotNull String id) {
-        Document deletedComment = commentService.deleteComment(id);
+        Comment deletedComment = commentService.deleteComment(id);
         if (deletedComment != null) {
             ctx.status(200);
             ctx.json(deletedComment);

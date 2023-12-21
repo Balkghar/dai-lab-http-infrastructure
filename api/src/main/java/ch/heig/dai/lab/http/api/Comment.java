@@ -6,8 +6,8 @@ package ch.heig.dai.lab.http.api;
  * @author Aubry Mangold <aubry.mangold@heig-vd.ch>
  * @author Hugo Germano <hugo.germano@heig-vd.ch>
  */
-public record Comment(String blogId, String username, String content) {
+public record Comment(String _id, String blogId, String username, String content) {
     public Comment(){
-        this(null, null, null);
+        this(null, null, null, null);
     }
 }

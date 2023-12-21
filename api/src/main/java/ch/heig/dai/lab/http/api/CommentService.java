@@ -21,14 +21,14 @@ public class CommentService {
     /**
      * The comments collection.
      */
-    private final MongoCollection<Document> commentsCollection;
+    private final MongoCollection<Comment> commentsCollection;
 
     /**
      * Constructor.
      */
     public CommentService() {
         MongoDatabase database = MongoDbConnection.getDatabase();
-        commentsCollection = database.getCollection("comments");
+        commentsCollection = database.getCollection("comments", Comment.class);
     }
 
     /**
@@ -37,14 +37,14 @@ public class CommentService {
      * @param comment The comment to create.
      * @return The created comment.
      */
-    public Document createComment(Comment comment) {
+    public Comment createComment(Comment comment) {
         if (comment == null) {
             return null;
         }
         String uuid = UUID.randomUUID().toString();
-        Document doc = new Document("_id", uuid).append("blogId", comment.blogId()).append("username", comment.username()).append("content", comment.content());
-        commentsCollection.insertOne(doc);
-        return doc;
+        Comment commentWithId = new Comment(uuid, comment.blogId(), comment.username(), comment.content());
+        commentsCollection.insertOne(commentWithId);
+        return commentWithId;
     }
 
     /**
@@ -53,7 +53,7 @@ public class CommentService {
      * @param id The ID of the comment.
      * @return The comment.
      */
-    public Document getCommentById(String id) {
+    public Comment getCommentById(String id) {
         return commentsCollection.find(Filters.eq("_id", id)).first();
     }
 
@@ -62,12 +62,8 @@ public class CommentService {
      *
      * @return All comments.
      */
-    public List<Document> getAllComments() {
-        List<Document> comments = new ArrayList<>();
-        for (Document blog : commentsCollection.find()) {
-            comments.add(blog);
-        }
-        return comments;
+    public List<Comment> getAllComments() {
+        return commentsCollection.find().into(new ArrayList<>());
     }
 
     /**
@@ -76,7 +72,7 @@ public class CommentService {
      * @param id The id of the blog.
      * @return A list of the comments for the blog.
      */
-    public List<Document> getCommentsForBlog(String id) {
+    public List<Comment> getCommentsForBlog(String id) {
         return commentsCollection.find(eq("blogId", id)).into(new ArrayList<>());
     }
 
@@ -87,7 +83,7 @@ public class CommentService {
      * @param comment The comment to update.
      * @return The updated comment.
      */
-    public Document updateComment(String id, Comment comment) {
+    public Comment updateComment(String id, Comment comment) {
         if (comment == null) {
             return null;
         }
@@ -100,10 +96,10 @@ public class CommentService {
      * Delete a comment.
      *
      * @param id The ID of the comment to delete.
-     * @return The deleted blog.
+     * @return The deleted comment.
      */
-    public Document deleteComment(String id) {
-        Document commentToDelete = getCommentById(id);
+    public Comment deleteComment(String id) {
+        Comment commentToDelete = getCommentById(id);
         if (commentToDelete != null) {
             commentsCollection.deleteOne(Filters.eq("_id", id));
         }
