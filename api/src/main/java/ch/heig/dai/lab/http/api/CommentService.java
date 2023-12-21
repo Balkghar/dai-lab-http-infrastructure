@@ -42,7 +42,7 @@ public class CommentService {
             return null;
         }
         String uuid = UUID.randomUUID().toString();
-        Comment commentWithId = new Comment(uuid, comment.blogId(), comment.username(), comment.content());
+        Comment commentWithId = new Comment(uuid, comment.blogId(), comment.author(), comment.content());
         commentsCollection.insertOne(commentWithId);
         return commentWithId;
     }
@@ -87,7 +87,7 @@ public class CommentService {
         if (comment == null) {
             return null;
         }
-        Document updatedComment = new Document("username", comment.username()).append("content", comment.content());
+        Document updatedComment = new Document("author", comment.author()).append("content", comment.content());
         commentsCollection.updateOne(Filters.eq("_id", id), new Document("$set", updatedComment));
         return getCommentById(id);
     }

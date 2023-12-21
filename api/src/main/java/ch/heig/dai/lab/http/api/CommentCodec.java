@@ -42,7 +42,7 @@ public class CommentCodec implements CollectibleCodec<Comment> {
         document.put("_id", comment._id());
         document.put("blogId", comment.blogId());
         document.put("content", comment.content());
-        document.put("author", comment.username());
+        document.put("author", comment.author());
         documentCodec.encode(writer, document, encoderContext);
     }
 
@@ -79,7 +79,7 @@ public class CommentCodec implements CollectibleCodec<Comment> {
     @Override
     public Comment generateIdIfAbsentFromDocument(Comment comment) {
         if (!documentHasId(comment)) {
-            return new Comment(UUID.randomUUID().toString(), comment.blogId(), comment.content(), comment.username());
+            return new Comment(UUID.randomUUID().toString(), comment.blogId(), comment.content(), comment.author());
         }
         return comment;
     }
