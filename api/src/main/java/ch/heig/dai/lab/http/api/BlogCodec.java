@@ -6,8 +6,6 @@ import org.bson.codecs.CollectibleCodec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.UUID;
 
 /**
@@ -70,8 +68,7 @@ public class BlogCodec implements CollectibleCodec<Blog> {
     public Blog decode(BsonReader reader, DecoderContext decoderContext) {
         Document document = documentCodec.decode(reader, decoderContext);
         return new Blog(document.getString("_id"), document.getString("title"), document.getString("content"),
-                        document.get("createdAt", LocalDateTime.class),
-                        document.get("updatedAt", LocalDateTime.class));
+                        document.getString("createdAt"), document.getString("updatedAt"));
     }
 
     /**
