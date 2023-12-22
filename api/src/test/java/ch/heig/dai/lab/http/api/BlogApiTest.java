@@ -122,7 +122,7 @@ public class BlogApiTest {
     }
 
     @Test
-    public void updateBlog_whenBlogExists_updatesBlog() {
+    public void updateBlog_whenBlogIsValid_updatesBlog() {
         String id = "123";
         Blog updatedBlog = new Blog(id, "updatedTitle", "updatedContent", null, null);
         when(ctx.pathParam("id")).thenReturn(id);
