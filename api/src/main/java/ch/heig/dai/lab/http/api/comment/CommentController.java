@@ -1,11 +1,11 @@
 package ch.heig.dai.lab.http.api.comment;
 
+import ch.heig.dai.lab.http.api.blog.BlogService;
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Comment controller.
@@ -20,12 +20,18 @@ public class CommentController implements CrudHandler {
     private final CommentService commentService;
 
     /**
+     * The blog service. Used to check if a blog exists.
+     */
+    private final BlogService blogService;
+
+    /**
      * Constructor.
      *
      * @param commentService The comment service to use.
      */
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentService commentService, BlogService blogService) {
         this.commentService = commentService;
+        this.blogService = blogService;
     }
 
     /**
@@ -35,15 +41,27 @@ public class CommentController implements CrudHandler {
      */
     @Override
     public void create(@NotNull Context ctx) {
-        final Comment comment = ctx.bodyAsClass(Comment.class);
-        final Optional<Comment> createdComment = Optional.ofNullable(commentService.createComment(comment));
+        try {
+            final Comment comment = ctx.bodyAsClass(Comment.class);
+            if (blogService.getBlogById(comment._blogId()) == null) {
+                ctx.status(404);
+                ctx.result("Blog not found");
+                return;
+            }
 
-        if (createdComment.isPresent()) {
+            final Comment createdComment = commentService.createComment(comment);
+
+            if (createdComment == null) {
+                ctx.status(500);
+                ctx.result("Comment creation failed");
+                return;
+            }
+
             ctx.status(201);
-            ctx.json(createdComment.get());
-        } else {
-            ctx.status(500);
-            ctx.result("Comment creation failed");
+            ctx.json(createdComment);
+        } catch (Exception e) {
+            ctx.status(400);
+            ctx.result("Bad request: " + e.getMessage());
         }
     }
 
@@ -90,17 +108,28 @@ public class CommentController implements CrudHandler {
      */
     @Override
     public void update(@NotNull Context ctx, @NotNull String id) {
-        String commentId = ctx.pathParam("id");
-        Comment comment = ctx.bodyAsClass(Comment.class);
+        try {
+            String commentId = ctx.pathParam("id");
+            Comment comment = ctx.bodyAsClass(Comment.class);
 
-        Comment updatedComment = commentService.updateComment(commentId, comment);
-        if (updatedComment == null) {
-            ctx.status(500);
-            ctx.result("Comment update failed");
-            return;
+            if (blogService.getBlogById(comment._blogId()) == null) {
+                ctx.status(404);
+                ctx.result("Blog not found");
+                return;
+            }
+
+            Comment updatedComment = commentService.updateComment(commentId, comment);
+            if (updatedComment == null) {
+                ctx.status(500);
+                ctx.result("Comment update failed");
+                return;
+            }
+            ctx.status(200);
+            ctx.json(updatedComment);
+        } catch (Exception e) {
+            ctx.status(400);
+            ctx.result("Bad request: " + e.getMessage());
         }
-        ctx.status(200);
-        ctx.json(updatedComment);
     }
 
     /**
@@ -112,13 +141,13 @@ public class CommentController implements CrudHandler {
     @Override
     public void delete(@NotNull Context ctx, @NotNull String id) {
         Comment deletedComment = commentService.deleteComment(id);
-        if (deletedComment != null) {
-            ctx.status(200);
-            ctx.json(deletedComment);
-        } else {
+        if (deletedComment == null) {
             ctx.status(404);
             ctx.result("Comment not found");
+            return;
         }
+        ctx.status(200);
+        ctx.json(deletedComment);
     }
 
     /**

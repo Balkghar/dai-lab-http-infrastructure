@@ -40,8 +40,8 @@ public class Main {
         // Register routes
         app.routes(() -> {
             crud("api/blogs/{id}", new BlogController(blogService));
-            crud("api/comments/{id}", new CommentController(commentService));
-            app.get("api/blogs/{id}/comments", new CommentController(commentService)::getAllByBlogId);
+            crud("api/comments/{id}", new CommentController(commentService, blogService));
+            app.get("api/blogs/{id}/comments", new CommentController(commentService, blogService)::getAllByBlogId);
         });
     }
 }

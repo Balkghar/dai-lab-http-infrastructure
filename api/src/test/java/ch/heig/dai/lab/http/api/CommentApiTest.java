@@ -1,5 +1,6 @@
 package ch.heig.dai.lab.http.api;
 
+import ch.heig.dai.lab.http.api.blog.BlogService;
 import ch.heig.dai.lab.http.api.comment.Comment;
 import ch.heig.dai.lab.http.api.comment.CommentController;
 import ch.heig.dai.lab.http.api.comment.CommentService;
@@ -30,7 +31,7 @@ public class CommentApiTest {
     @BeforeEach
     public void setUp() {
         commentService = mock(CommentService.class);
-        commentController = new CommentController(commentService);
+        commentController = new CommentController(commentService, mock(BlogService.class));
         ctx = mock(Context.class);
     }
 
@@ -46,6 +47,18 @@ public class CommentApiTest {
         verify(commentService).createComment(createdComment);
         verify(ctx).status(201);
         verify(ctx).json(createdComment);
+    }
+
+    @Test
+    public void createComment_whenBlogIdIsInvalid_returnNotFound() {
+        Comment createdComment = new Comment("1", "invalidId", "title", "content", null, null);
+
+        when(ctx.bodyAsClass(Comment.class)).thenReturn(createdComment);
+        when(commentService.createComment(createdComment)).thenReturn(null);
+
+        commentController.create(ctx);
+
+        verify(ctx).status(404);
     }
 
     @Test
