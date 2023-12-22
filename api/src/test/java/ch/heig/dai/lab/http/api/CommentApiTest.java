@@ -1,5 +1,6 @@
 package ch.heig.dai.lab.http.api;
 
+import ch.heig.dai.lab.http.api.blog.Blog;
 import ch.heig.dai.lab.http.api.blog.BlogService;
 import ch.heig.dai.lab.http.api.comment.Comment;
 import ch.heig.dai.lab.http.api.comment.CommentController;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.*;
  */
 public class CommentApiTest {
     private CommentService commentService;
+    private BlogService blogService;
     private CommentController commentController;
     private Context ctx;
 
@@ -31,15 +33,18 @@ public class CommentApiTest {
     @BeforeEach
     public void setUp() {
         commentService = mock(CommentService.class);
-        commentController = new CommentController(commentService, mock(BlogService.class));
+        blogService = mock(BlogService.class);
+        commentController = new CommentController(commentService, blogService);
         ctx = mock(Context.class);
     }
 
     @Test
     public void createComment_whenCommentIsValid_addsNewComment() {
+        Blog blog = new Blog("1", "title", "content", null, null);
         Comment createdComment = new Comment("1", "1", "title", "content", null, null);
 
         when(ctx.bodyAsClass(Comment.class)).thenReturn(createdComment);
+        when(blogService.getBlogById(createdComment._blogId())).thenReturn(blog);
         when(commentService.createComment(createdComment)).thenReturn(createdComment);
 
         commentController.create(ctx);
@@ -122,9 +127,11 @@ public class CommentApiTest {
 
     @Test
     public void updateComment_whenCommentIsValid_updatesComment() {
+        Blog blog = new Blog("1", "title", "content", null, null);
         Comment updatedComment = new Comment("1", "1", "title", "content", null, null);
 
         when(ctx.bodyAsClass(Comment.class)).thenReturn(updatedComment);
+        when(blogService.getBlogById(blog._id())).thenReturn(blog);
         when(ctx.pathParam("id")).thenReturn(updatedComment._id());
         when(commentService.updateComment(updatedComment._id(), updatedComment)).thenReturn(updatedComment);
 
