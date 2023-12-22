@@ -36,9 +36,7 @@ public class Main {
 
         // Register error handler
         app.error(404, ctx -> ctx.result("Page not found").contentType("text/plain"));
-        // Register exception handlers
-        app.exception(BadRequestResponse.class, (e, ctx) -> ctx.status(400).result("Bad request"));
-        app.exception(MismatchedInputException.class, (e, ctx) -> ctx.status(400).result("Bad request"));
+        // Register exception handler
         app.exception(Exception.class, (e, ctx) -> ctx.status(500).result("Internal server error"));
 
         // Register routes
