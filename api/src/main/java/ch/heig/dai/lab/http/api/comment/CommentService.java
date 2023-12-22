@@ -41,7 +41,7 @@ public class CommentService {
      */
     public Comment createComment(Comment comment) {
         if (comment == null) {
-            return null;
+            throw new NullPointerException("Comment must not be null");
         }
         String uuid = UUID.randomUUID().toString();
         String now = LocalDateTime.now().toString();
@@ -58,6 +58,9 @@ public class CommentService {
      * @return The comment.
      */
     public Comment getCommentById(String id) {
+        if (id == null) {
+            throw new NullPointerException("Id must not be null");
+        }
         return commentsCollection.find(Filters.eq("_id", id)).first();
     }
 
@@ -77,6 +80,9 @@ public class CommentService {
      * @return A list of the comments for the blog.
      */
     public List<Comment> getCommentsByBlogId(String id) {
+        if (id == null) {
+            throw new NullPointerException("Id must not be null");
+        }
         return commentsCollection.find(eq("_blogId", id)).into(new ArrayList<>());
     }
 
@@ -88,8 +94,8 @@ public class CommentService {
      * @return The updated comment.
      */
     public Comment updateComment(String id, Comment comment) {
-        if (comment == null) {
-            return null;
+        if (id == null || comment == null) {
+            throw new NullPointerException("Comment and id must not be null");
         }
         Document updatedComment = new Document("author", comment.author()).append("content", comment.content());
         // Set the updatedAt field to the current time.
@@ -105,10 +111,14 @@ public class CommentService {
      * @return The deleted comment.
      */
     public Comment deleteComment(String id) {
-        Comment commentToDelete = getCommentById(id);
-        if (commentToDelete != null) {
-            commentsCollection.deleteOne(Filters.eq("_id", id));
+        if (id == null) {
+            throw new NullPointerException("Id must not be null");
         }
+        Comment commentToDelete = getCommentById(id);
+        if (commentToDelete == null) {
+            throw new NullPointerException("Comment must not be null");
+        }
+        commentsCollection.deleteOne(Filters.eq("_id", id));
         return commentToDelete;
     }
 
@@ -119,10 +129,14 @@ public class CommentService {
      * @return The deleted comments.
      */
     public List<Comment> deleteCommentsByBlogId(String blogId) {
-        List<Comment> commentsToDelete = getCommentsByBlogId(blogId);
-        if (commentsToDelete != null) {
-            commentsCollection.deleteMany(Filters.eq("_blogId", blogId));
+        if (blogId == null) {
+            throw new NullPointerException("blogId must not be null");
         }
+        List<Comment> commentsToDelete = getCommentsByBlogId(blogId);
+        if (commentsToDelete == null) {
+            throw new NullPointerException("Comment must not be null");
+        }
+        commentsCollection.deleteMany(Filters.eq("_blogId", blogId));
         return commentsToDelete;
     }
 }

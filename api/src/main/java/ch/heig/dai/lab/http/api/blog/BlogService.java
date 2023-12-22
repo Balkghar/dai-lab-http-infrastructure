@@ -39,7 +39,7 @@ public class BlogService {
      */
     public Blog createBlog(Blog blog) {
         if (blog == null) {
-            return null;
+            throw new NullPointerException("Blog must not be null");
         }
         String uuid = UUID.randomUUID().toString();
         String now = LocalDateTime.now().toString();
@@ -55,6 +55,9 @@ public class BlogService {
      * @return The blog.
      */
     public Blog getBlogById(String id) {
+        if (id == null) {
+            throw new NullPointerException("Id must not be null");
+        }
         return blogCollection.find(Filters.eq("_id", id)).first();
     }
 
@@ -75,8 +78,8 @@ public class BlogService {
      * @return The updated blog.
      */
     public Blog updateBlog(String id, Blog blog) {
-        if (blog == null) {
-            return null;
+        if (id == null || blog == null) {
+            throw new NullPointerException("Blog and id must not be null");
         }
         Document updatedBlog = new Document("title", blog.title()).append("content", blog.content());
         updatedBlog.append("updatedAt", LocalDateTime.now().toString());
@@ -91,10 +94,14 @@ public class BlogService {
      * @return The deleted blog.
      */
     public Blog deleteBlog(String id) {
-        Blog blogToDelete = getBlogById(id);
-        if (blogToDelete != null) {
-            blogCollection.deleteOne(Filters.eq("_id", id));
+        if (id == null) {
+            throw new NullPointerException("Id must not be null");
         }
+        Blog blogToDelete = getBlogById(id);
+        if (blogToDelete == null) {
+           throw new NullPointerException("Blog must not be null");
+        }
+         blogCollection.deleteOne(Filters.eq("_id", id));
         return blogToDelete;
     }
 }
