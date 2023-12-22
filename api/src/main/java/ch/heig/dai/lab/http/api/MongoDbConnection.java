@@ -28,6 +28,7 @@ public class MongoDbConnection {
         final String password = System.getenv("MONGO_INITDB_ROOT_PASSWORD");
         final String host = System.getenv("MONGO_INITDB_ROOT_HOST");
         final String uri = String.format("mongodb://%s:%s@%s", username, password, host);
+        // Setup the codecs for the java classes (POJOs)
         CodecRegistry pojoCodecRegistry = CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
                                                                          CodecRegistries.fromCodecs(
                                                                                  new CommentCodec(new DocumentCodec()),
@@ -37,7 +38,7 @@ public class MongoDbConnection {
                                                                                                   .automatic(true)
                                                                                                   .build()));
         try {
-            MongoClient mongoClient = MongoClients.create(uri);
+            MongoClient mongoClient = MongoClients.create(uri); // FIXME
             database = mongoClient.getDatabase("dai").withCodecRegistry(pojoCodecRegistry);
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
