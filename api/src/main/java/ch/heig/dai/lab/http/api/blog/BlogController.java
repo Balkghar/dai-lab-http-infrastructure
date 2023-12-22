@@ -94,7 +94,8 @@ public class BlogController implements CrudHandler {
 
         Blog updatedBlog = blogService.updateBlog(blogId, blog);
         if (updatedBlog == null) {
-            ctx.status(404).result("Blog update failed");
+            ctx.status(404);
+            ctx.result("Blog update failed");
             return;
         }
         ctx.status(200);
