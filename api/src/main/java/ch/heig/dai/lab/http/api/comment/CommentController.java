@@ -51,7 +51,7 @@ public class CommentController implements CrudHandler {
      * Get a single comment.
      *
      * @param ctx Context of the http query.
-     * @param id ID of the comment to delete.
+     * @param id  ID of the comment to delete.
      */
     @Override
     public void getOne(@NotNull Context ctx, @NotNull String id) {
@@ -86,7 +86,7 @@ public class CommentController implements CrudHandler {
      * Update a comment.
      *
      * @param ctx Context of the http query.
-     * @param id ID of the comment to delete.
+     * @param id  ID of the comment to delete.
      */
     @Override
     public void update(@NotNull Context ctx, @NotNull String id) {
@@ -107,7 +107,7 @@ public class CommentController implements CrudHandler {
      * Delete a comment.
      *
      * @param ctx Context of the http query.
-     * @param id ID of the comment to delete.
+     * @param id  ID of the comment to delete.
      */
     @Override
     public void delete(@NotNull Context ctx, @NotNull String id) {
@@ -126,7 +126,7 @@ public class CommentController implements CrudHandler {
      *
      * @param ctx Context of the http query.
      */
-    public void getCommentsByBlogId(@NotNull Context ctx) {
+    public void getAllByBlogId(@NotNull Context ctx) {
         String blogId = ctx.pathParam("id");
         List<Comment> comments = commentService.getCommentsByBlogId(blogId);
         if (comments == null || comments.isEmpty()) {
