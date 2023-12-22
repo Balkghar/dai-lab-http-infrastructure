@@ -128,7 +128,7 @@ public class CommentController implements CrudHandler {
      */
     public void getCommentsByBlogId(@NotNull Context ctx) {
         String blogId = ctx.pathParam("id");
-        List<Comment> comments = commentService.getCommentsByBlog(blogId);
+        List<Comment> comments = commentService.getCommentsByBlogId(blogId);
         if (comments == null || comments.isEmpty()) {
             ctx.status(404);
             ctx.result("No comments found");

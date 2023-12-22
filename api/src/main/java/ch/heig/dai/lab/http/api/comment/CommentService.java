@@ -76,7 +76,7 @@ public class CommentService {
      * @param id The id of the blog.
      * @return A list of the comments for the blog.
      */
-    public List<Comment> getCommentsByBlog(String id) {
+    public List<Comment> getCommentsByBlogId(String id) {
         return commentsCollection.find(eq("_blogId", id)).into(new ArrayList<>());
     }
 
