@@ -4,9 +4,7 @@ import ch.heig.dai.lab.http.api.blog.BlogController;
 import ch.heig.dai.lab.http.api.blog.BlogService;
 import ch.heig.dai.lab.http.api.comment.CommentController;
 import ch.heig.dai.lab.http.api.comment.CommentService;
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.javalin.Javalin;
-import io.javalin.http.BadRequestResponse;
 
 import static io.javalin.apibuilder.ApiBuilder.crud;
 
@@ -43,7 +41,7 @@ public class Main {
         app.routes(() -> {
             crud("api/blogs/{id}", new BlogController(blogService));
             crud("api/comments/{id}", new CommentController(commentService));
-            app.get("api/blogs/{id}/comments", new CommentController(commentService)::getCommentsByBlogId);
+            app.get("api/blogs/{id}/comments", new CommentController(commentService)::getAllByBlogId);
         });
     }
 }

@@ -111,4 +111,18 @@ public class CommentService {
         }
         return commentToDelete;
     }
+
+    /**
+     * Delete all comments for a specified blog.
+     *
+     * @param blogId The ID of the blog to delete.
+     * @return The deleted comments.
+     */
+    public List<Comment> deleteCommentsByBlogId(String blogId) {
+        List<Comment> commentsToDelete = getCommentsByBlogId(blogId);
+        if (commentsToDelete != null) {
+            commentsCollection.deleteMany(Filters.eq("_blogId", blogId));
+        }
+        return commentsToDelete;
+    }
 }

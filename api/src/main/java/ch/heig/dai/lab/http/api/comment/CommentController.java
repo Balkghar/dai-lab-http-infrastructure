@@ -137,4 +137,21 @@ public class CommentController implements CrudHandler {
         ctx.status(200);
         ctx.json(comments);
     }
+
+    /**
+     * Delete all comments for a specified blog.
+     *
+     * @param ctx Context of the http query.
+     */
+    public void deleteAllByBlogId(@NotNull Context ctx) {
+        String blogId = ctx.pathParam("id");
+        List<Comment> comments = commentService.deleteCommentsByBlogId(blogId);
+        if (comments == null || comments.isEmpty()) {
+            ctx.status(404);
+            ctx.result("No comments found");
+            return;
+        }
+        ctx.status(200);
+        ctx.json(comments);
+    }
 }
