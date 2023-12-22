@@ -36,7 +36,7 @@ public class BlogApiTest {
     }
 
     @Test
-    public void createResource_whenResourceIsValid_addsNewResource() {
+    public void createBlog_whenBlogIsValid_addsNewBlog() {
         Blog createdBlog = new Blog("1", "title", "content", null, null);
 
         when(ctx.bodyAsClass(Blog.class)).thenReturn(createdBlog);
@@ -50,7 +50,7 @@ public class BlogApiTest {
     }
 
     @Test
-    public void createResource_whenResourceIsInvalid_returnBadRequest() {
+    public void createBlog_whenBlogIsInvalid_returnBadRequest() {
         when(ctx.bodyAsClass(Blog.class)).thenThrow(new BadRequestResponse());
 
         blogController.create(ctx);
@@ -59,7 +59,7 @@ public class BlogApiTest {
     }
 
     @Test
-    public void getResource_whenIdIsValid_returnsResource() {
+    public void getBlog_whenIdIsValid_returnsBlog() {
         String id = new ObjectId().toString();
         Blog expectedBlog = new Blog(id, "title", "content", null, null);
         when(ctx.pathParam("id")).thenReturn(id);
@@ -73,7 +73,7 @@ public class BlogApiTest {
     }
 
     @Test
-    public void getResource_whenIdIsInvalid_returnsNotFound() {
+    public void getBlog_whenIdIsInvalid_returnsNotFound() {
         String id = "invalidId";
         when(ctx.pathParam("id")).thenReturn(id);
         when(blogService.getBlogById(id)).thenReturn(null);
@@ -84,7 +84,7 @@ public class BlogApiTest {
     }
 
     @Test
-    public void getAllResources_withExistingResources_returnsResources() {
+    public void getAllBlogs_withExistingBlogs_returnsBlogs() {
         // Arrange
         List<Blog> expectedBlogs = Arrays.asList(new Blog("1", "title1", "content1", null, null), new Blog("2", "title2", "content2", null, null));
         when(blogService.getAllBlogs()).thenReturn(expectedBlogs);
@@ -99,7 +99,7 @@ public class BlogApiTest {
     }
 
     @Test
-    public void getAllResources_whenIdIsInvalid_returnsNotFound() {
+    public void getAllBlogs_whenIdIsInvalid_returnsNotFound() {
         when(blogService.getAllBlogs()).thenReturn(null);
 
         blogController.getAll(ctx);
@@ -108,7 +108,7 @@ public class BlogApiTest {
     }
 
     @Test
-    public void getAllResources_withNoResources_returnsNotFound() {
+    public void getAllBlogs_withNoBlogs_returnsNotFound() {
         // Arrange
         when(blogService.getAllBlogs()).thenReturn(null);
 
@@ -122,7 +122,7 @@ public class BlogApiTest {
     }
 
     @Test
-    public void updateResource_whenResourceExists_updatesResource() {
+    public void updateBlog_whenBlogExists_updatesBlog() {
         String id = "123";
         Blog updatedBlog = new Blog(id, "updatedTitle", "updatedContent", null, null);
         when(ctx.pathParam("id")).thenReturn(id);
@@ -137,7 +137,7 @@ public class BlogApiTest {
     }
 
     @Test
-    public void updateResource_whenIdIsInvalid_returnsNotFound() {
+    public void updateBlog_whenIdIsInvalid_returnsNotFound() {
         String id = "invalidId";
         Blog updatedBlog = new Blog(id, "updatedTitle", "updatedContent", null, null);
         when(ctx.pathParam("id")).thenReturn(id);
@@ -150,7 +150,7 @@ public class BlogApiTest {
     }
 
     @Test
-    public void updateResource_whenResourceIsInvalid_returnsBadRequest() {
+    public void updateBlog_whenBlogIsInvalid_returnsBadRequest() {
         String id = "123";
         when(ctx.pathParam("id")).thenReturn(id);
         when(ctx.bodyAsClass(Blog.class)).thenThrow(new BadRequestResponse());
@@ -161,7 +161,7 @@ public class BlogApiTest {
     }
 
     @Test
-    public void deleteResource_whenIdIsValid_removesResource() {
+    public void deleteBlog_whenIdIsValid_removesBlog() {
         String id = "123";
         Blog deletedBlog = new Blog("1", "title", "content", null, null);
         when(ctx.pathParam("id")).thenReturn(id);
@@ -175,7 +175,7 @@ public class BlogApiTest {
     }
 
     @Test
-    public void deleteResource_whenIdIsInvalid_returnsNotFound() {
+    public void deleteBlog_whenIdIsInvalid_returnsNotFound() {
         String id = "nonExistingId";
         when(ctx.pathParam("id")).thenReturn(id);
         when(blogService.deleteBlog(id)).thenReturn(null);
