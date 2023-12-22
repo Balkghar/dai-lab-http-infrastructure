@@ -1,11 +1,11 @@
 package ch.heig.dai.lab.http.api.blog;
 
 import io.javalin.apibuilder.CrudHandler;
+import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Blog controller class.
@@ -35,16 +35,20 @@ public class BlogController implements CrudHandler {
      */
     @Override
     public void create(@NotNull Context ctx) {
-        final Blog blog = ctx.bodyAsClass(Blog.class);
+        try {
+            final Blog blog = ctx.bodyAsClass(Blog.class);
+            final Blog createdBlog = blogService.createBlog(blog);
 
-        final Optional<Blog> createdBlog = Optional.ofNullable(blogService.createBlog(blog));
+            if (createdBlog == null) {
+                ctx.status(500);
+                ctx.result("Blog creation failed");
+                return;
+            }
 
-        if (createdBlog.isPresent()) {
             ctx.status(201);
-            ctx.json(createdBlog.get());
-        } else {
-            ctx.status(500);
-            ctx.result("Blog creation failed");
+            ctx.json(createdBlog);
+        } catch (BadRequestResponse e) {
+            ctx.status(400);
         }
     }
 
@@ -89,17 +93,21 @@ public class BlogController implements CrudHandler {
      */
     @Override
     public void update(Context ctx, @NotNull String id) {
-        final String blogId = ctx.pathParam("id");
-        Blog blog = ctx.bodyAsClass(Blog.class);
+        try {
+            final String blogId = ctx.pathParam("id");
+            Blog blog = ctx.bodyAsClass(Blog.class);
 
-        Blog updatedBlog = blogService.updateBlog(blogId, blog);
-        if (updatedBlog == null) {
-            ctx.status(404);
-            ctx.result("Blog update failed");
-            return;
+            Blog updatedBlog = blogService.updateBlog(blogId, blog);
+            if (updatedBlog == null) {
+                ctx.status(404);
+                ctx.result("Blog update failed");
+                return;
+            }
+            ctx.status(200);
+            ctx.json(updatedBlog);
+        } catch (BadRequestResponse e) {
+            ctx.status(400);
         }
-        ctx.status(200);
-        ctx.json(updatedBlog);
     }
 
     /**
@@ -110,13 +118,13 @@ public class BlogController implements CrudHandler {
     @Override
     public void delete(@NotNull Context ctx, @NotNull String id) {
         final Blog deletedBlog = blogService.deleteBlog(id);
-        if (deletedBlog != null) {
-            ctx.status(200);
-            ctx.json(deletedBlog);
-        } else {
+        if (deletedBlog == null) {
             ctx.status(404);
             ctx.result("Blog not found");
+            return;
         }
+        ctx.status(200);
+        ctx.json(deletedBlog);
     }
 
 }
