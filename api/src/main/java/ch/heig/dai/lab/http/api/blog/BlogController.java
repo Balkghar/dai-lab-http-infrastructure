@@ -90,12 +90,11 @@ public class BlogController implements CrudHandler {
     @Override
     public void update(Context ctx, @NotNull String id) {
         final String blogId = ctx.pathParam("id");
-        final Blog blog = ctx.bodyAsClass(Blog.class);
+        Blog blog = ctx.bodyAsClass(Blog.class);
 
         Blog updatedBlog = blogService.updateBlog(blogId, blog);
         if (updatedBlog == null) {
-            ctx.status(500);
-            ctx.result("Blog update failed");
+            ctx.status(404).result("Blog update failed");
             return;
         }
         ctx.status(200);
