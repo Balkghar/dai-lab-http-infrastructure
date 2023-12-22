@@ -120,4 +120,21 @@ public class CommentController implements CrudHandler {
             ctx.result("Comment not found");
         }
     }
+
+    /**
+     * Get all comments for a specified blog.
+     *
+     * @param ctx Context of the http query.
+     */
+    public void getCommentsByBlogId(@NotNull Context ctx) {
+        String blogId = ctx.pathParam("id");
+        List<Comment> comments = commentService.getCommentsByBlog(blogId);
+        if (comments == null || comments.isEmpty()) {
+            ctx.status(404);
+            ctx.result("No comments found");
+            return;
+        }
+        ctx.status(200);
+        ctx.json(comments);
+    }
 }
