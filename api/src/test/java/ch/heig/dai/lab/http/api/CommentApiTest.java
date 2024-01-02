@@ -206,44 +206,4 @@ public class CommentApiTest {
 
         verify(ctx).status(404);
     }
-
-    @Test
-    public void deleteAllComments_withExistingComments_returnsComments() {
-        String blogId = "1";
-        List<Comment> expectedComments = Arrays.asList(new Comment("1", blogId, "title1", "content1", null, null),
-                                                       new Comment("2", blogId, "title2", "content2", null, null));
-
-        when(ctx.pathParam("commentId")).thenReturn(blogId);
-        when(commentService.deleteCommentsByBlogId(blogId)).thenReturn(expectedComments);
-
-        commentController.deleteAll(ctx);
-
-        verify(commentService).deleteCommentsByBlogId(blogId);
-        verify(ctx).json(expectedComments);
-        verify(ctx).status(200);
-    }
-
-    @Test
-    public void deleteAllComments_whenIdIsInvalid_returnsNotFound() {
-        String blogId = "invalidId";
-
-        when(ctx.pathParam("blogId")).thenReturn(blogId);
-        when(commentService.deleteCommentsByBlogId(blogId)).thenReturn(null);
-
-        commentController.deleteAll(ctx);
-
-        verify(ctx).status(404);
-    }
-
-    @Test
-    public void deleteAllComments_withNoComments_returnsNotFound() {
-        String blogId = "1";
-
-        when(ctx.pathParam("blogId")).thenReturn(blogId);
-        when(commentService.deleteCommentsByBlogId(blogId)).thenReturn(null);
-
-        commentController.deleteAll(ctx);
-
-        verify(ctx).status(404);
-    }
 }
