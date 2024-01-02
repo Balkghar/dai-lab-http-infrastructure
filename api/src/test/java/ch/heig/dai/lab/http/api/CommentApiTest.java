@@ -177,9 +177,6 @@ public class CommentApiTest {
         String blogId = "1";
         String commentId = "1";
 
-        Comment updatedComment = new Comment("1", blogId, "title", "content", null, null);
-
-
         when(ctx.pathParam("blogId")).thenReturn(blogId);
         when(ctx.pathParam("commentId")).thenReturn(commentId);
 
