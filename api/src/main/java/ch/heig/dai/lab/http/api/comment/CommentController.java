@@ -42,15 +42,16 @@ public class CommentController implements CrudHandler {
     @Override
     public void create(@NotNull Context ctx) {
         try {
-            final Comment comment = ctx.bodyAsClass(Comment.class);
-            if (blogService.getBlogById(comment._blogId()) == null) {
+            final String blogId = ctx.pathParam("blogId");
+            if (blogService.getBlogById(blogId) == null) {
                 ctx.status(404);
                 ctx.result("Blog not found");
                 return;
             }
 
-            final Comment createdComment = commentService.createComment(comment);
+            final Comment comment = ctx.bodyAsClass(Comment.class);
 
+            final Comment createdComment = commentService.createComment(comment);
             if (createdComment == null) {
                 ctx.status(500);
                 ctx.result("Comment creation failed");
@@ -73,6 +74,13 @@ public class CommentController implements CrudHandler {
      */
     @Override
     public void getOne(@NotNull Context ctx, @NotNull String id) {
+        final String blogId = ctx.pathParam("blogId");
+        if (blogService.getBlogById(blogId) == null) {
+            ctx.status(404);
+            ctx.result("Blog not found");
+            return;
+        }
+
         final Comment comment = commentService.getCommentById(id);
         if (comment == null) {
             ctx.status(404);
@@ -90,7 +98,14 @@ public class CommentController implements CrudHandler {
      */
     @Override
     public void getAll(@NotNull Context ctx) {
-        List<Comment> allComments = commentService.getAllComments();
+        final String blogId = ctx.pathParam("blogId");
+        if (blogService.getBlogById(blogId) == null) {
+            ctx.status(404);
+            ctx.result("Blog not found");
+            return;
+        }
+
+        List<Comment> allComments = commentService.getCommentsByBlogId(blogId);
         if (allComments == null || allComments.isEmpty()) {
             ctx.status(404);
             ctx.result("No comments found");
@@ -109,14 +124,15 @@ public class CommentController implements CrudHandler {
     @Override
     public void update(@NotNull Context ctx, @NotNull String id) {
         try {
-            String commentId = ctx.pathParam("id");
-            Comment comment = ctx.bodyAsClass(Comment.class);
-
-            if (blogService.getBlogById(comment._blogId()) == null) {
+            final String blogId = ctx.pathParam("blogId");
+            if (blogService.getBlogById(blogId) == null) {
                 ctx.status(404);
                 ctx.result("Blog not found");
                 return;
             }
+
+            String commentId = ctx.pathParam("commentId");
+            Comment comment = ctx.bodyAsClass(Comment.class);
 
             Comment updatedComment = commentService.updateComment(commentId, comment);
             if (updatedComment == null) {
@@ -140,6 +156,13 @@ public class CommentController implements CrudHandler {
      */
     @Override
     public void delete(@NotNull Context ctx, @NotNull String id) {
+        final String blogId = ctx.pathParam("blogId");
+        if (blogService.getBlogById(blogId) == null) {
+            ctx.status(404);
+            ctx.result("Blog not found");
+            return;
+        }
+
         Comment deletedComment = commentService.deleteComment(id);
         if (deletedComment == null) {
             ctx.status(404);
@@ -151,29 +174,12 @@ public class CommentController implements CrudHandler {
     }
 
     /**
-     * Get all comments for a specified blog.
-     *
-     * @param ctx Context of the http query.
-     */
-    public void getAllByBlogId(@NotNull Context ctx) {
-        String blogId = ctx.pathParam("id");
-        List<Comment> comments = commentService.getCommentsByBlogId(blogId);
-        if (comments == null || comments.isEmpty()) {
-            ctx.status(404);
-            ctx.result("No comments found");
-            return;
-        }
-        ctx.status(200);
-        ctx.json(comments);
-    }
-
-    /**
      * Delete all comments for a specified blog.
      *
      * @param ctx Context of the http query.
      */
-    public void deleteAllByBlogId(@NotNull Context ctx) {
-        String blogId = ctx.pathParam("id");
+    public void deleteAll(@NotNull Context ctx) {
+        String blogId = ctx.pathParam("blogId");
         List<Comment> comments = commentService.deleteCommentsByBlogId(blogId);
         if (comments == null || comments.isEmpty()) {
             ctx.status(404);
