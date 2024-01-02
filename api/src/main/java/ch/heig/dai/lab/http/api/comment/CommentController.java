@@ -123,29 +123,32 @@ public class CommentController implements CrudHandler {
      */
     @Override
     public void update(@NotNull Context ctx, @NotNull String id) {
-        try {
-            final String blogId = ctx.pathParam("blogId");
-            if (blogService.getBlogById(blogId) == null) {
-                ctx.status(404);
-                ctx.result("Blog not found");
-                return;
-            }
+        Comment comment = ctx.bodyAsClass(Comment.class);
 
-            String commentId = ctx.pathParam("commentId");
-            Comment comment = ctx.bodyAsClass(Comment.class);
-
-            Comment updatedComment = commentService.updateComment(commentId, comment);
-            if (updatedComment == null) {
-                ctx.status(500);
-                ctx.result("Comment update failed");
-                return;
-            }
-            ctx.status(200);
-            ctx.json(updatedComment);
-        } catch (Exception e) {
+        if (comment == null || comment._blogId() == null || comment.author() == null || comment.content() == null) {
             ctx.status(400);
-            ctx.result("Bad request: " + e.getMessage());
+            ctx.result("Invalid comment");
+            return;
         }
+
+        Blog blog = blogService.getBlogById(comment._blogId());
+
+        if (blog == null) {
+            ctx.status(404);
+            ctx.result("Blog not found");
+            return;
+        }
+
+        Comment updatedComment = commentService.updateComment(id, comment);
+
+        if (updatedComment == null) {
+            ctx.status(500);
+            ctx.result("Comment update failed");
+            return;
+        }
+
+        ctx.status(200);
+        ctx.json(updatedComment);
     }
 
     /**
