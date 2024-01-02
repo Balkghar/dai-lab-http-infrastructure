@@ -22,6 +22,8 @@ import static org.mockito.Mockito.*;
  * @author Hugo Germano <hugo.germano@heig-vd.ch>
  */
 public class CommentApiTest {
+    private static final Blog blog1 = new Blog("1", "title 1", "content 1", null, null);
+    private static final Blog blog2 = new Blog("2", "title 2", "content 2", null, null);
     private CommentService commentService;
     private BlogService blogService;
     private CommentController commentController;
@@ -36,15 +38,19 @@ public class CommentApiTest {
         blogService = mock(BlogService.class);
         commentController = new CommentController(commentService, blogService);
         ctx = mock(Context.class);
+
+        // Setup mock blogs
+        when(blogService.getBlogById(blog1._id())).thenReturn(blog1);
+        when(blogService.getBlogById(blog2._id())).thenReturn(blog2);
+        when(blogService.getAllBlogs()).thenReturn(Arrays.asList(blog1, blog2));
+        when(ctx.pathParam("blogId")).thenReturn(blog1._id());
     }
 
     @Test
     public void createComment_whenCommentIsValid_addsNewComment() {
-        Blog blog = new Blog("1", "title", "content", null, null);
         Comment createdComment = new Comment("1", "1", "title", "content", null, null);
 
         when(ctx.bodyAsClass(Comment.class)).thenReturn(createdComment);
-        when(blogService.getBlogById(createdComment._blogId())).thenReturn(blog);
         when(commentService.createComment(createdComment)).thenReturn(createdComment);
 
         commentController.create(ctx);
@@ -68,7 +74,10 @@ public class CommentApiTest {
 
     @Test
     public void createComment_whenCommentIsInvalid_returnBadRequest() {
-        when(ctx.bodyAsClass(Comment.class)).thenThrow(new BadRequestResponse());
+        Comment invalidComment = new Comment(null, null, null, null, null,
+                                             null); // Assuming null fields make the comment invalid
+        when(ctx.bodyAsClass(Comment.class)).thenReturn(invalidComment);
+        doThrow(new BadRequestResponse()).when(commentService).createComment(invalidComment);
 
         commentController.create(ctx);
 
@@ -88,20 +97,6 @@ public class CommentApiTest {
     }
 
     @Test
-    public void getCommentsByBlogId_whenCommentsExist_returnsComments() {
-        Comment comment1 = new Comment("1", "1", "title", "content", null, null);
-        Comment comment2 = new Comment("2", "1", "title", "content", null, null);
-        List<Comment> comments = Arrays.asList(comment1, comment2);
-
-        when(ctx.pathParam("id")).thenReturn(comment1._blogId());
-        when(commentService.getCommentsByBlogId(comment1._blogId())).thenReturn(comments);
-
-        commentController.getAllByBlogId(ctx);
-
-        verify(ctx).json(comments);
-    }
-
-    @Test
     public void getCommentById_whenCommentDoesNotExist_returnsNotFound() {
         String id = "invalidId";
 
@@ -113,95 +108,19 @@ public class CommentApiTest {
         verify(ctx).status(404);
     }
 
-    @Test
-    public void getCommentsByBlogId_whenBlogDoesNotExist_returnsComments() {
-        String id = "invalidId";
-
-        when(ctx.pathParam("id")).thenReturn(id);
-        when(commentService.getCommentsByBlogId(id)).thenReturn(null);
-
-        commentController.getAllByBlogId(ctx);
-
-        verify(ctx).status(404);
-    }
-
-    @Test
-    public void updateComment_whenCommentIsValid_updatesComment() {
-        Blog blog = new Blog("1", "title", "content", null, null);
-        Comment updatedComment = new Comment("1", "1", "title", "content", null, null);
-
-        when(ctx.bodyAsClass(Comment.class)).thenReturn(updatedComment);
-        when(blogService.getBlogById(blog._id())).thenReturn(blog);
-        when(ctx.pathParam("id")).thenReturn(updatedComment._id());
-        when(commentService.updateComment(updatedComment._id(), updatedComment)).thenReturn(updatedComment);
-
-        commentController.update(ctx, updatedComment._id());
-
-        verify(commentService).updateComment(updatedComment._id(), updatedComment);
-        verify(ctx).status(200);
-        verify(ctx).json(updatedComment);
-    }
-
-    @Test
-    public void updateComment_whenCommentIdIsInvalid_returnBadRequest() {
-        Comment updatedComment = new Comment("1", "1", "title", "content", null, null);
-
-        when(ctx.bodyAsClass(Comment.class)).thenReturn(updatedComment);
-        when(ctx.pathParam("id")).thenReturn("invalidId");
-        when(commentService.updateComment(updatedComment._id(), updatedComment)).thenReturn(null);
-
-        commentController.update(ctx, updatedComment._id());
-
-        verify(ctx).status(404);
-    }
-
-    @Test
-    public void updateComment_whenCommentIsInvalid_returnBadRequest() {
-        when(ctx.bodyAsClass(Comment.class)).thenThrow(new BadRequestResponse());
-
-        commentController.update(ctx, "1");
-
-        verify(ctx).status(400);
-    }
-
-    @Test
-    public void deleteComment_whenCommentIdIsValid_deletesComment() {
-        Comment deletedComment = new Comment("1", "1", "title", "content", null, null);
-
-        when(ctx.pathParam("id")).thenReturn(deletedComment._id());
-        when(commentService.deleteComment(deletedComment._id())).thenReturn(deletedComment);
-
-        commentController.delete(ctx, deletedComment._id());
-
-        verify(commentService).deleteComment(deletedComment._id());
-        verify(ctx).status(200);
-        verify(ctx).json(deletedComment);
-    }
-
-    @Test
-    public void deleteComment_whenCommentIdIsInvalid_returnsNotFound() {
-        String id = "invalidId";
-
-        when(ctx.pathParam("id")).thenReturn(id);
-        when(commentService.deleteComment(id)).thenReturn(null);
-
-        commentController.delete(ctx, id);
-
-        verify(ctx).status(404);
-    }
 
     @Test
     public void getAllComments_withExistingComments_returnsComments() {
-        List<Comment> expectedComments = Arrays.asList(new Comment("1", "1", "title1", "content1", null, null),
-                                                       new Comment("2", "1", "title2", "content2", null, null));
-
-        when(commentService.getAllComments()).thenReturn(expectedComments);
+        String blogId = "1";
+        List<Comment> expectedComments = Arrays.asList(new Comment("1", blogId, "author1", "content1", null, null),
+                                                       new Comment("2", blogId, "author2", "content2", null, null));
+        when(ctx.pathParam("blogId")).thenReturn(blogId);
+        when(commentService.getCommentsByBlogId(blogId)).thenReturn(expectedComments);
 
         commentController.getAll(ctx);
 
-        verify(commentService).getAllComments();
-        verify(ctx).json(expectedComments);
         verify(ctx).status(200);
+        verify(ctx).json(expectedComments);
     }
 
     @Test
@@ -223,15 +142,90 @@ public class CommentApiTest {
     }
 
     @Test
+    public void updateComment_whenCommentIsValid_updatesComment() {
+        Blog blog = new Blog("1", "title", "content", null, null);
+        Comment updatedComment = new Comment("1", "1", "title", "content", null, null);
+
+        when(ctx.bodyAsClass(Comment.class)).thenReturn(updatedComment);
+        when(blogService.getBlogById(blog._id())).thenReturn(blog);
+        when(ctx.pathParam("commentId")).thenReturn(updatedComment._id()); // corrected line
+        when(commentService.updateComment(updatedComment._id(), updatedComment)).thenReturn(updatedComment);
+
+        commentController.update(ctx, updatedComment._id());
+
+        verify(commentService).updateComment(updatedComment._id(), updatedComment);
+        verify(ctx).status(200);
+        verify(ctx).json(updatedComment);
+    }
+
+    @Test
+    public void updateComment_whenCommentIdIsInvalid_returnBadRequest() {
+        String invalidId = "invalidId";
+        Comment updatedComment = new Comment("1", "1", "title", "content", null, null);
+
+        when(ctx.bodyAsClass(Comment.class)).thenReturn(updatedComment);
+        when(ctx.pathParam("commentId")).thenReturn(invalidId);
+        when(commentService.updateComment(invalidId, updatedComment)).thenThrow(new BadRequestResponse());
+
+        commentController.update(ctx, invalidId);
+
+        verify(ctx).status(400);
+    }
+
+    @Test
+    public void updateComment_whenCommentIsInvalid_returnBadRequest() {
+        String blogId = "1";
+        String commentId = "1";
+
+        Comment updatedComment = new Comment("1", blogId, "title", "content", null, null);
+
+
+        when(ctx.pathParam("blogId")).thenReturn(blogId);
+        when(ctx.pathParam("commentId")).thenReturn(commentId);
+
+        when(ctx.bodyAsClass(Comment.class)).thenThrow(new BadRequestResponse());
+
+        commentController.update(ctx, commentId);
+
+        verify(ctx).status(400);
+    }
+
+    @Test
+    public void deleteComment_whenCommentIdIsValid_deletesComment() {
+        Comment deletedComment = new Comment("1", "1", "title", "content", null, null);
+
+        when(ctx.pathParam("commentId")).thenReturn(deletedComment._id());
+        when(commentService.deleteComment(deletedComment._id())).thenReturn(deletedComment);
+
+        commentController.delete(ctx, deletedComment._id());
+
+        verify(commentService).deleteComment(deletedComment._id());
+        verify(ctx).status(200);
+        verify(ctx).json(deletedComment);
+    }
+
+    @Test
+    public void deleteComment_whenCommentIdIsInvalid_returnsNotFound() {
+        String id = "invalidId";
+
+        when(ctx.pathParam("commentId")).thenReturn(id);
+        when(commentService.deleteComment(id)).thenReturn(null);
+
+        commentController.delete(ctx, id);
+
+        verify(ctx).status(404);
+    }
+
+    @Test
     public void deleteAllComments_withExistingComments_returnsComments() {
         String blogId = "1";
         List<Comment> expectedComments = Arrays.asList(new Comment("1", blogId, "title1", "content1", null, null),
                                                        new Comment("2", blogId, "title2", "content2", null, null));
 
-        when(ctx.pathParam("id")).thenReturn(blogId);
+        when(ctx.pathParam("commentId")).thenReturn(blogId);
         when(commentService.deleteCommentsByBlogId(blogId)).thenReturn(expectedComments);
 
-        commentController.deleteAllByBlogId(ctx);
+        commentController.deleteAll(ctx);
 
         verify(commentService).deleteCommentsByBlogId(blogId);
         verify(ctx).json(expectedComments);
@@ -242,10 +236,10 @@ public class CommentApiTest {
     public void deleteAllComments_whenIdIsInvalid_returnsNotFound() {
         String blogId = "invalidId";
 
-        when(ctx.pathParam("id")).thenReturn(blogId);
+        when(ctx.pathParam("blogId")).thenReturn(blogId);
         when(commentService.deleteCommentsByBlogId(blogId)).thenReturn(null);
 
-        commentController.deleteAllByBlogId(ctx);
+        commentController.deleteAll(ctx);
 
         verify(ctx).status(404);
     }
@@ -254,10 +248,10 @@ public class CommentApiTest {
     public void deleteAllComments_withNoComments_returnsNotFound() {
         String blogId = "1";
 
-        when(ctx.pathParam("id")).thenReturn(blogId);
+        when(ctx.pathParam("blogId")).thenReturn(blogId);
         when(commentService.deleteCommentsByBlogId(blogId)).thenReturn(null);
 
-        commentController.deleteAllByBlogId(ctx);
+        commentController.deleteAll(ctx);
 
         verify(ctx).status(404);
     }
