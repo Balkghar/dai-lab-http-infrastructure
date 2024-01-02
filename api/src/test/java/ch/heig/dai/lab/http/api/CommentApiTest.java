@@ -26,7 +26,6 @@ public class CommentApiTest {
     private static final Blog blog1 = new Blog("1", "title 1", "content 1", null, null);
     private static final Blog blog2 = new Blog("2", "title 2", "content 2", null, null);
     private CommentService commentService;
-    private BlogService blogService;
     private CommentController commentController;
     private Context ctx;
 
@@ -36,7 +35,7 @@ public class CommentApiTest {
     @BeforeEach
     public void setUp() {
         commentService = mock(CommentService.class);
-        blogService = mock(BlogService.class);
+        BlogService blogService = mock(BlogService.class);
         commentController = new CommentController(commentService, blogService);
         ctx = mock(Context.class);
 

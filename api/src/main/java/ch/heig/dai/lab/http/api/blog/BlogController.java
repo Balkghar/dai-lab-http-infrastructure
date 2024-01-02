@@ -94,7 +94,7 @@ public class BlogController implements CrudHandler {
      * @param ctx The Javalin context.
      */
     @Override
-    public void update(Context ctx, @NotNull String id) {
+    public void update(@NotNull Context ctx, @NotNull String id) {
         if (blogService.getBlogById(id) == null) {
             ctx.status(404);
             ctx.result("Blog not found");
