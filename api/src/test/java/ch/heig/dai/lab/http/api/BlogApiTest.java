@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 /**
@@ -51,7 +52,9 @@ public class BlogApiTest {
 
     @Test
     public void createBlog_whenBlogIsInvalid_returnBadRequest() {
-        when(ctx.bodyAsClass(Blog.class)).thenThrow(new BadRequestResponse());
+        Blog invalidBlog = new Blog(null, null, null, null, null);
+        when(ctx.bodyAsClass(Blog.class)).thenReturn(invalidBlog);
+        doThrow(new BadRequestResponse()).when(blogService).createBlog(invalidBlog);
 
         blogController.create(ctx);
 
@@ -86,7 +89,8 @@ public class BlogApiTest {
     @Test
     public void getAllBlogs_withExistingBlogs_returnsBlogs() {
         // Arrange
-        List<Blog> expectedBlogs = Arrays.asList(new Blog("1", "title1", "content1", null, null), new Blog("2", "title2", "content2", null, null));
+        List<Blog> expectedBlogs = Arrays.asList(new Blog("1", "title1", "content1", null, null),
+                                                 new Blog("2", "title2", "content2", null, null));
         when(blogService.getAllBlogs()).thenReturn(expectedBlogs);
 
         // Act
@@ -109,13 +113,10 @@ public class BlogApiTest {
 
     @Test
     public void getAllBlogs_withNoBlogs_returnsNotFound() {
-        // Arrange
         when(blogService.getAllBlogs()).thenReturn(null);
 
-        // Act
         blogController.getAll(ctx);
 
-        // Assert
         verify(blogService).getAllBlogs();
         verify(ctx).status(404);
         verify(ctx).result("No blogs found");
@@ -132,8 +133,8 @@ public class BlogApiTest {
         blogController.update(ctx, id);
 
         verify(blogService).updateBlog(id, updatedBlog);
-        verify(ctx).status(200); // Verify that status 200 is set
-        verify(ctx).json(updatedBlog); // Verify that the response is JSON
+        verify(ctx).status(200);
+        verify(ctx).json(updatedBlog);
     }
 
     @Test
@@ -155,9 +156,9 @@ public class BlogApiTest {
         when(ctx.pathParam("id")).thenReturn(id);
         when(ctx.bodyAsClass(Blog.class)).thenThrow(new BadRequestResponse());
 
-        blogController.update(ctx, id);
+        assertThrows(BadRequestResponse.class, () -> blogController.update(ctx, id));
 
-        verify(ctx).status(400);
+        verify(ctx, never()).status(anyInt());
     }
 
     @Test

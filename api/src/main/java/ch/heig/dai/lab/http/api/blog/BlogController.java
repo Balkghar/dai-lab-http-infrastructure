@@ -1,7 +1,6 @@
 package ch.heig.dai.lab.http.api.blog;
 
 import io.javalin.apibuilder.CrudHandler;
-import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,21 +34,24 @@ public class BlogController implements CrudHandler {
      */
     @Override
     public void create(@NotNull Context ctx) {
-        try {
-            final Blog blog = ctx.bodyAsClass(Blog.class);
-            final Blog createdBlog = blogService.createBlog(blog);
+        final Blog blog = ctx.bodyAsClass(Blog.class);
 
-            if (createdBlog == null) {
-                ctx.status(500);
-                ctx.result("Blog creation failed");
-                return;
-            }
-
-            ctx.status(201);
-            ctx.json(createdBlog);
-        } catch (BadRequestResponse e) {
+        if (blog.title() == null || blog.content() == null) {
             ctx.status(400);
+            ctx.result("Invalid blog");
+            return;
         }
+
+        final Blog createdBlog = blogService.createBlog(blog);
+
+        if (createdBlog == null) {
+            ctx.status(500);
+            ctx.result("Blog creation failed");
+            return;
+        }
+
+        ctx.status(201);
+        ctx.json(createdBlog);
     }
 
     /**
@@ -93,20 +95,16 @@ public class BlogController implements CrudHandler {
      */
     @Override
     public void update(Context ctx, @NotNull String id) {
-        try {
-            Blog blog = ctx.bodyAsClass(Blog.class);
+        Blog blog = ctx.bodyAsClass(Blog.class);
 
-            Blog updatedBlog = blogService.updateBlog(id, blog);
-            if (updatedBlog == null) {
-                ctx.status(404);
-                ctx.result("Blog update failed");
-                return;
-            }
-            ctx.status(200);
-            ctx.json(updatedBlog);
-        } catch (BadRequestResponse e) {
-            ctx.status(400);
+        Blog updatedBlog = blogService.updateBlog(id, blog);
+        if (updatedBlog == null) {
+            ctx.status(404);
+            ctx.result("Blog update failed");
+            return;
         }
+        ctx.status(200);
+        ctx.json(updatedBlog);
     }
 
     /**
