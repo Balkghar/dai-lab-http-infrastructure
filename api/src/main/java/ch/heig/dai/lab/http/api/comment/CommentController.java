@@ -44,15 +44,15 @@ public class CommentController implements CrudHandler {
     public void create(Context ctx) {
         Comment newComment = ctx.bodyAsClass(Comment.class);
 
-        if (newComment == null || newComment._blogId() == null || newComment.author() == null || newComment.content() == null) {
+        if (newComment == null || newComment.author() == null || newComment.content() == null) {
             ctx.status(400);
             ctx.result("Invalid comment");
             return;
         }
 
-        Blog blog = blogService.getBlogById(newComment._blogId());
+        Blog blog = blogService.getBlogById(ctx.pathParam("blogId"));
 
-        if (blog == null) {
+        if (blog == null || !newComment._blogId().equals(blog._id())) {
             ctx.status(404);
             ctx.result("Blog not found");
             return;
@@ -78,8 +78,7 @@ public class CommentController implements CrudHandler {
      */
     @Override
     public void getOne(@NotNull Context ctx, @NotNull String id) {
-        final String blogId = ctx.pathParam("blogId");
-        if (blogService.getBlogById(blogId) == null) {
+        if (blogService.getBlogById(ctx.pathParam("blogId")) == null) {
             ctx.status(404);
             ctx.result("Blog not found");
             return;
@@ -102,8 +101,7 @@ public class CommentController implements CrudHandler {
      */
     @Override
     public void getAll(@NotNull Context ctx) {
-        String blogId = ctx.pathParam("blogId");
-        List<Comment> comments = commentService.getCommentsByBlogId(blogId);
+        List<Comment> comments = commentService.getCommentsByBlogId(ctx.pathParam("blogId"));
 
         if (comments == null || comments.isEmpty()) {
             ctx.status(404);
@@ -130,8 +128,8 @@ public class CommentController implements CrudHandler {
         }
 
         Comment comment = ctx.bodyAsClass(Comment.class);
-
-        if (blogService.getBlogById(comment._blogId()) == null) {
+        String blogId = ctx.pathParam("blogId");
+        if (blogService.getBlogById(blogId) == null || !comment._blogId().equals(blogId)) {
             ctx.status(404);
             ctx.result("Blog not found");
             return;
