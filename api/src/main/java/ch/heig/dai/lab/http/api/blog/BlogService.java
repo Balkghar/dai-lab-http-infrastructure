@@ -38,7 +38,7 @@ public class BlogService {
      * @return The created blog.
      */
     public Blog createBlog(Blog blog) {
-        if (blog == null) {
+        if (blog == null || blog.title() == null || blog.content() == null) {
             throw new NullPointerException("Blog must not be null");
         }
         String uuid = UUID.randomUUID().toString();

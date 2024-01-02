@@ -4,6 +4,7 @@ import ch.heig.dai.lab.http.api.MongoDbConnection;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import io.javalin.http.BadRequestResponse;
 import org.bson.Document;
 
 import java.time.LocalDateTime;
@@ -40,8 +41,8 @@ public class CommentService {
      * @return The created comment.
      */
     public Comment createComment(Comment comment) {
-        if (comment == null) {
-            throw new NullPointerException("Comment must not be null");
+        if (comment == null || comment._blogId() == null || comment.author() == null || comment.content() == null) {
+            throw new BadRequestResponse();
         }
         String uuid = UUID.randomUUID().toString();
         String now = LocalDateTime.now().toString();
