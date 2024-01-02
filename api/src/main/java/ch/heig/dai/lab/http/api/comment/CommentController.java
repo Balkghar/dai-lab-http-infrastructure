@@ -1,5 +1,6 @@
 package ch.heig.dai.lab.http.api.comment;
 
+import ch.heig.dai.lab.http.api.blog.Blog;
 import ch.heig.dai.lab.http.api.blog.BlogService;
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
@@ -40,30 +41,26 @@ public class CommentController implements CrudHandler {
      * @param ctx Context of the http query.
      */
     @Override
-    public void create(@NotNull Context ctx) {
-        try {
-            final String blogId = ctx.pathParam("blogId");
-            if (blogService.getBlogById(blogId) == null) {
-                ctx.status(404);
-                ctx.result("Blog not found");
-                return;
-            }
+    public void create(Context ctx) {
+        Comment newComment = ctx.bodyAsClass(Comment.class);
+        Blog blog = blogService.getBlogById(newComment._blogId());
 
-            final Comment comment = ctx.bodyAsClass(Comment.class);
-
-            final Comment createdComment = commentService.createComment(comment);
-            if (createdComment == null) {
-                ctx.status(500);
-                ctx.result("Comment creation failed");
-                return;
-            }
-
-            ctx.status(201);
-            ctx.json(createdComment);
-        } catch (Exception e) {
-            ctx.status(400);
-            ctx.result("Bad request: " + e.getMessage());
+        if (blog == null) {
+            ctx.status(404); // return 404 when blog ID is invalid
+            ctx.result("Blog not found");
+            return;
         }
+
+        Comment createdComment = commentService.createComment(newComment);
+
+        if (createdComment == null) {
+            ctx.status(500);
+            ctx.result("Comment creation failed");
+            return;
+        }
+
+        ctx.status(201);
+        ctx.json(createdComment);
     }
 
     /**
