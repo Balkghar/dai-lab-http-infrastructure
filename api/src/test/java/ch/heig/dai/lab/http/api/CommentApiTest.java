@@ -75,7 +75,7 @@ public class CommentApiTest {
     @Test
     public void createComment_whenCommentIsInvalid_returnBadRequest() {
         Comment invalidComment = new Comment(null, null, null, null, null,
-                                             null); // Assuming null fields make the comment invalid
+                                             null);
         when(ctx.bodyAsClass(Comment.class)).thenReturn(invalidComment);
         doThrow(new BadRequestResponse()).when(commentService).createComment(invalidComment);
 
@@ -148,7 +148,7 @@ public class CommentApiTest {
 
         when(ctx.bodyAsClass(Comment.class)).thenReturn(updatedComment);
         when(blogService.getBlogById(blog._id())).thenReturn(blog);
-        when(ctx.pathParam("commentId")).thenReturn(updatedComment._id()); // corrected line
+        when(ctx.pathParam("commentId")).thenReturn(updatedComment._id());
         when(commentService.updateComment(updatedComment._id(), updatedComment)).thenReturn(updatedComment);
 
         commentController.update(ctx, updatedComment._id());
