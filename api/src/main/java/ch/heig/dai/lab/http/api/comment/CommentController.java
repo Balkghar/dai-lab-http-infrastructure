@@ -43,10 +43,17 @@ public class CommentController implements CrudHandler {
     @Override
     public void create(Context ctx) {
         Comment newComment = ctx.bodyAsClass(Comment.class);
+
+        if (newComment == null || newComment._blogId() == null || newComment.author() == null || newComment.content() == null) {
+            ctx.status(400);
+            ctx.result("Invalid comment");
+            return;
+        }
+
         Blog blog = blogService.getBlogById(newComment._blogId());
 
         if (blog == null) {
-            ctx.status(404); // return 404 when blog ID is invalid
+            ctx.status(404);
             ctx.result("Blog not found");
             return;
         }
@@ -95,21 +102,17 @@ public class CommentController implements CrudHandler {
      */
     @Override
     public void getAll(@NotNull Context ctx) {
-        final String blogId = ctx.pathParam("blogId");
-        if (blogService.getBlogById(blogId) == null) {
-            ctx.status(404);
-            ctx.result("Blog not found");
-            return;
-        }
+        String blogId = ctx.pathParam("blogId");
+        List<Comment> comments = commentService.getCommentsByBlogId(blogId);
 
-        List<Comment> allComments = commentService.getCommentsByBlogId(blogId);
-        if (allComments == null || allComments.isEmpty()) {
+        if (comments == null || comments.isEmpty()) {
             ctx.status(404);
             ctx.result("No comments found");
             return;
         }
+
         ctx.status(200);
-        ctx.json(allComments);
+        ctx.json(comments);
     }
 
     /**
