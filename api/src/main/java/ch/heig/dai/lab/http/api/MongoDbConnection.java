@@ -23,6 +23,11 @@ public class MongoDbConnection {
      */
     private static final MongoDatabase database;
 
+    /**
+     * The MongoDB client.
+     */
+    private static final MongoClient client;
+
     static {
         final String username = System.getenv("MONGO_INITDB_ROOT_USERNAME");
         final String password = System.getenv("MONGO_INITDB_ROOT_PASSWORD");
@@ -37,9 +42,11 @@ public class MongoDbConnection {
                                                                                  PojoCodecProvider.builder()
                                                                                                   .automatic(true)
                                                                                                   .build()));
+        // This is not a try-with-resources because it would automatically close the connection. Because it is a
+        // singleton, the resources is not closed until the end of the lifetime of the application.
         try {
-            MongoClient mongoClient = MongoClients.create(uri); // FIXME
-            database = mongoClient.getDatabase("dai").withCodecRegistry(pojoCodecRegistry);
+            client = MongoClients.create(uri);
+            database = client.getDatabase("dai").withCodecRegistry(pojoCodecRegistry);
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             throw e;
