@@ -41,8 +41,10 @@ public class CommentService {
      * @return The created comment.
      */
     public Comment createComment(Comment comment) {
-        if (comment == null || comment._blogId() == null || comment.author() == null || comment.content() == null) {
-            throw new BadRequestResponse();
+        if (comment == null) {
+            throw new NullPointerException("Comment must not be null");
+        } else if (comment._blogId() == null || comment.author() == null || comment.content() == null) {
+            throw new BadRequestResponse("Invalid comment");
         }
         String uuid = UUID.randomUUID().toString();
         String now = LocalDateTime.now().toString();
@@ -97,6 +99,8 @@ public class CommentService {
     public Comment updateComment(String id, Comment comment) {
         if (id == null || comment == null) {
             throw new NullPointerException("Comment and id must not be null");
+        } else if (comment._blogId() == null || comment.author() == null || comment.content() == null) {
+            throw new BadRequestResponse("Invalid comment");
         }
         Document updatedComment = new Document("author", comment.author()).append("content", comment.content());
         // Set the updatedAt field to the current time.

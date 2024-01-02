@@ -38,8 +38,10 @@ public class BlogService {
      * @return The created blog.
      */
     public Blog createBlog(Blog blog) {
-        if (blog == null || blog.title() == null || blog.content() == null) {
+        if (blog == null) {
             throw new NullPointerException("Blog must not be null");
+        } else if (blog.title() == null || blog.content() == null) {
+            throw new NullPointerException("Invalid blog");
         }
         String uuid = UUID.randomUUID().toString();
         String now = LocalDateTime.now().toString();
@@ -80,6 +82,8 @@ public class BlogService {
     public Blog updateBlog(String id, Blog blog) {
         if (id == null || blog == null) {
             throw new NullPointerException("Blog and id must not be null");
+        } else if (blog.title() == null || blog.content() == null) {
+            throw new NullPointerException("Invalid blog");
         }
         Document updatedBlog = new Document("title", blog.title()).append("content", blog.content());
         updatedBlog.append("updatedAt", LocalDateTime.now().toString());
