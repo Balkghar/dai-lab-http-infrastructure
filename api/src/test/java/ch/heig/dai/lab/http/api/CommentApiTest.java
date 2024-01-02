@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 /**
@@ -74,8 +75,7 @@ public class CommentApiTest {
 
     @Test
     public void createComment_whenCommentIsInvalid_returnBadRequest() {
-        Comment invalidComment = new Comment(null, null, null, null, null,
-                                             null);
+        Comment invalidComment = new Comment(null, null, null, null, null, null);
         when(ctx.bodyAsClass(Comment.class)).thenReturn(invalidComment);
         doThrow(new BadRequestResponse()).when(commentService).createComment(invalidComment);
 
@@ -143,12 +143,10 @@ public class CommentApiTest {
 
     @Test
     public void updateComment_whenCommentIsValid_updatesComment() {
-        Blog blog = new Blog("1", "title", "content", null, null);
         Comment updatedComment = new Comment("1", "1", "title", "content", null, null);
-
-        when(ctx.bodyAsClass(Comment.class)).thenReturn(updatedComment);
-        when(blogService.getBlogById(blog._id())).thenReturn(blog);
         when(ctx.pathParam("commentId")).thenReturn(updatedComment._id());
+        when(ctx.bodyAsClass(Comment.class)).thenReturn(updatedComment);
+        when(commentService.getCommentById(updatedComment._id())).thenReturn(updatedComment);
         when(commentService.updateComment(updatedComment._id(), updatedComment)).thenReturn(updatedComment);
 
         commentController.update(ctx, updatedComment._id());
@@ -159,9 +157,9 @@ public class CommentApiTest {
     }
 
     @Test
-    public void updateComment_whenCommentIdIsInvalid_returnBadRequest() {
+    public void updateComment_whenCommentIdIsInvalid_returnNotFound() {
         String invalidId = "invalidId";
-        Comment updatedComment = new Comment("1", "1", "title", "content", null, null);
+        Comment updatedComment = new Comment("1", invalidId, "title", "content", null, null);
 
         when(ctx.bodyAsClass(Comment.class)).thenReturn(updatedComment);
         when(ctx.pathParam("commentId")).thenReturn(invalidId);
@@ -169,22 +167,19 @@ public class CommentApiTest {
 
         commentController.update(ctx, invalidId);
 
-        verify(ctx).status(400);
+        verify(ctx).status(404);
     }
 
     @Test
     public void updateComment_whenCommentIsInvalid_returnBadRequest() {
-        String blogId = "1";
-        String commentId = "1";
+        String id = "1";
+        Comment invalidComment = new Comment(id, "1", null, null, null, null);
+        when(ctx.pathParam("commentId")).thenReturn(id);
+        when(commentService.getCommentById(id)).thenReturn(new Comment(id, "1", "title", "content", null, null));
+        when(ctx.bodyAsClass(Comment.class)).thenReturn(invalidComment);
+        doThrow(new BadRequestResponse()).when(commentService).updateComment(id, invalidComment);
 
-        when(ctx.pathParam("blogId")).thenReturn(blogId);
-        when(ctx.pathParam("commentId")).thenReturn(commentId);
-
-        when(ctx.bodyAsClass(Comment.class)).thenThrow(new BadRequestResponse());
-
-        commentController.update(ctx, commentId);
-
-        verify(ctx).status(400);
+        assertThrows(BadRequestResponse.class, () -> commentController.update(ctx, id));
     }
 
     @Test

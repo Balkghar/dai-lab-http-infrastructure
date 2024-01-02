@@ -4,6 +4,7 @@ import ch.heig.dai.lab.http.api.MongoDbConnection;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import io.javalin.http.BadRequestResponse;
 import org.bson.Document;
 
 import java.time.LocalDateTime;
@@ -83,7 +84,7 @@ public class BlogService {
         if (id == null || blog == null) {
             throw new NullPointerException("Blog and id must not be null");
         } else if (blog.title() == null || blog.content() == null) {
-            throw new NullPointerException("Invalid blog");
+            throw new BadRequestResponse("Invalid blog");
         }
         Document updatedBlog = new Document("title", blog.title()).append("content", blog.content());
         updatedBlog.append("updatedAt", LocalDateTime.now().toString());

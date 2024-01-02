@@ -65,7 +65,7 @@ public class BlogApiTest {
     public void getBlog_whenIdIsValid_returnsBlog() {
         String id = new ObjectId().toString();
         Blog expectedBlog = new Blog(id, "title", "content", null, null);
-        when(ctx.pathParam("id")).thenReturn(id);
+        when(ctx.pathParam("blogId")).thenReturn(id);
         when(blogService.getBlogById(id)).thenReturn(expectedBlog);
 
         blogController.getOne(ctx, id);
@@ -78,7 +78,7 @@ public class BlogApiTest {
     @Test
     public void getBlog_whenIdIsInvalid_returnsNotFound() {
         String id = "invalidId";
-        when(ctx.pathParam("id")).thenReturn(id);
+        when(ctx.pathParam("blogId")).thenReturn(id);
         when(blogService.getBlogById(id)).thenReturn(null);
 
         blogController.getOne(ctx, id);
@@ -124,10 +124,11 @@ public class BlogApiTest {
 
     @Test
     public void updateBlog_whenBlogIsValid_updatesBlog() {
-        String id = "123";
+        String id = "1";
         Blog updatedBlog = new Blog(id, "updatedTitle", "updatedContent", null, null);
-        when(ctx.pathParam("id")).thenReturn(id);
+        when(ctx.pathParam("blogId")).thenReturn(id);
         when(ctx.bodyAsClass(Blog.class)).thenReturn(updatedBlog);
+        when(blogService.getBlogById(id)).thenReturn(new Blog(id, "title", "content", null, null));
         when(blogService.updateBlog(id, updatedBlog)).thenReturn(updatedBlog);
 
         blogController.update(ctx, id);
@@ -141,7 +142,7 @@ public class BlogApiTest {
     public void updateBlog_whenIdIsInvalid_returnsNotFound() {
         String id = "invalidId";
         Blog updatedBlog = new Blog(id, "updatedTitle", "updatedContent", null, null);
-        when(ctx.pathParam("id")).thenReturn(id);
+        when(ctx.pathParam("blogId")).thenReturn(id);
         when(ctx.bodyAsClass(Blog.class)).thenReturn(updatedBlog);
         when(blogService.updateBlog(id, updatedBlog)).thenReturn(null);
 
@@ -152,20 +153,21 @@ public class BlogApiTest {
 
     @Test
     public void updateBlog_whenBlogIsInvalid_returnsBadRequest() {
-        String id = "123";
-        when(ctx.pathParam("id")).thenReturn(id);
-        when(ctx.bodyAsClass(Blog.class)).thenThrow(new BadRequestResponse());
+        String id = "1";
+        Blog invalidBlog = new Blog(id, null, null, null, null);
+        when(ctx.pathParam("blogId")).thenReturn(id);
+        when(ctx.bodyAsClass(Blog.class)).thenReturn(invalidBlog);
+        when(blogService.getBlogById(id)).thenReturn(new Blog(id, "title", "content", null, null));
+        doThrow(new BadRequestResponse()).when(blogService).updateBlog(id, invalidBlog);
 
         assertThrows(BadRequestResponse.class, () -> blogController.update(ctx, id));
-
-        verify(ctx, never()).status(anyInt());
     }
 
     @Test
     public void deleteBlog_whenIdIsValid_removesBlog() {
         String id = "123";
         Blog deletedBlog = new Blog("1", "title", "content", null, null);
-        when(ctx.pathParam("id")).thenReturn(id);
+        when(ctx.pathParam("blogId")).thenReturn(id);
         when(blogService.deleteBlog(id)).thenReturn(deletedBlog);
 
         blogController.delete(ctx, id);
@@ -178,7 +180,7 @@ public class BlogApiTest {
     @Test
     public void deleteBlog_whenIdIsInvalid_returnsNotFound() {
         String id = "nonExistingId";
-        when(ctx.pathParam("id")).thenReturn(id);
+        when(ctx.pathParam("blogId")).thenReturn(id);
         when(blogService.deleteBlog(id)).thenReturn(null);
 
         blogController.delete(ctx, id);
