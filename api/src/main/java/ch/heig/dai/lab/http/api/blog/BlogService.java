@@ -1,6 +1,7 @@
 package ch.heig.dai.lab.http.api.blog;
 
 import ch.heig.dai.lab.http.api.MongoDbConnection;
+import ch.heig.dai.lab.http.api.comment.CommentService;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -104,9 +105,11 @@ public class BlogService {
         }
         Blog blogToDelete = getBlogById(id);
         if (blogToDelete == null) {
-           throw new NullPointerException("Blog must not be null");
+            throw new NullPointerException("Blog must not be null");
         }
-         blogCollection.deleteOne(Filters.eq("_id", id));
+        // Delete all comments for the blog.
+        new CommentService().deleteCommentsByBlogId(id);
+        blogCollection.deleteOne(Filters.eq("_id", id));
         return blogToDelete;
     }
 }
