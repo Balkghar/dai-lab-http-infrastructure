@@ -1,0 +1,24 @@
+### Get all comments for a blog
+GET localhost:7000/api/blogs/ed4cc555-2d96-48ad-94e0-1c27ae44014c/comments
+
+### Get a comment by id
+GET localhost:7000/api/blogs/ed4cc555-2d96-48ad-94e0-1c27ae44014c/comments/30e9f88c-5d13-420e-a49d-0b73f303d0d9
+
+### Create a comment
+POST localhost:7000/api/blogs/ed4cc555-2d96-48ad-94e0-1c27ae44014c/comments
+
+{
+    "_blogId": "ed4cc555-2d96-48ad-94e0-1c27ae44014c",
+    "content": "This is a comment"
+}
+
+### Update a comment
+PATCH localhost:7000/api/blogs/ed4cc555-2d96-48ad-94e0-1c27ae44014c/comments/30e9f88c-5d13-420e-a49d-0b73f303d0d9
+
+{
+    "content": "This is a patched comment"
+}
+
+### Delete a comment
+DELETE localhost:7000/api/blogs/ed4cc555-2d96-48ad-94e0-1c27ae44014c/comments/30e9f88c-5d13-420e-a49d-0b73f303d0d9
+

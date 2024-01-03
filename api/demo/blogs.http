@@ -1,0 +1,26 @@
+### Get all blogs
+GET localhost:7000/api/blogs
+
+### Get a single blog
+GET localhost:7000/api/blogs/62737b1b-df87-4f79-a225-be5e0778df46
+
+### Post a blog
+POST localhost:7000/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Demo blog",
+  "content": "This blog is a demo"
+}
+
+### Patch a blog
+PATCH localhost:7000/api/blogs/62737b1b-df87-4f79-a225-be5e0778df46
+Content-Type: application/json
+
+{
+  "title": "Demo blog",
+  "content": "This blog is a patched demo"
+}
+
+### Delete a blog
+DELETE localhost:7000/api/blogs/62737b1b-df87-4f79-a225-be5e0778df46
