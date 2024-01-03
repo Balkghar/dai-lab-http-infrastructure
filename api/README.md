@@ -57,7 +57,7 @@ You can run the API either locally or in a docker container. Note that the serve
 
 If you need to specify the environment variables on the command line, you can do so in the following way :
 
-```console
+```shell
 MONGO_INITDB_ROOT_USERNAME=root          \
 MONGO_INITDB_ROOT_PASSWORD=password      \
 MONGO_INITDB_DATABASE=dai                \
