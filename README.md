@@ -42,15 +42,16 @@ A [example](.env.example) `.env` file is provided with default values for the pr
 
 ## Docker compose
 
-The project uses docker-compose to deploy the different components based on their respective Dockerfiles. 
+The project uses docker-compose to deploy the different components based on their respective Dockerfiles.
 The stack is named `dai-lab-http`. The [docker-compose](./docker-compose.yaml) file is located at the root of the project.
 
 The following services are defined:
 
-- `web`: the static website. Runs on port 80.
+- `web`: the static website. Runs on port 80. Accessible at [localhost](localhost)
 - `mongo`: the MongoDB database. Runs on port 27017.
 - `mongo-seed`: a service that seeds the database with some initial data found in the [db](./db) directory.
-- `api`: the RESTful API. Runs on port 7000.
+- `api`: the RESTful API. Runs on port 7000. Accessible at [localhost/api](localhost/api)
+- `traefik`: the reverse proxy. Runs on port 8080. Accessible at [localhost:8080](localhost:8080).
 
 To run the project while rebuilding the images, use this command:
 
@@ -63,3 +64,14 @@ To stop the stack, use the following command:
 ```shell
 docker compose down
 ```
+
+## Traefik
+
+Traefik is used as a reverse proxy for the project. Further documentation about reverse proxies can be found in the [related README file](./reverse-proxy/README.md).
+
+The Traefik configuration is the following:
+
+- The static website is attainable at the [localhost](http://localhost) URL.
+- The API server is attainable at the [localhost/api](http://localhost/api) URL.
+
+Furthermore, the Traefik dashboard is available at [localhost:8080](http://localhost:8080).
