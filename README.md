@@ -43,23 +43,23 @@ A [example](.env.example) `.env` file is provided with default values for the pr
 ## Docker compose
 
 The project uses docker-compose to deploy the different components based on their respective Dockerfiles. 
-The [docker-compose](./docker-compose.yaml) file is located at the root of the project.
+The stack is named `dai-lab-http`. The [docker-compose](./docker-compose.yaml) file is located at the root of the project.
 
 The following services are defined:
 
 - `web`: the static website. Runs on port 80.
-- `mongo`: the MongoDB database.
-- `mongo-seed`: a service that seeds the database with some initial data.
+- `mongo`: the MongoDB database. Runs on port 27017.
+- `mongo-seed`: a service that seeds the database with some initial data found in the [db](./db) directory.
 - `api`: the RESTful API. Runs on port 7000.
 
 To run the project while rebuilding the images, use this command:
 
-```console
+```shell
 docker compose up -d --build
 ```
 
 To stop the stack, use the following command:
 
-```console
+```shell
 docker compose down
 ```
