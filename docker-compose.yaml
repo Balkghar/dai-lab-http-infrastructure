@@ -1,6 +1,49 @@
+version: '3.8'
+
+name: dai-lab-http
+
 services:
   web:
-    image: web-image # name of the images
-    build: ./frontend # indicate the folder where the Dockerfile is
+    container_name: web
+    build: ./frontend
     ports:
-      - "8080:80" # the port to expose
+      - "8080:80"
+
+  mongo:
+    container_name: mongodb
+    image: mongo:latest
+    env_file:
+      - .env
+    ports:
+      - "27017:27017"
+
+  mongo-seed:
+    env_file:
+      - .env
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+      args:
+        - MONGODB_URI=$DATABASE_URI
+        - MONGODB_HOST=$MONGO_INITDB_ROOT_HOST
+        - MONGODB_USERNAME=$MONGO_INITDB_ROOT_USERNAME
+        - MONGODB_PASSWORD=$MONGO_INITDB_ROOT_PASSWORD
+    depends_on:
+      - mongo
+
+  api:
+    container_name: api
+    env_file:
+      - .env
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+      args:
+        - MONGODB_URI=$DATABASE_URI
+        - MONGODB_HOST=$MONGO_INITDB_ROOT_HOST
+        - MONGODB_USERNAME=$MONGO_INITDB_ROOT_USERNAME
+        - MONGODB_PASSWORD=$MONGO_INITDB_ROOT_PASSWORD
+    ports:
+      - "7000:7000"
+    depends_on:
+      - mongo
