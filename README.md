@@ -75,3 +75,9 @@ The Traefik configuration is the following:
 - The API server is attainable at the [localhost/api](http://localhost/api) URL.
 
 Furthermore, the Traefik dashboard is available at [localhost:8080](http://localhost:8080).
+
+## Scalability and load-balancing
+
+The application is set up to use 5 instances of each service using the `replicas` attribute in the [docker-compose](./docker-compose.yaml) configuration.
+
+Further information about scalability and load balancing may be found in the [documentation](./reverse-proxy/README.md).

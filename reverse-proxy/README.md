@@ -1,8 +1,8 @@
-## Reverse proxy
+# Traefik
 
 A reverse proxy is configured to route traffic to multiple services located at different URLs. This allows the project to use a single entry point, the reverse proxy, to manage requests targeting different services running on different hosts or containers. This setup is beneficial for security by providing isolation, SSL capabilities and hiding backend servers from outside networks.
 
-### Traefik
+## Reverse proxy
 
 Traefik intercepts and routes every incoming request to the corresponding backend service. In the case of this project, that means the staic website and the API.
 
