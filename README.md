@@ -81,3 +81,10 @@ Furthermore, the Traefik dashboard is available at [localhost:8080](http://local
 The application is set up to use 5 instances of each service using the `replicas` attribute in the [docker-compose](./docker-compose.yaml) configuration.
 
 Further information about scalability and load balancing may be found in the [documentation](./reverse-proxy/README.md).
+
+## Round Robin and sticky sessions
+
+Round robin is a load-balencing strategy that distributes the charge of a service equally between all available instances.
+Sticky sessions allow a client to always communicate with the same container.
+Both are implemented using Traefik in the docker-compose file.
+See at [round robin and sticky session](./doc/round-robin_sticky-session.md) how to configure it.
