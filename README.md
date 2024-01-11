@@ -88,3 +88,8 @@ Round robin is a load-balencing strategy that distributes the charge of a servic
 Sticky sessions allow a client to always communicate with the same container.
 Both are implemented using Traefik in the docker-compose file.
 See at [round robin and sticky session](./doc/round-robin_sticky-session.md) how to configure it.
+
+## HTTPS with traefik.me
+
+[Traefik.me](https://traefik.me) allows to have a valid certificate on a LAN network without the need of generating one. The dns server of traefik.me resolve all request to *.traefik.me to 127.0.0.1. If you want another to resolve to another IP adress, you need to add it to the dns like this 10.0.0.1.traefik.me.
+See at [https-with-traefik.me](./doc/https-with-traefik.me.md) how to deploy it.
