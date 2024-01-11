@@ -13,11 +13,14 @@ const apiCommand = (command, data) => {
     }).then(
         response => {
             console.log(response);
-            if (response.status === 200)
+            if (response.status === 200) {
                 notify(`Command '${command}' executed successfully.`, 'success');
-            else
+                updateContainers();
+                updateServices();
+            }
+            else {
                 notify(`Command '${command}' failed.`, 'error');
-            window.location.reload();
+            }
         }
     ).catch(error => {
         console.log(error);
@@ -41,6 +44,34 @@ const notify = (message, status) => {
     setTimeout(() => {
         document.body.removeChild(toast);
     }, 5000);
+}
+
+const updateStatus = () => {
+    fetch(`${apiUrl}/status`, {}).then(response => {
+        // Replace the section.status > div with the new one
+        response.text().then(data => {
+            document.querySelector('section.status > p').outerHTML = data;
+        }).catch(error => console.error(error));
+    });
+}
+
+const updateServices = () => {
+    fetch(`${apiUrl}/services`, {}).then(response => {
+        // Replace the section.status > div with the new one
+        response.text().then(data => {
+            document.querySelector('section.services > table').outerHTML = data;
+        }).catch(error => console.error(error));
+    });
+}
+
+// FIXME: refactorable into a single function
+const updateContainers = () => {
+    fetch(`${apiUrl}/containers`, {}).then(response => {
+        // Replace the section.status > div with the new one
+        response.text().then(data => {
+            document.querySelector('section.containers > ul').outerHTML = data;
+        }).catch(error => console.error(error));
+    });
 }
 
 // Start service event listener.
@@ -95,4 +126,10 @@ const errorIcon = `
 // DOM loaded handler.
 document.addEventListener('DOMContentLoaded', () => {
     notify('Ready', 'success');
+
+    updateStatus();
+    updateServices();
+    updateContainers();
+
+    setTimeout(updateStatus, 1000);
 });

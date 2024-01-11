@@ -8,12 +8,12 @@
 </head>
 <body>
     <h1>Infrastructure <%= composeProjectName %></h1>
-    <section>
+    <section class="status">
         <h2>Status</h2>
         <p class="status-text"><%= status == "OK" ? "Running" : "Stopped" %></p>
     </section>
 
-    <section>
+    <section class="services">
         <h2>Services</h2>
         <% if (Object.keys(services).length === 0) { %>
             <p>No services found.</p>
@@ -45,7 +45,7 @@
         <% } %>
     </section>
 
-    <section>
+    <section class="containers">
         <h2>Containers</h2>
         <ul>
             <% containers.forEach(function(container) { %>

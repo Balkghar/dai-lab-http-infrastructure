@@ -52,6 +52,57 @@ app.get('/', async (req, res) => {
     }
 });
 
+// Get the list of services.
+app.get('/api/services', async (req, res) => {
+    try {
+        const containers = await docker.listContainers({all: true});
+
+        // Count the number of instances for each allowed service.
+        const services = containers
+            .reduce((acc, container) => {
+                const serviceName = container.Labels['com.docker.compose.service'];
+                if (serviceName && isValidServiceName(serviceName) && container.State === 'running') {
+                    acc[serviceName] = (acc[serviceName] || 0) + 1;
+                }
+                return acc;
+            }, {});
+
+        // Add the services that are not running with 0 instances.
+        COMPOSE_SERVICES.forEach(service => {
+            if (!services[service]) {
+                services[service] = 0;
+            }
+        });
+
+        res.render('services', {services});
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while fetching the containers');
+    }
+});
+
+// Get the list of containers.
+app.get('/api/containers', async (req, res) => {
+    try {
+        const containers = await docker.listContainers({all: true});
+        res.render('containers', {containers});
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while fetching the containers');
+    }
+});
+
+// Get the status of the Docker daemon.
+app.get('/api/status', async (req, res) => {
+    try {
+        const status = await docker.ping({timeout: 1000});
+        res.render('status', {status});
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while fetching the containers');
+    }
+});
+
 // Start a service.
 app.post('/api/start', (req, res) => {
     const {serviceName} = req.body;
