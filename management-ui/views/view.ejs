@@ -2,17 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Docker Services</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="style.css" type="text/css" rel="stylesheet">
 </head>
-<body class="container">
-    <h1><%= composeProjectName %></h1>
+<body>
+    <h1>Infrastructure <%= composeProjectName %></h1>
     <div class="status">
         <h2>Status</h2>
         <p class="status-text">Not implemented</p>
     </div>
 
-    <div class="services">
+    <section class="services">
         <h2>Services</h2>
         <% if (Object.keys(services).length === 0) { %>
             <p>No services found.</p>
@@ -21,7 +23,7 @@
                 <thead>
                 <tr>
                     <th>Service</th>
-                    <th>State</th>
+                    <th>Replicas</th>
                     <th>Start</th>
                     <th>Stop</th>
                     <th>Add</th>
@@ -42,16 +44,16 @@
                 </tbody>
             </table>
         <% } %>
-    </div>
+    </section>
 
-    <div class="containers">
+    <section class="containers">
         <h2>Containers</h2>
         <ul>
             <% containers.forEach(function(container) { %>
                 <li><%= container.Names[0] %>: <%= container.State %></li>
             <% }); %>
         </ul>
-    </div>
+    </section>
 
     <script src="script.js"></script>
 </body>

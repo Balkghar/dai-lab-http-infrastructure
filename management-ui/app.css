@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+    @apply bg-gradient-to-r from-indigo-500 to-purple-500 text-white;
+}
+body {
+    @apply container mx-auto py-4;
+}
+
+section {
+    @apply mb-8 mt-4 p-4 bg-gradient-to-l border rounded-lg shadow-lg;
+}
+
+h1 {
+    @apply text-3xl font-bold mb-4;
+}
+
+h2 {
+    @apply text-2xl font-bold mb-4;
+}
+
+table {
+    @apply table-auto w-full border-collapse text-left;
+}
+
+table th {
+    @apply bg-gray-200 border text-gray-600 px-4 py-2;
+}
+
+table tr {
+    @apply border-b;
+}
+
+table tr:nth-child(even) {
+}
+
+button {
+    @apply bg-indigo-500 hover:bg-indigo-700 text-white font-bold px-2 rounded border shadow;
+}
