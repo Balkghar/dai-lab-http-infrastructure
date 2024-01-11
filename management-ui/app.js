@@ -24,7 +24,7 @@ const isValidServiceName = service => {
 
 // Render the view with the list of containers and services.
 app.get('/', async (req, res) => {
-    res.render('view', {composeProjectName: COMPOSE_PROJECT_NAME});
+    res.render('index', {composeProjectName: COMPOSE_PROJECT_NAME});
 });
 
 // Get the status of the infrastructure.
