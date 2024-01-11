@@ -24,20 +24,28 @@ const isValidServiceName = service => {
 
 // Render the view with the list of containers and services.
 app.get('/', async (req, res) => {
-    // FIXME: reimplement this using docker socket
     try {
+        const status = await docker.ping({timeout: 1000});
         const containers = await docker.listContainers({all: true});
+
+        // Count the number of instances for each allowed service.
         const services = containers
             .reduce((acc, container) => {
                 const serviceName = container.Labels['com.docker.compose.service'];
-                if (serviceName) {
+                if (serviceName && isValidServiceName(serviceName) && container.State === 'running') {
                     acc[serviceName] = (acc[serviceName] || 0) + 1;
                 }
                 return acc;
             }, {});
 
-        res.render('view', {composeProjectName: COMPOSE_PROJECT_NAME, containers, services});
-        containers.forEach(container => console.log(container));
+        // Add the services that are not running with 0 instances.
+        COMPOSE_SERVICES.forEach(service => {
+            if (!services[service]) {
+                services[service] = 0;
+            }
+        });
+
+        res.render('view', {composeProjectName: COMPOSE_PROJECT_NAME, status, containers, services});
     } catch (error) {
         console.error(error);
         res.status(500).send('An error occurred while fetching the containers.');
@@ -52,7 +60,7 @@ app.post('/api/start', (req, res) => {
         return res.status(400).send(`Invalid service name: ${serviceName}`);
     }
 
-    exec(`docker compose -p ${COMPOSE_PROJECT_NAME} start ${serviceName}`, (err, stdout, stderr) => {
+    exec(`docker compose -p ${COMPOSE_PROJECT_NAME} start ${serviceName}`, (err) => {
         if (err) {
             console.error(`Error: ${err}`);
             return res.status(500).send('An error occurred while starting the service.');
@@ -72,7 +80,7 @@ app.post('/api/stop', (req, res) => {
     }
 
     // Execute docker compose stop <serviceName>
-    exec(`docker compose -p ${COMPOSE_PROJECT_NAME} stop ${serviceName}`, (err, stdout, stderr) => {
+    exec(`docker compose -p ${COMPOSE_PROJECT_NAME} stop ${serviceName}`, (err) => {
         if (err) {
             console.error(`Error: ${err}`);
             return res.status(500).send('An error occurred while stopping the service.');
@@ -85,24 +93,24 @@ app.post('/api/stop', (req, res) => {
 
 // Scale a service.
 app.post('/api/scale', async (req, res) => {
-    const {serviceName, scaleNumber} = req.body;
+    const {serviceName, serviceScale} = req.body;
     if (!isValidServiceName(serviceName)) {
         console.error(`Invalid service name: ${serviceName}`);
         return res.status(400).send(`Invalid service name: ${serviceName}`);
-    } else if (scaleNumber < 0 || scaleNumber > COMPOSE_MAX_SCALE) {
-        console.error(`Invalid scale number: ${scaleNumber}`);
-        return res.status(400).send(`Invalid scale number: ${scaleNumber}`);
+    } else if (serviceScale < 0 || serviceScale > COMPOSE_MAX_SCALE) {
+        console.error(`Invalid scale number: ${serviceScale}`);
+        return res.status(400).send(`Invalid scale number: ${serviceScale}`);
     }
 
     // Execute docker compose scale <serviceName>=<scaleNumber>
-    exec(`docker compose -p ${COMPOSE_PROJECT_NAME} up --scale ${serviceName}=${scaleNumber}`, (err, stdout, stderr) => {
+    exec(`docker compose -p ${COMPOSE_PROJECT_NAME} up --scale ${serviceName}=${serviceScale}`, (err) => {
         if (err) {
             console.error(`Error: ${err}`);
             return res.status(500).send('An error occurred while scaling the service.');
         }
 
-        console.info(`Scaled service '${serviceName}' to ${scaleNumber}.`);
-        res.status(200).send(`Scaled service '${serviceName}' to ${scaleNumber}.`);
+        console.info(`Scaled service '${serviceName}' to ${serviceScale}.`);
+        res.status(200).send(`Scaled service '${serviceName}' to ${serviceScale}.`);
     });
 });
 
