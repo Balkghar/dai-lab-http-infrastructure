@@ -7,9 +7,22 @@ const apiUrl = "/api";
 // Send a command to the API.
 const apiCommand = (command, data) => {
     fetch(`${apiUrl}/${command}`, {
-        method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)
-    }).then(response => console.log(response))
-        .catch(error => console.error(error))
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    }).then(
+        response => {
+            console.log(response);
+            if (response.status === 200)
+                notify(`Command '${command}' executed successfully.`, 'success');
+            else
+                notify(`Command '${command}' failed.`, 'error');
+            window.location.reload();
+        }
+    ).catch(error => {
+        console.log(error);
+        notify(`Command '${command}' failed.`, 'error');
+    });
 }
 
 // Notify the user.
