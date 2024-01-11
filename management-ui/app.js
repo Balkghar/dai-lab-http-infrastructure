@@ -27,6 +27,18 @@ app.get('/', async (req, res) => {
     res.render('view', {composeProjectName: COMPOSE_PROJECT_NAME});
 });
 
+// Get the status of the infrastructure.
+app.get('/api/status', async (req, res) => {
+    docker.listContainers({all: true}, (err, containers) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('An error occurred while fetching the containers');
+        }
+        const status = containers.length === 0 ? 'Stopped' : 'Running';
+        res.render('status', {infraStatus: status});
+    });
+});
+
 // Get the list of services.
 app.get('/api/services', async (req, res) => {
     try {
@@ -52,7 +64,7 @@ app.get('/api/services', async (req, res) => {
         res.render('services', {services});
     } catch (error) {
         console.error(error);
-        res.status(500).send('An error occurred while fetching the containers');
+        res.status(500).send('An error occurred while fetching the services');
     }
 });
 
@@ -61,17 +73,6 @@ app.get('/api/containers', async (req, res) => {
     try {
         const containers = await docker.listContainers({all: true});
         res.render('containers', {containers});
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('An error occurred while fetching the containers');
-    }
-});
-
-// Get the status of the Docker daemon.
-app.get('/api/status', async (req, res) => {
-    try {
-        const status = await docker.ping({timeout: 1000});
-        res.render('status', {status});
     } catch (error) {
         console.error(error);
         res.status(500).send('An error occurred while fetching the containers');
