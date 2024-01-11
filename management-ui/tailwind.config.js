@@ -1,5 +1,5 @@
 module.exports = {
-    content: ['./views/*.ejs'], darkMode: 'class', theme: {
+    content: ['./views/*.ejs', './app.js', './public/*.{js,css}'], darkMode: 'class', theme: {
         extend: {},
     }, plugins: [{
         tailwindcss: {}, autoprefixer: {},
