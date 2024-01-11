@@ -124,7 +124,7 @@ const stopHandler = event => {
 // Add service event handler.
 const addHandler = event => {
     const serviceName = event.target.dataset.service;
-    const serviceScale = event.target.dataset.scale++;
+    const serviceScale = parseInt(event.target.dataset.scale) + 1;
     console.info(`Add service: ${serviceName}.`);
     apiCommand('scale', {serviceName, serviceScale});
 }
@@ -132,7 +132,7 @@ const addHandler = event => {
 // Remove service event handler.
 const removeHandler = event => {
     const serviceName = event.target.dataset.service;
-    const serviceScale = event.target.dataset.scale--;
+    const serviceScale = parseInt(event.target.dataset.scale) - 1;
     console.info(`Remove service: ${serviceName}.`);
     apiCommand('scale', {serviceName, serviceScale});
 }

@@ -131,7 +131,7 @@ app.post('/api/scale', async (req, res) => {
     }
 
     // Execute docker compose scale <serviceName>=<scaleNumber>
-    exec(`docker compose -p ${COMPOSE_PROJECT_NAME} up --scale ${serviceName}=${serviceScale}`, (err) => {
+    exec(`docker compose -p ${COMPOSE_PROJECT_NAME} up -d --scale ${serviceName}=${serviceScale}`, (err) => {
         if (err) {
             console.error(err);
             return res.status(500).send('An error occurred while scaling the service.');
