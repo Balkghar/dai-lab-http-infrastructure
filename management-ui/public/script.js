@@ -3,6 +3,7 @@
 
 // API URL
 const apiUrl = "/api";
+const RESTART_PROMPT = "Are you sure you want to restart the infrastructure?\r\n\r\nThis may interrupt running services. The infrastructure may take a while to restart.";
 
 // Send a command to the API.
 const apiCommand = (command, data) => {
@@ -41,9 +42,7 @@ const notify = (message, status) => {
 
     document.body.appendChild(toast);
 
-    setTimeout(() => {
-        document.body.removeChild(toast);
-    }, 5000);
+    setTimeout(() => document.body.removeChild(toast), 5000);
 }
 
 // Update the status.
@@ -76,32 +75,64 @@ const updateContainers = () => {
     });
 }
 
-// Start service event listener.
-const startHandler = event => {
-        var serviceName = event.target.dataset.service;
-        console.info("Start service: " + serviceName);
-        apiCommand('start', {serviceName});
+// Restart infrastructure event handler.
+const restartHandler = event => {
+    const confirmed = confirm(RESTART_PROMPT);
+    if (!confirmed) {
+        return;
+    }
+    notify('Infrastructure restarting...');
+    console.info("Restart infrastructure.");
+    fetch(`${apiUrl}/restart`, {method: 'POST'}).then(response => {
+        setTimeout(() => document.location.reload(), 3000);
+    }).catch(error => {
+        notify('Failed to restart infrastructure', 'error');
+        console.error(error)
+    });
 }
 
-// Stop service event listener.
+// Rebuild infrastructure event handler.
+const rebuildHandler = event => {
+    const confirmed = confirm(RESTART_PROMPT);
+    if (!confirmed) {
+        return;
+    }
+    console.info("Rebuild infrastructure.");
+    notify('Infrastructure rebuilding...');
+    fetch(`${apiUrl}/rebuild`, {method: 'POST'}).then(response => {
+        setTimeout(() => document.location.reload(), 10000);
+    }).catch(error => {
+        notify('Failed to rebuild infrastructure', 'error');
+        console.error(error)
+    });
+}
+
+// Start service event handler.
+const startHandler = event => {
+    const serviceName = event.target.dataset.service;
+    console.info("Start service: " + serviceName);
+    apiCommand('start', {serviceName});
+}
+
+// Stop service event handler.
 const stopHandler = event => {
-    var serviceName = event.target.dataset.service;
+    const serviceName = event.target.dataset.service;
     console.info("Stop service: " + serviceName);
     apiCommand('stop', {serviceName});
 }
 
-// Add service event listener.
+// Add service event handler.
 const addHandler = event => {
-    var serviceName = event.target.dataset.service;
-    var serviceScale = event.target.dataset.scale++;
+    const serviceName = event.target.dataset.service;
+    const serviceScale = event.target.dataset.scale++;
     console.info(`Add service: ${serviceName}.`);
     apiCommand('scale', {serviceName, serviceScale});
 }
 
-// Remove service event listener.
+// Remove service event handler.
 const removeHandler = event => {
-    var serviceName = event.target.dataset.service;
-    var serviceScale = event.target.dataset.scale--;
+    const serviceName = event.target.dataset.service;
+    const serviceScale = event.target.dataset.scale--;
     console.info(`Remove service: ${serviceName}.`);
     apiCommand('scale', {serviceName, serviceScale});
 }

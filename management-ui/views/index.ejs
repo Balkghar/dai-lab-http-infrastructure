@@ -9,7 +9,13 @@
 <body>
     <h1>Infrastructure <%= composeProjectName %></h1>
     <section class="status">
-        <h2>Status</h2>
+        <div>
+            <h2>Status</h2>
+            <div>
+                <button class="restart-infra" onclick="restartHandler(event)">Restart</button>
+                <button class="rebuild-infra" onclick="rebuildHandler(event)">Rebuild</button>
+            </div>
+        </div>
         <p class="status-text">Loading...</p>
     </section>
 

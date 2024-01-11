@@ -142,6 +142,19 @@ app.post('/api/scale', async (req, res) => {
     });
 });
 
+// Restart the infrastructure.
+app.post('/api/restart', async (req, res) => {
+    exec(`docker compose -p ${COMPOSE_PROJECT_NAME} up -d`, (err) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('An error occurred while restarting the infrastructure');
+        }
+
+        console.info(`Restarted infrastructure '${COMPOSE_PROJECT_NAME}'`);
+        res.status(200).send(`Restarted infrastructure '${COMPOSE_PROJECT_NAME}'`);
+    });
+});
+
 // Rebuild the infrastructure.
 app.post('/api/rebuild', async (req, res) => {
     exec(`docker compose -p ${COMPOSE_PROJECT_NAME} up -d --build`, (err) => {
