@@ -86,6 +86,7 @@ app.post('/api/start', (req, res) => {
         return res.status(400).send(`Invalid service name: ${serviceName}`);
     }
 
+    // Execute docker compose start <serviceName>
     exec(`docker compose -p ${COMPOSE_PROJECT_NAME} start ${serviceName}`, (err) => {
         if (err) {
             console.error(err);
@@ -137,6 +138,19 @@ app.post('/api/scale', async (req, res) => {
 
         console.info(`Scaled service '${serviceName}' to ${serviceScale}.`);
         res.status(200).send(`Scaled service '${serviceName}' to ${serviceScale}.`);
+    });
+});
+
+// Rebuild the infrastructure.
+app.post('/api/rebuild', async (req, res) => {
+    exec(`docker compose -p ${COMPOSE_PROJECT_NAME} up -d --build`, (err) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('An error occurred while rebuilding the infrastructure');
+        }
+
+        console.info(`Rebuilt infrastructure '${COMPOSE_PROJECT_NAME}'`);
+        res.status(200).send(`Rebuilt infrastructure '${COMPOSE_PROJECT_NAME}'`);
     });
 });
 
