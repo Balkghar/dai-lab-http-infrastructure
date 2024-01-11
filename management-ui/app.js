@@ -48,7 +48,7 @@ app.get('/', async (req, res) => {
         res.render('view', {composeProjectName: COMPOSE_PROJECT_NAME, status, containers, services});
     } catch (error) {
         console.error(error);
-        res.status(500).send('An error occurred while fetching the containers.');
+        res.status(500).send('An error occurred while fetching the containers');
     }
 });
 
@@ -63,11 +63,11 @@ app.post('/api/start', (req, res) => {
     exec(`docker compose -p ${COMPOSE_PROJECT_NAME} start ${serviceName}`, (err) => {
         if (err) {
             console.error(`Error: ${err}`);
-            return res.status(500).send('An error occurred while starting the service.');
+            return res.status(500).send('An error occurred while starting the service');
         }
 
-        console.info(`Started service '${serviceName}'.`);
-        res.status(200).send(`Started service '${serviceName}'.`);
+        console.info(`Started service '${serviceName}'`);
+        res.status(200).send(`Started service '${serviceName}'`);
     });
 });
 
@@ -83,11 +83,11 @@ app.post('/api/stop', (req, res) => {
     exec(`docker compose -p ${COMPOSE_PROJECT_NAME} stop ${serviceName}`, (err) => {
         if (err) {
             console.error(`Error: ${err}`);
-            return res.status(500).send('An error occurred while stopping the service.');
+            return res.status(500).send('An error occurred while stopping the service');
         }
 
-        console.info(`Stopped service '${serviceName}'.`);
-        res.status(200).send(`Stopped service '${serviceName}'.`);
+        console.info(`Stopped service '${serviceName}'`);
+        res.status(200).send(`Stopped service '${serviceName}'`);
     });
 });
 
