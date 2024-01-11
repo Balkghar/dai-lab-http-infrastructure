@@ -46,6 +46,7 @@ const notify = (message, status) => {
     }, 5000);
 }
 
+// Update the status.
 const updateStatus = () => {
     fetch(`${apiUrl}/status`, {}).then(response => {
         // Replace the section.status > div with the new one
@@ -55,6 +56,7 @@ const updateStatus = () => {
     });
 }
 
+// Update the services list.
 const updateServices = () => {
     fetch(`${apiUrl}/services`, {}).then(response => {
         // Replace the section.status > div with the new one
@@ -65,6 +67,7 @@ const updateServices = () => {
 }
 
 // FIXME: refactorable into a single function
+// Update the containers list.
 const updateContainers = () => {
     fetch(`${apiUrl}/containers`, {}).then(response => {
         // Replace the section.status > div with the new one
@@ -75,42 +78,34 @@ const updateContainers = () => {
 }
 
 // Start service event listener.
-document.querySelectorAll('.start-service').forEach(function (element) {
-    element.addEventListener('click', function (event) {
+const startHandler = event => {
         var serviceName = event.target.dataset.service;
         console.info("Start service: " + serviceName);
         apiCommand('start', {serviceName});
-    });
-});
+}
 
 // Stop service event listener.
-document.querySelectorAll('.stop-service').forEach(function (element) {
-    element.addEventListener('click', function (event) {
-        var serviceName = event.target.dataset.service;
-        console.info("Stop service: " + serviceName);
-        apiCommand('stop', {serviceName});
-    });
-});
+const stopHandler = event => {
+    var serviceName = event.target.dataset.service;
+    console.info("Stop service: " + serviceName);
+    apiCommand('stop', {serviceName});
+}
 
 // Add service event listener.
-document.querySelectorAll('.add-service').forEach(function (element) {
-    element.addEventListener('click', function (event) {
-        var serviceName = event.target.dataset.service;
-        var serviceScale = event.target.dataset.scale++;
-        console.info(`Add service: ${serviceName}.`);
-        apiCommand('scale', {serviceName, serviceScale});
-    });
-});
+const addHandler = event => {
+    var serviceName = event.target.dataset.service;
+    var serviceScale = event.target.dataset.scale++;
+    console.info(`Add service: ${serviceName}.`);
+    apiCommand('scale', {serviceName, serviceScale});
+}
 
 // Remove service event listener.
-document.querySelectorAll('.remove-service').forEach(function (element) {
-    element.addEventListener('click', function (event) {
-        var serviceName = event.target.dataset.service;
-        var serviceScale = event.target.dataset.scale--;
-        console.info(`Remove service: ${serviceName}.`);
-        apiCommand('scale', {serviceName, serviceScale});
-    });
-});
+const removeHandler = event => {
+    var serviceName = event.target.dataset.service;
+    var serviceScale = event.target.dataset.scale--;
+    console.info(`Remove service: ${serviceName}.`);
+    apiCommand('scale', {serviceName, serviceScale});
+}
 
 // Icons
 const successIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">

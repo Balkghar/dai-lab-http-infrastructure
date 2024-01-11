@@ -34,10 +34,10 @@
                     <tr>
                         <td><%= serviceName %></td>
                         <td><%= services[serviceName] %></td>
-                        <td><button class="start-service" data-service="<%= serviceName %>">Start</button></td>
-                        <td><button class="stop-service" data-service="<%= serviceName %>">Stop</button></td>
-                        <td><button class="add-service" data-service="<%= serviceName %>" data-scale="<%= services[serviceName] %>">Add</button></td>
-                        <td><button class="remove-service" data-service="<%= serviceName %>" data-scale="<%= services[serviceName] %>">Remove</button></td>
+                        <td><button class="start-service" data-service="<%= serviceName %>" onclick="startHandler()">Start</button></td>
+                        <td><button class="stop-service" data-service="<%= serviceName %>" onclick="stopHandler()">Stop</button></td>
+                        <td><button class="add-service" data-service="<%= serviceName %>" data-scale="<%= services[serviceName] %>" onclick="addHandler()">Add</button></td>
+                        <td><button class="remove-service" data-service="<%= serviceName %>" data-scale="<%= services[serviceName] %>" onclick="removeHandler()">Remove</button></td>
                     </tr>
                 <% } %>
                 </tbody>
