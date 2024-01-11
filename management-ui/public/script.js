@@ -12,6 +12,24 @@ const apiCommand = (command, data) => {
         .catch(error => console.error(error))
 }
 
+// Notify the user.
+const notify = (message, status) => {
+    const toast = document.createElement('div');
+    toast.classList.add('notification');
+    toast.textContent = message;
+
+    const icon = document.createElement('span');
+    icon.classList.add('inline-block', 'mr-2');
+    icon.innerHTML = status === 'success' ? successIcon : errorIcon;
+    toast.appendChild(icon);
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        document.body.removeChild(toast);
+    }, 5000);
+}
+
 // Start service event listener.
 document.querySelectorAll('.start-service').forEach(function (element) {
     element.addEventListener('click', function (event) {
@@ -50,3 +68,18 @@ document.querySelectorAll('.remove-service').forEach(function (element) {
     });
 });
 
+// Icons
+const successIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+</svg>
+`
+
+const errorIcon = `
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+</svg>`
+
+// DOM loaded handler.
+document.addEventListener('DOMContentLoaded', () => {
+    notify('Ready', 'success');
+});
