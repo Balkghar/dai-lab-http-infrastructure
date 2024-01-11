@@ -1,0 +1,10 @@
+POST localhost:3000/scale
+Content-Type: application/json
+
+{
+  "id": 999,
+  "value": "content"
+}
+
+### All containers
+GET localhost:3000/containers

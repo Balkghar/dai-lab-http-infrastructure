@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Docker Services</title>
+</head>
+<body>
+    <h1>Docker Services</h1>
+    <% if (services.length === 0) { %>
+        <p>No services found.</p>
+    <% } else { %>
+        <ul>
+            <% services.forEach(service => { %>
+                <li><%= service.Spec.Name %></li>
+            <% }); %>
+        </ul>
+    <% } %>
+</body>
+</html>

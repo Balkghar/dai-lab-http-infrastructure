@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Docker Services</title>
+</head>
+<body>
+    <h1><%= composeProjectName %></h1>
+    <div class="status">
+        <h2>Status</h2>
+        <p class="status-text">Not implemented</p>
+    </div>
+
+    <div class="services">
+        <h2>Services</h2>
+        <% if (Object.keys(services).length === 0) { %>
+            <p>No services found.</p>
+        <% } else { %>
+            <table>
+                <tr>
+                    <th>Service</th>
+                    <th>State</th>
+                    <th>Start</th>
+                    <th>Stop</th>
+                    <th>Add</th>
+                    <th>Remove</th>
+                </tr>
+                <% for(const serviceName in services) { %>
+                    <tr>
+                        <td><%= serviceName %></td>
+                        <td><%= services[serviceName] %></td>
+                        <td><button class="start-service" data-service="<%= serviceName %>" %>">Start</button></td>
+                        <td><button class="stop-service" data-service="<%= serviceName %>" %>">Stop</button></td>
+                        <td><button class="add-service" data-service="<%= serviceName %>" data-scale="<%= services[serviceName] %>">Add</button></td>
+                        <td><button class="remove-service" data-service="<%= serviceName %>" data-scale="<%= services[serviceName] %>">">Remove</button></td>
+                    </tr>
+                <% } %>
+            </table>
+        <% } %>
+    </div>
+
+    <div class="containers">
+        <h2>Containers</h2>
+        <ul>
+            <% containers.forEach(function(container) { %>
+                <li><%= container.Names[0] %>: <%= container.State %></li>
+            <% }); %>
+        </ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
