@@ -88,7 +88,7 @@ app.post('/api/start', (req, res) => {
 
     exec(`docker compose -p ${COMPOSE_PROJECT_NAME} start ${serviceName}`, (err) => {
         if (err) {
-            console.error(`Error: ${err}`);
+            console.error(err);
             return res.status(500).send('An error occurred while starting the service');
         }
 
@@ -108,7 +108,7 @@ app.post('/api/stop', (req, res) => {
     // Execute docker compose stop <serviceName>
     exec(`docker compose -p ${COMPOSE_PROJECT_NAME} stop ${serviceName}`, (err) => {
         if (err) {
-            console.error(`Error: ${err}`);
+            console.error(err);
             return res.status(500).send('An error occurred while stopping the service');
         }
 
@@ -131,7 +131,7 @@ app.post('/api/scale', async (req, res) => {
     // Execute docker compose scale <serviceName>=<scaleNumber>
     exec(`docker compose -p ${COMPOSE_PROJECT_NAME} up --scale ${serviceName}=${serviceScale}`, (err) => {
         if (err) {
-            console.error(`Error: ${err}`);
+            console.error(err);
             return res.status(500).send('An error occurred while scaling the service.');
         }
 
