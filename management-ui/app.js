@@ -2,9 +2,9 @@ const express = require('express');
 const Docker = require('dockerode');
 const path = require('path');
 const bodyParser = require('body-parser');
-
+const exec = require('child_process').exec;
 const app = express();
-const docker = new Docker(); // connects to your Docker daemon
+const docker = new Docker();
 
 const composeProjectName = 'dai-lab-http'; // FIXME: hard-coded
 
@@ -35,34 +35,44 @@ app.get('/', async (req, res) => {
     }
 });
 
-app.post('/start', async (req, res) => {
+app.post('/api/start', (req, res) => {
     const {serviceName} = req.body;
 
-    try {
-        let service = await docker.getService(serviceName);
-        await service.update({version: null, updateConfig: {}}); // FIXME
+    // Execute docker compose start <serviceName>
+    exec(`docker compose -p ${composeProjectName} start ${serviceName}`, (err, stdout, stderr) => {
+        if (err) {
+            console.error(`Error: ${err}`);
+            console.error(`Stderr: ${stderr}`);
+            return res.status(500).send('An error occurred while starting the service.');
+        }
+
+        console.info(`Started service ${serviceName}.`);
+        console.log(`Stdout: ${stdout}`);
         res.status(200).send(`Started service ${serviceName}.`);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('An error occurred while starting the service.');
-    }
+    });
 });
 
-app.post('/scale', async (req, res) => {
+app.post('/api/stop', (req, res) => {
+    const {serviceName} = req.body;
+
+    // Execute docker compose stop <serviceName>
+    exec(`docker compose -p ${composeProjectName} stop ${serviceName}`, (err, stdout, stderr) => {
+        if (err) {
+            console.error(`Error: ${err}`);
+            console.error(`Stderr: ${stderr}`);
+            return res.status(500).send('An error occurred while stopping the service.');
+        }
+
+        console.info(`Stopped service ${serviceName}.`);
+        console.log(`Stdout: ${stdout}`);
+        res.status(200).send(`Stopped service ${serviceName}.`);
+    });
+});
+
+app.post('/api/scale', async (req, res) => {
     const {serviceName, scaleNumber} = req.body;
 
-    try {
-        let service = await docker.getService(serviceName);
-        let serviceInfo = await service.inspect();
-
-        let updatedSpec = {...serviceInfo.Spec, Mode: {Replicated: {Replicas: scaleNumber}}};
-        await service.update({version: serviceInfo.Version.Index}, updatedSpec);
-
-        res.status(200).send(`Scaled service ${serviceName} to ${scaleNumber} replicas.`);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('An error occurred while scaling the service.');
-    }
+    res.status(200).send(`Scaled service ${serviceName} to ${scaleNumber} replicas.`);
 });
 
 const PORT = process.env.PORT || 3000;
