@@ -5,16 +5,15 @@
     <meta http-equiv="x-ua-compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Docker Services</title>
-    <link href="style.css" type="text/css" rel="stylesheet">
 </head>
 <body>
     <h1>Infrastructure <%= composeProjectName %></h1>
-    <section class="status">
+    <section>
         <h2>Status</h2>
         <p class="status-text"><%= status == "OK" ? "Running" : "Stopped" %></p>
     </section>
 
-    <section class="services">
+    <section>
         <h2>Services</h2>
         <% if (Object.keys(services).length === 0) { %>
             <p>No services found.</p>
@@ -35,8 +34,8 @@
                     <tr>
                         <td><%= serviceName %></td>
                         <td><%= services[serviceName] %></td>
-                        <td><button class="start-service" data-service="<%= serviceName %>" %>">Start</button></td>
-                        <td><button class="stop-service" data-service="<%= serviceName %>" %>">Stop</button></td>
+                        <td><button class="start-service" data-service="<%= serviceName %>">Start</button></td>
+                        <td><button class="stop-service" data-service="<%= serviceName %>">Stop</button></td>
                         <td><button class="add-service" data-service="<%= serviceName %>" data-scale="<%= services[serviceName] %>">Add</button></td>
                         <td><button class="remove-service" data-service="<%= serviceName %>" data-scale="<%= services[serviceName] %>">Remove</button></td>
                     </tr>
@@ -46,7 +45,7 @@
         <% } %>
     </section>
 
-    <section class="containers">
+    <section>
         <h2>Containers</h2>
         <ul>
             <% containers.forEach(function(container) { %>
@@ -56,5 +55,6 @@
     </section>
 
     <script src="script.js"></script>
+    <link href="style.css" type="text/css" rel="stylesheet">
 </body>
 </html>
