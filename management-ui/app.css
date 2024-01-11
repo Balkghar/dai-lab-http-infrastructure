@@ -74,5 +74,5 @@ button {
 }
 
 .notification {
-    @apply fixed top-0 right-0 m-8 p-4 bg-gray-800 text-white rounded shadow-lg transition duration-500 ease-in-out animate-slide-in;
+    @apply fixed top-0 right-0 m-8 p-4 text-white rounded shadow-lg transition duration-500 ease-in-out animate-slide-in;
 }

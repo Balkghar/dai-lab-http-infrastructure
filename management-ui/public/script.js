@@ -17,8 +17,7 @@ const apiCommand = (command, data) => {
                 notify(`Command '${command}' executed successfully.`, 'success');
                 updateContainers();
                 updateServices();
-            }
-            else {
+            } else {
                 notify(`Command '${command}' failed.`, 'error');
             }
         }
@@ -32,12 +31,13 @@ const apiCommand = (command, data) => {
 const notify = (message, status) => {
     const toast = document.createElement('div');
     toast.classList.add('notification');
+    toast.classList.add(status === 'success' ? 'bg-green-600' : 'bg-red-600');
     toast.textContent = message;
 
     const icon = document.createElement('span');
-    icon.classList.add('inline-block', 'mr-2');
+    icon.classList.add('inline-block', 'mr-2', 'align-middle');
     icon.innerHTML = status === 'success' ? successIcon : errorIcon;
-    toast.appendChild(icon);
+    toast.prepend(icon);
 
     document.body.appendChild(toast);
 
@@ -66,7 +66,6 @@ const updateServices = () => {
     });
 }
 
-// FIXME: refactorable into a single function
 // Update the containers list.
 const updateContainers = () => {
     fetch(`${apiUrl}/containers`, {}).then(response => {
@@ -108,13 +107,13 @@ const removeHandler = event => {
 }
 
 // Icons
-const successIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+const successIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
 </svg>
 `
 
 const errorIcon = `
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
   <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
 </svg>`
 

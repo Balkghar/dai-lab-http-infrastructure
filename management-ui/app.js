@@ -24,32 +24,7 @@ const isValidServiceName = service => {
 
 // Render the view with the list of containers and services.
 app.get('/', async (req, res) => {
-    try {
-        const status = await docker.ping({timeout: 1000});
-        const containers = await docker.listContainers({all: true});
-
-        // Count the number of instances for each allowed service.
-        const services = containers
-            .reduce((acc, container) => {
-                const serviceName = container.Labels['com.docker.compose.service'];
-                if (serviceName && isValidServiceName(serviceName) && container.State === 'running') {
-                    acc[serviceName] = (acc[serviceName] || 0) + 1;
-                }
-                return acc;
-            }, {});
-
-        // Add the services that are not running with 0 instances.
-        COMPOSE_SERVICES.forEach(service => {
-            if (!services[service]) {
-                services[service] = 0;
-            }
-        });
-
-        res.render('view', {composeProjectName: COMPOSE_PROJECT_NAME, status, containers, services});
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('An error occurred while fetching the containers');
-    }
+    res.render('view', {composeProjectName: COMPOSE_PROJECT_NAME});
 });
 
 // Get the list of services.
