@@ -3,18 +3,19 @@
 @tailwind utilities;
 
 html {
-    @apply bg-gradient-to-r from-indigo-500 to-purple-500 text-white;
+    @apply bg-gradient-to-r from-indigo-500 to-indigo-800 text-white;
 }
+
 body {
     @apply container mx-auto py-4;
 }
 
 section {
-    @apply mb-8 mt-4 p-4 bg-gradient-to-l border rounded-lg shadow-lg;
+    @apply mb-8 mt-4 p-4 bg-gradient-to-r from-indigo-500 to-indigo-600 border rounded shadow-lg;
 }
 
 h1 {
-    @apply text-3xl font-bold mb-4;
+    @apply text-6xl font-bold my-8;
 }
 
 h2 {
@@ -22,20 +23,37 @@ h2 {
 }
 
 table {
-    @apply table-auto w-full border-collapse text-left;
+    @apply table-auto w-full border-collapse shadow-2xl text-left;
+    tr {
+        @apply border-b;
+    }
+
+    th {
+        @apply bg-gray-200 border text-gray-700 py-2 px-2;
+    }
+
+    td {
+        @apply border py-2 px-2;
+    }
+
+    tr > td:first-child {
+        @apply font-bold;
+    }
+
+    td:has(button) {
+        @apply w-12;
+    }
 }
 
-table th {
-    @apply bg-gray-200 border text-gray-600 px-4 py-2;
-}
-
-table tr {
-    @apply border-b;
-}
-
-table tr:nth-child(even) {
-}
 
 button {
     @apply bg-indigo-500 hover:bg-indigo-700 text-white font-bold px-2 rounded border shadow;
+
+    &.start-service {
+        @apply bg-green-600 hover:bg-green-500 text-gray-50;
+    }
+
+    &.stop-service {
+        @apply bg-red-600 hover:bg-red-500 text-gray-50;
+    }
 }

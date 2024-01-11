@@ -9,10 +9,10 @@
 </head>
 <body>
     <h1>Infrastructure <%= composeProjectName %></h1>
-    <div class="status">
+    <section class="status">
         <h2>Status</h2>
-        <p class="status-text">Not implemented</p>
-    </div>
+        <p class="status-text"><%= status == "OK" ? "Running" : "Stopped" %></p>
+    </section>
 
     <section class="services">
         <h2>Services</h2>
