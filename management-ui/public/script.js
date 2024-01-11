@@ -1,52 +1,52 @@
 // Script for the management UI
 // Authors: Aubry Mangold, Hugo Germano
 
-const apiURl = "/api";
+// API URL
+const apiUrl = "/api";
 
-// Start service event listener
+// Send a command to the API.
+const apiCommand = (command, data) => {
+    fetch(`${apiUrl}/${command}`, {
+        method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)
+    }).then(response => console.log(response))
+        .catch(error => console.error(error))
+}
+
+// Start service event listener.
 document.querySelectorAll('.start-service').forEach(function (element) {
     element.addEventListener('click', function (event) {
         var serviceName = event.target.dataset.service;
         console.info("Start service: " + serviceName);
-        fetch(apiURl + '/start', {
-            method: 'POST', headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({serviceName}),
-        }).then(response => console.log(response))
-            .then(data => console.log(data))
-            .catch(error => console.error(error))
+        apiCommand('start', {serviceName});
     });
 });
 
-// Stop service event listener
+// Stop service event listener.
 document.querySelectorAll('.stop-service').forEach(function (element) {
     element.addEventListener('click', function (event) {
         var serviceName = event.target.dataset.service;
         console.info("Stop service: " + serviceName);
-        fetch(apiURl + '/stop', {
-            method: 'POST', headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({serviceName}),
-        }).then(response => console.log(response))
-            .then(data => console.log(data))
-            .catch(error => console.error(error))
+        apiCommand('stop', {serviceName});
     });
 });
 
-// Add service event listener
+// Add service event listener.
 document.querySelectorAll('.add-service').forEach(function (element) {
     element.addEventListener('click', function (event) {
         var serviceName = event.target.dataset.service;
-        console.info("Add service: " + serviceName);
+        var serviceScale = event.target.dataset.scale++;
+        console.info(`Add service: ${serviceName}.`);
+        apiCommand('scale', {serviceName, serviceScale});
     });
 });
 
-// Remove service event listener
+// Remove service event listener.
 document.querySelectorAll('.remove-service').forEach(function (element) {
     element.addEventListener('click', function (event) {
         var serviceName = event.target.dataset.service;
-        console.info("Remove service: " + serviceName);
+        var serviceScale = event.target.dataset.scale--;
+        console.info(`Remove service: ${serviceName}.`);
+        apiCommand('scale', {serviceName, serviceScale});
     });
 });
+
