@@ -30,6 +30,27 @@ section {
     &.status div {
         @apply flex justify-between;
     }
+
+    &.containers ul {
+        @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 cursor-pointer;
+
+        li {
+            @apply bg-gray-200 text-gray-700 p-4 rounded shadow-lg;
+
+            span {
+                &:first-child {
+                    @apply font-bold;
+                }
+                &:last-child {
+                    @apply font-mono text-xs;
+                }
+            }
+        }
+    }
+
+    &.logs textarea {
+        @apply w-full h-96 bg-gray-200 text-gray-700 p-4 rounded shadow-lg font-mono text-xs break-words;
+    }
 }
 
 h1 {
@@ -87,6 +108,10 @@ button {
 
     &.rebuild-infra {
         @apply my-2 mb-4 bg-stone-900 hover:bg-stone-800 text-gray-50;
+    }
+
+    &.logs-infra {
+        @apply my-2 mb-4 mr-2 bg-white hover:bg-gray-100 text-black;
     }
 }
 

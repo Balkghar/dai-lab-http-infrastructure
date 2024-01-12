@@ -1,16 +1,20 @@
 const express = require('express');
 const Docker = require('dockerode');
 const path = require('path');
+const {env} = require('process');
 const bodyParser = require('body-parser');
 const exec = require('child_process').exec;
-const app = express();
 const docker = new Docker();
-const {env} = require('process');
+
+const app = express();
+const expressWs = require('express-ws')(app);
 
 const PORT = process.env.PORT || 3000;
 const COMPOSE_PROJECT_NAME = env.COMPOSE_NAME || 'dai-lab-http';
 const COMPOSE_SERVICES = process.env.COMPOSE_SERVICES.split(',');
 const COMPOSE_MAX_SCALE = process.env.COMPOSE_MAX_SCALE || 10;
+const WS_BUFFER_SIZE = 1024 * 1024; // 1MB
+const WS_FLUSH_INTERVAL = 1000; // 1 second
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -21,6 +25,14 @@ app.use(bodyParser.json());
 const isValidServiceName = service => {
     return COMPOSE_SERVICES.includes(service);
 }
+
+// Logging middleware
+app.use((req, res, next) => {
+    const now = new Date().toISOString();
+    const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    console.log(`[${now}] ${req.method} ${req.url} from ${clientIp}`);
+    next();
+});
 
 // Render the view with the list of containers and services.
 app.get('/', async (req, res) => {
@@ -72,6 +84,8 @@ app.get('/api/services', async (req, res) => {
 app.get('/api/containers', async (req, res) => {
     try {
         const containers = await docker.listContainers({all: true});
+        // Strip the container name from the prefix slash
+        containers.forEach(c => c.Name = c.Names[0].substring(1));
         res.render('containers', {containers});
     } catch (error) {
         console.error(error);
@@ -167,6 +181,75 @@ app.post('/api/rebuild', async (req, res) => {
         res.status(200).send(`Rebuilt infrastructure '${COMPOSE_PROJECT_NAME}'`);
     });
 });
+
+// Logs websocket.
+let logProcess;
+app.ws('/api/logs', ws => {
+    ws.on('message', message => {
+        console.log(`WebSocket message: ${message}`);
+        const [type, name] = message.split(' ');
+        logProcess && logProcess.kill(); // Kill the previous exec process if any.
+        if (type === 'hello') {
+            return;
+        } else if (type === 'infra') {
+            logProcess = streamInfraLogs(name, ws);
+        } else if (type === 'container') {
+            logProcess = streamContainerLogs(name, ws);
+        }
+    });
+
+    ws.on('error', error => {
+        console.error('WebSocket error:', error);
+    });
+
+    ws.on('close', () => {
+        console.log('WebSocket connection closed');
+    });
+});
+
+// Infrastructure logs streaming function. Buffers the logs and sends them to the client.
+const streamInfraLogs = (infra, ws) => {
+    let buffer = '';
+    const logs = exec(`docker compose -p ${COMPOSE_PROJECT_NAME} logs -f`);
+    logs.stdout.on('data', data => {
+        buffer += data;
+        if (Buffer.byteLength(buffer, 'utf8') >= WS_BUFFER_SIZE) {
+            ws.send(buffer);
+            buffer = '';
+        }
+    });
+
+    setInterval(() => {
+        if (buffer.length > 0) {
+            ws.send(buffer);
+            buffer = '';
+        }
+    }, WS_FLUSH_INTERVAL);
+
+    return logs;
+}
+
+// Containers logs streaming function. Buffers the logs and sends them to the client.
+const streamContainerLogs = (container, ws) => {
+   let buffer = '';
+    const logs = exec(`docker logs -f ${container}`);
+    logs.stdout.on('data', data => {
+        buffer += data;
+        if (Buffer.byteLength(buffer, 'utf8') >= WS_BUFFER_SIZE) {
+            ws.send(buffer);
+            buffer = '';
+        }
+    });
+
+    setInterval(() => {
+        if (buffer.length > 0) {
+            ws.send(buffer);
+            buffer = '';
+        }
+    }, WS_FLUSH_INTERVAL);
+
+    return logs;
+}
 
 // Start the server.
 app.listen(PORT, () => {

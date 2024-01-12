@@ -2,12 +2,12 @@
 // Authors: Aubry Mangold, Hugo Germano
 
 // API URL
-const apiUrl = "/api";
+const API_URL = "/api";
 const RESTART_PROMPT = "Are you sure you want to restart the infrastructure?\r\n\r\nThis may interrupt running services. The infrastructure may take a while to restart.";
 
 // Send a command to the API.
 const apiCommand = (command, data) => {
-    fetch(`${apiUrl}/${command}`, {
+    fetch(`${API_URL}/${command}`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data)
@@ -47,7 +47,7 @@ const notify = (message, status) => {
 
 // Update the status.
 const updateStatus = () => {
-    fetch(`${apiUrl}/status`, {}).then(response => {
+    fetch(`${API_URL}/status`, {}).then(response => {
         // Replace the section.status > div with the new one
         response.text().then(data => {
             document.querySelector('section.status > p').outerHTML = data;
@@ -57,7 +57,7 @@ const updateStatus = () => {
 
 // Update the services list.
 const updateServices = () => {
-    fetch(`${apiUrl}/services`, {}).then(response => {
+    fetch(`${API_URL}/services`, {}).then(response => {
         // Replace the section.status > div with the new one
         response.text().then(data => {
             document.querySelector('section.services > table').outerHTML = data;
@@ -67,7 +67,7 @@ const updateServices = () => {
 
 // Update the containers list.
 const updateContainers = () => {
-    fetch(`${apiUrl}/containers`, {}).then(response => {
+    fetch(`${API_URL}/containers`, {}).then(response => {
         // Replace the section.status > div with the new one
         response.text().then(data => {
             document.querySelector('section.containers > ul').outerHTML = data;
@@ -83,7 +83,7 @@ const restartHandler = event => {
     }
     notify('Infrastructure restarting...');
     console.info("Restart infrastructure.");
-    fetch(`${apiUrl}/restart`, {method: 'POST'}).then(response => {
+    fetch(`${API_URL}/restart`, {method: 'POST'}).then(response => {
         setTimeout(() => document.location.reload(), 3000);
     }).catch(error => {
         notify('Failed to restart infrastructure', 'error');
@@ -99,7 +99,7 @@ const rebuildHandler = event => {
     }
     console.info("Rebuild infrastructure.");
     notify('Infrastructure rebuilding...');
-    fetch(`${apiUrl}/rebuild`, {method: 'POST'}).then(response => {
+    fetch(`${API_URL}/rebuild`, {method: 'POST'}).then(response => {
         setTimeout(() => document.location.reload(), 10000);
     }).catch(error => {
         notify('Failed to rebuild infrastructure', 'error');
@@ -137,6 +137,45 @@ const removeHandler = event => {
     apiCommand('scale', {serviceName, serviceScale});
 }
 
+// Infrastructure logs event handler.
+const infraLogsHandler = event => {
+    const infraName = event.target.dataset.infra;
+    document.querySelector('section.logs > textarea').value = '';
+    ws.send(`infra ${infraName}`);
+}
+
+// Container logs event handler.
+const contrainerLogsHandler = event => {
+    let containerName = event.target.dataset.container || event.target.parentElement.dataset.container;
+    document.querySelector('section.logs > textarea').value = '';
+    ws.send(`container ${containerName}`);
+}
+
+// WebSocket for logs.
+const ws = new WebSocket(`ws://${window.location.hostname}:3000/api/logs`);
+
+ws.onopen = () => {
+    console.log('WebSocket connection opened');
+    ws.send('hello');
+    ws.send(`infra dai-lab-http`);
+};
+
+ws.onerror = error => {
+    console.error('WebSocket error:', error);
+};
+
+ws.onclose = () => {
+    ws.send('bye');
+    console.log('WebSocket connection closed');
+};
+
+ws.onmessage = event => {
+    const logs = document.querySelector('section.logs > textarea')
+    logs.value += '\n' + event.data;
+    logs.value = logs.value.trim();
+    logs.scrollTop = logs.scrollHeight;
+};
+
 // Icons
 const successIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -156,5 +195,10 @@ document.addEventListener('DOMContentLoaded', () => {
     updateServices();
     updateContainers();
 
-    setTimeout(updateStatus, 1000);
+    setTimeout(() => updateStatus(), 1000, true);
+});
+
+// Page unload handler to close the WebSocket.
+window.addEventListener('beforeunload', function(event) {
+    ws.close();
 });

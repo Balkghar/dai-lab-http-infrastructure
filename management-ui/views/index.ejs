@@ -7,35 +7,41 @@
     <title>Docker Services</title>
 </head>
 <body>
-    <h1>Infrastructure <%= composeProjectName %></h1>
-    <section class="status">
+<h1>Infrastructure <%= composeProjectName %></h1>
+<section class="status">
+    <div>
+        <h2>Status</h2>
         <div>
-            <h2>Status</h2>
-            <div>
-                <button class="restart-infra" onclick="restartHandler(event)">Restart</button>
-                <button class="rebuild-infra" onclick="rebuildHandler(event)">Rebuild</button>
-            </div>
+            <button data-infra="dai-lab-http" class="logs-infra" onclick="infraLogsHandler(event)">Logs</button>
+            <button class="restart-infra" onclick="restartHandler(event)">Restart</button>
+            <button class="rebuild-infra" onclick="rebuildHandler(event)">Rebuild</button>
         </div>
-        <p class="status-text">Loading...</p>
-    </section>
+    </div>
+    <p class="status-text">Loading...</p>
+</section>
 
-    <section class="services">
-        <h2>Services</h2>
-        <table>
-            <tr>
-                <td>Loading...</td>
-            </tr>
-        </table>
-    </section>
+<section class="services">
+    <h2>Services</h2>
+    <table>
+        <tr>
+            <td>Loading...</td>
+        </tr>
+    </table>
+</section>
 
-    <section class="containers">
-        <h2>Containers</h2>
-        <ul>
-            Loading...
-        </ul>
-    </section>
+<section class="containers">
+    <h2>Containers</h2>
+    <ul>
+        Loading...
+    </ul>
+</section>
 
-    <script src="script.js"></script>
-    <link href="style.css" type="text/css" rel="stylesheet">
+<section class="logs">
+    <h2>Logs</h2>
+    <textarea readonly></textarea>
+</section>
+
+<script src="script.js"></script>
+<link href="style.css" type="text/css" rel="stylesheet">
 </body>
 </html>
