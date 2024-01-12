@@ -7,8 +7,8 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "build": "npm run build:css",
-    "watch:css": "postcss app.css -o public/style.css --watch",
-    "build:css": "postcss app.css -o public/style.css"
+    "watch:css": "postcss ./app.css -o ./public/style.css --watch",
+    "build:css": "postcss ./app.css -o ./public/style.css"
   },
   "dependencies": {
     "autoprefixer": "^10.4.16",

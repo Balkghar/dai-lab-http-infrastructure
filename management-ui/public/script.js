@@ -13,20 +13,16 @@ const RESTART_PROMPT = "Are you sure you want to restart the infrastructure?\r\n
 // Send a command to the API.
 const apiCommand = (command, data) => {
     fetch(`${API_URL}/${command}`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
-    }).then(
-        response => {
-            if (response.status === 200) {
-                notify(`Command '${command}' executed successfully.`, 'success');
-                updateContainers();
-                updateServices();
-            } else {
-                notify(`Command '${command}' failed.`, 'error');
-            }
+        method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)
+    }).then(response => {
+        if (response.status === 200) {
+            notify(`Command '${command}' executed successfully.`, 'success');
+            updateContainers();
+            updateServices();
+        } else {
+            notify(`Command '${command}' failed.`, 'error');
         }
-    ).catch(error => {
+    }).catch(error => {
         console.error(error);
         notify(`Command '${command}' failed.`, 'error');
     });

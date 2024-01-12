@@ -10,14 +10,14 @@ const Docker = require('dockerode');
 const path = require('path');
 const {env} = require('process');
 const bodyParser = require('body-parser');
-const { exec, spawn } = require('child_process');
+const {exec, spawn} = require('child_process');
 const docker = new Docker();
 
 const app = express();
 const expressWs = require('express-ws')(app);
 
-const APP_PORT = env.PORT || 3000;
-const APP_BASE_PATH = env.APP_BASE_PATH || 'localhost';
+const APP_PORT = env.MGMT_PORT || 3000;
+const APP_BASE_PATH = env.MGMT_URL || 'localhost';
 const COMPOSE_PROJECT_NAME = env.COMPOSE_NAME || 'dai-lab-http';
 const COMPOSE_SERVICES = env.COMPOSE_SERVICES.split(',');
 const COMPOSE_MAX_SCALE = env.COMPOSE_MAX_SCALE || 10;
@@ -51,6 +51,7 @@ app.get('/api/status', async (req, res) => {
             console.error(err);
             return res.status(500).send('An error occurred while fetching the containers');
         }
+
         const status = containers.length === 0 ? 'Stopped' : 'Running';
         res.render('status', {infraStatus: status});
     });
@@ -114,7 +115,6 @@ app.post('/api/start', (req, res) => {
             return res.status(500).send('An error occurred while starting the service');
         }
 
-        console.info(`Started service '${serviceName}'`);
         res.status(200).send(`Started service '${serviceName}'`);
     });
 });
@@ -134,7 +134,6 @@ app.post('/api/stop', (req, res) => {
             return res.status(500).send('An error occurred while stopping the service');
         }
 
-        console.info(`Stopped service '${serviceName}'`);
         res.status(200).send(`Stopped service '${serviceName}'`);
     });
 });
@@ -157,7 +156,6 @@ app.post('/api/scale', async (req, res) => {
             return res.status(500).send('An error occurred while scaling the service.');
         }
 
-        console.info(`Scaled service '${serviceName}' to ${serviceScale}.`);
         res.status(200).send(`Scaled service '${serviceName}' to ${serviceScale}.`);
     });
 });
@@ -170,7 +168,6 @@ app.post('/api/restart', async (req, res) => {
             return res.status(500).send('An error occurred while restarting the infrastructure');
         }
 
-        console.info(`Restarted infrastructure '${COMPOSE_PROJECT_NAME}'`);
         res.status(200).send(`Restarted infrastructure '${COMPOSE_PROJECT_NAME}'`);
     });
 });
@@ -183,7 +180,6 @@ app.post('/api/rebuild', async (req, res) => {
             return res.status(500).send('An error occurred while rebuilding the infrastructure');
         }
 
-        console.info(`Rebuilt infrastructure '${COMPOSE_PROJECT_NAME}'`);
         res.status(200).send(`Rebuilt infrastructure '${COMPOSE_PROJECT_NAME}'`);
     });
 });
@@ -196,7 +192,7 @@ app.ws('/api/logs', ws => {
         const [type, name] = message.split(' ');
         logProcess && logProcess.kill(); // Kill the previous exec process if any.
         if (type === 'hello') {
-            return;
+
         } else if (type === 'infra') {
             logProcess = streamInfraLogs(name, ws);
         } else if (type === 'container') {

@@ -73,6 +73,8 @@ services:
         - COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME
         - COMPOSE_SERVICES=$COMPOSE_SERVICES
         - COMPOSE_MAX_SCALE=$COMPOSE_MAX_SCALE
+        - PORT=$MGMT_PORT
+        - URL=$MGMT_URL
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api.rule=Host(`localhost`) && PathPrefix(`/management-ui`)"
