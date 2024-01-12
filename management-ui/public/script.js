@@ -169,12 +169,21 @@ ws.onerror = error => {
     console.error('WebSocket error:', error);
 };
 
+let buffer = [];
 ws.onmessage = event => {
-    const logs = document.querySelector('section.logs > textarea')
-    logs.value += '\n' + event.data;
-    logs.value = logs.value.trim();
-    logs.scrollTop = logs.scrollHeight;
+    buffer.push(event.data);
 };
+
+// Buffer the display of the log messages.
+setInterval(() => {
+    if (buffer.length > 0) {
+        const logs = document.querySelector('section.logs > textarea')
+        logs.value += buffer;
+        logs.value = logs.value.trim();
+        logs.scrollTop = logs.scrollHeight;
+        buffer = [];
+    }
+}, 250)
 
 // Icons
 const successIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -195,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateServices();
     updateContainers();
 
-    setTimeout(() => updateStatus(), 1000, true);
+    setInterval(() => updateStatus(), 60000, true);
 });
 
 // Page unload handler to close the WebSocket.

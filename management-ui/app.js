@@ -10,7 +10,7 @@ const Docker = require('dockerode');
 const path = require('path');
 const {env} = require('process');
 const bodyParser = require('body-parser');
-const exec = require('child_process').exec;
+const { exec, spawn } = require('child_process');
 const docker = new Docker();
 
 const app = express();
@@ -21,8 +21,6 @@ const APP_BASE_PATH = env.APP_BASE_PATH || 'localhost';
 const COMPOSE_PROJECT_NAME = env.COMPOSE_NAME || 'dai-lab-http';
 const COMPOSE_SERVICES = env.COMPOSE_SERVICES.split(',');
 const COMPOSE_MAX_SCALE = env.COMPOSE_MAX_SCALE || 10;
-const WS_BUFFER_SIZE = 1024 * 1024; // 1MB
-const WS_FLUSH_INTERVAL = 1000; // 1 second
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -209,50 +207,37 @@ app.ws('/api/logs', ws => {
     ws.on('error', error => {
         console.error(`[${new Date().toISOString()}] WebSocket error: ${error}`);
     });
+
+    setInterval(() => {
+        if (buffer.length > 0) {
+            ws.send(buffer.join('\n'));
+            buffer = [];
+        }
+    }, 250)
 });
 
-// Infrastructure logs streaming function. Buffers the logs and sends them to the client.
+// Infrastructure logs streaming function.
 const streamInfraLogs = (infra, ws) => {
-    let buffer = '';
-    const logs = exec(`docker compose -p ${COMPOSE_PROJECT_NAME} logs -f`);
-    logs.stdout.on('data', data => {
-        buffer += data;
-        if (Buffer.byteLength(buffer, 'utf8') >= WS_BUFFER_SIZE) {
-            ws.send(buffer);
-            buffer = '';
-        }
-    });
+    const process = spawn('docker', ['compose', '-p', COMPOSE_PROJECT_NAME, 'logs', '-f']);
 
-    setInterval(() => {
-        if (buffer.length > 0) {
-            ws.send(buffer);
-            buffer = '';
-        }
-    }, WS_FLUSH_INTERVAL);
-
-    return logs;
+    process.stdout.on('data', data => bufferedSend(ws, data.toString()));
+    process.stderr.on('data', data => bufferedSend(ws, data.toString()));
+    return process;
 }
 
-// Containers logs streaming function. Buffers the logs and sends them to the client.
+// Container logs streaming function.
 const streamContainerLogs = (container, ws) => {
-   let buffer = '';
-    const logs = exec(`docker logs -f ${container}`);
-    logs.stdout.on('data', data => {
-        buffer += data;
-        if (Buffer.byteLength(buffer, 'utf8') >= WS_BUFFER_SIZE) {
-            ws.send(buffer);
-            buffer = '';
-        }
-    });
+    const process = spawn('docker', ['logs', '-f', container]);
 
-    setInterval(() => {
-        if (buffer.length > 0) {
-            ws.send(buffer);
-            buffer = '';
-        }
-    }, WS_FLUSH_INTERVAL);
+    process.stdout.on('data', data => bufferedSend(ws, data.toString()));
+    process.stderr.on('data', data => bufferedSend(ws, data.toString()));
+    return process;
+}
 
-    return logs;
+// Buffered sending through the WebSocket.
+let buffer = [];
+const bufferedSend = (ws, message) => {
+    buffer.push(message);
 }
 
 // Start the server.
