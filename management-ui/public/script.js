@@ -154,7 +154,7 @@ const contrainerLogsHandler = event => {
 }
 
 // WebSocket for logs.
-const ws = new WebSocket(`ws://${BASE_PATH}:3000/api/logs`);
+const ws = new WebSocket(`wss://${BASE_PATH}/api/logs`);
 
 ws.onopen = () => {
     ws.send('hello');
