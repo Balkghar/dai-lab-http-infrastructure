@@ -91,5 +91,5 @@ See at [round robin and sticky session](./doc/round-robin_sticky-session.md) how
 
 ## HTTPS with traefik.me
 
-[Traefik.me](https://traefik.me) allows to have a valid certificate on a LAN network without the need of generating one. The dns server of traefik.me resolve all request to *.traefik.me to 127.0.0.1. If you want another to resolve to another IP adress, you need to add it to the dns like this 10.0.0.1.traefik.me.
+[Traefik.me](https://traefik.me) allows to have a valid certificate on a LAN network without the need of generating one. The dns server of traefik.me resolve all request to *.traefik.me to 127.0.0.1. If you want another to resolve to another IP adress, you need to add it to the url like this 10.0.0.1.traefik.me.
 See at [https-with-traefik.me](./doc/https-with-traefik.me.md) how to deploy it.
