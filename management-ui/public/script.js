@@ -6,7 +6,7 @@
 
 
 // Get base path from <base> tag.
-const BASE_PATH = document.querySelector('base').getAttribute('href');
+const BASE_PATH = document.location.hostname;
 const API_URL = '/api';
 const RESTART_PROMPT = "Are you sure you want to restart the infrastructure?\r\n\r\nThis may interrupt running services. The infrastructure may take a while to restart.";
 

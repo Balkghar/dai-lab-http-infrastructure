@@ -16,8 +16,7 @@ const docker = new Docker();
 const app = express();
 const expressWs = require('express-ws')(app);
 
-const APP_PORT = env.MGMT_PORT || 3000;
-const APP_BASE_PATH = env.MGMT_URL || 'localhost';
+const APP_PORT = 3000;
 const COMPOSE_PROJECT_NAME = env.COMPOSE_NAME || 'dai-lab-http';
 const COMPOSE_SERVICES = env.COMPOSE_SERVICES.split(',');
 const COMPOSE_MAX_SCALE = env.COMPOSE_MAX_SCALE || 10;
@@ -41,7 +40,7 @@ app.use((req, res, next) => {
 
 // Render the view with the list of containers and services.
 app.get('/', async (req, res) => {
-    res.render('index', {composeProjectName: COMPOSE_PROJECT_NAME, basePath: APP_BASE_PATH});
+    res.render('index', {composeProjectName: COMPOSE_PROJECT_NAME});
 });
 
 // Get the status of the infrastructure.
