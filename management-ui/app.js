@@ -191,7 +191,7 @@ app.ws('/api/logs', ws => {
         const [type, name] = message.split(' ');
         logProcess && logProcess.kill(); // Kill the previous exec process if any.
         if (type === 'hello') {
-
+            return;
         } else if (type === 'infra') {
             logProcess = streamInfraLogs(name, ws);
         } else if (type === 'container') {

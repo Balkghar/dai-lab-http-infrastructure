@@ -102,6 +102,7 @@ services:
         - COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME
         - COMPOSE_SERVICES=$COMPOSE_SERVICES
         - COMPOSE_MAX_SCALE=$COMPOSE_MAX_SCALE
+    privileged: true
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.mgmt.rule=Host(`mgmt.traefik.me`) && PathPrefix(`/`)"
@@ -109,6 +110,7 @@ services:
       - "traefik.http.routers.mgmt.tls=true"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
 
 volumes:
   certs:
