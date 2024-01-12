@@ -92,10 +92,10 @@ app.get('/api/containers', async (req, res) => {
             console.error(error);
             return res.status(500).send('An error occurred while fetching the containers');
         }
-
+        let filteredContainers = containers.filter(c => isValidServiceName(c.Labels['com.docker.compose.service']));
         // Strip the container name from the prefix slash
-        containers.forEach(c => c.Name = c.Names[0].substring(1));
-        res.render('containers', {containers});
+        filteredContainers.forEach(c => c.Name = c.Names[0].substring(1));
+        res.render('containers', {containers: filteredContainers});
     });
 });
 
