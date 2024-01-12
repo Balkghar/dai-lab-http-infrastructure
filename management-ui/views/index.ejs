@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <base href="<%= basePath %>">
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,8 +14,8 @@
         <h2>Status</h2>
         <div>
             <button data-infra="dai-lab-http" class="logs-infra" onclick="infraLogsHandler(event)">Logs</button>
-            <button class="restart-infra" onclick="restartHandler(event)">Restart</button>
-            <button class="rebuild-infra" onclick="rebuildHandler(event)">Rebuild</button>
+            <button class="restart-infra" onclick="restartHandler()">Restart</button>
+            <button class="rebuild-infra" onclick="rebuildHandler()">Rebuild</button>
         </div>
     </div>
     <p class="status-text">Loading...</p>

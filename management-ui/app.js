@@ -1,3 +1,10 @@
+/**
+ * Docker management application
+ * Features api endpoints to manage a docker-compose infrastructure and a web interface to interact with the api.
+ *
+ * Authors: Aubry Mangold, Hugo Germano
+ */
+
 const express = require('express');
 const Docker = require('dockerode');
 const path = require('path');
@@ -9,10 +16,11 @@ const docker = new Docker();
 const app = express();
 const expressWs = require('express-ws')(app);
 
-const PORT = process.env.PORT || 3000;
+const APP_PORT = env.PORT || 3000;
+const APP_BASE_PATH = env.APP_BASE_PATH || 'localhost';
 const COMPOSE_PROJECT_NAME = env.COMPOSE_NAME || 'dai-lab-http';
-const COMPOSE_SERVICES = process.env.COMPOSE_SERVICES.split(',');
-const COMPOSE_MAX_SCALE = process.env.COMPOSE_MAX_SCALE || 10;
+const COMPOSE_SERVICES = env.COMPOSE_SERVICES.split(',');
+const COMPOSE_MAX_SCALE = env.COMPOSE_MAX_SCALE || 10;
 const WS_BUFFER_SIZE = 1024 * 1024; // 1MB
 const WS_FLUSH_INTERVAL = 1000; // 1 second
 
@@ -28,15 +36,14 @@ const isValidServiceName = service => {
 
 // Logging middleware
 app.use((req, res, next) => {
-    const now = new Date().toISOString();
     const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    console.log(`[${now}] ${req.method} ${req.url} from ${clientIp}`);
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} from ${clientIp}`);
     next();
 });
 
 // Render the view with the list of containers and services.
 app.get('/', async (req, res) => {
-    res.render('index', {composeProjectName: COMPOSE_PROJECT_NAME});
+    res.render('index', {composeProjectName: COMPOSE_PROJECT_NAME, basePath: APP_BASE_PATH});
 });
 
 // Get the status of the infrastructure.
@@ -82,15 +89,16 @@ app.get('/api/services', async (req, res) => {
 
 // Get the list of containers.
 app.get('/api/containers', async (req, res) => {
-    try {
-        const containers = await docker.listContainers({all: true});
+    docker.listContainers({all: true}, (err, containers) => {
+        if (err) {
+            console.error(error);
+            return res.status(500).send('An error occurred while fetching the containers');
+        }
+
         // Strip the container name from the prefix slash
         containers.forEach(c => c.Name = c.Names[0].substring(1));
         res.render('containers', {containers});
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('An error occurred while fetching the containers');
-    }
+    });
 });
 
 // Start a service.
@@ -186,7 +194,7 @@ app.post('/api/rebuild', async (req, res) => {
 let logProcess;
 app.ws('/api/logs', ws => {
     ws.on('message', message => {
-        console.log(`WebSocket message: ${message}`);
+        console.log(`[${new Date().toISOString()}] WebSocket '${message}' from ${ws._socket.remoteAddress}`);
         const [type, name] = message.split(' ');
         logProcess && logProcess.kill(); // Kill the previous exec process if any.
         if (type === 'hello') {
@@ -199,11 +207,7 @@ app.ws('/api/logs', ws => {
     });
 
     ws.on('error', error => {
-        console.error('WebSocket error:', error);
-    });
-
-    ws.on('close', () => {
-        console.log('WebSocket connection closed');
+        console.error(`[${new Date().toISOString()}] WebSocket error: ${error}`);
     });
 });
 
@@ -252,6 +256,6 @@ const streamContainerLogs = (container, ws) => {
 }
 
 // Start the server.
-app.listen(PORT, () => {
-    console.log(`Docker management UI for infrastructure ${COMPOSE_PROJECT_NAME} running on port ${PORT}`);
+app.listen(APP_PORT, () => {
+    console.log(`Docker management UI for infrastructure ${COMPOSE_PROJECT_NAME} running on port ${APP_PORT}`);
 });

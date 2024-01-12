@@ -1,8 +1,13 @@
-// Script for the management UI
-// Authors: Aubry Mangold, Hugo Germano
+/**
+ * Docker management UI.
+ *
+ * Authors: Aubry Mangold, Hugo Germano
+ */
 
-// API URL
-const API_URL = "/api";
+
+// Get base path from <base> tag.
+const BASE_PATH = document.querySelector('base').getAttribute('href');
+const API_URL = '/api';
 const RESTART_PROMPT = "Are you sure you want to restart the infrastructure?\r\n\r\nThis may interrupt running services. The infrastructure may take a while to restart.";
 
 // Send a command to the API.
@@ -13,7 +18,6 @@ const apiCommand = (command, data) => {
         body: JSON.stringify(data)
     }).then(
         response => {
-            console.log(response);
             if (response.status === 200) {
                 notify(`Command '${command}' executed successfully.`, 'success');
                 updateContainers();
@@ -23,7 +27,7 @@ const apiCommand = (command, data) => {
             }
         }
     ).catch(error => {
-        console.log(error);
+        console.error(error);
         notify(`Command '${command}' failed.`, 'error');
     });
 }
@@ -76,14 +80,14 @@ const updateContainers = () => {
 }
 
 // Restart infrastructure event handler.
-const restartHandler = event => {
+const restartHandler = () => {
     const confirmed = confirm(RESTART_PROMPT);
     if (!confirmed) {
         return;
     }
     notify('Infrastructure restarting...');
     console.info("Restart infrastructure.");
-    fetch(`${API_URL}/restart`, {method: 'POST'}).then(response => {
+    fetch(`${API_URL}/restart`, {method: 'POST'}).then(() => {
         setTimeout(() => document.location.reload(), 3000);
     }).catch(error => {
         notify('Failed to restart infrastructure', 'error');
@@ -92,14 +96,14 @@ const restartHandler = event => {
 }
 
 // Rebuild infrastructure event handler.
-const rebuildHandler = event => {
+const rebuildHandler = () => {
     const confirmed = confirm(RESTART_PROMPT);
     if (!confirmed) {
         return;
     }
     console.info("Rebuild infrastructure.");
     notify('Infrastructure rebuilding...');
-    fetch(`${API_URL}/rebuild`, {method: 'POST'}).then(response => {
+    fetch(`${API_URL}/rebuild`, {method: 'POST'}).then(() => {
         setTimeout(() => document.location.reload(), 10000);
     }).catch(error => {
         notify('Failed to rebuild infrastructure', 'error');
@@ -125,7 +129,7 @@ const stopHandler = event => {
 const addHandler = event => {
     const serviceName = event.target.dataset.service;
     const serviceScale = parseInt(event.target.dataset.scale) + 1;
-    console.info(`Add service: ${serviceName}.`);
+    console.info(`Add service: ${serviceName}`);
     apiCommand('scale', {serviceName, serviceScale});
 }
 
@@ -133,7 +137,7 @@ const addHandler = event => {
 const removeHandler = event => {
     const serviceName = event.target.dataset.service;
     const serviceScale = parseInt(event.target.dataset.scale) - 1;
-    console.info(`Remove service: ${serviceName}.`);
+    console.info(`Remove service: ${serviceName}`);
     apiCommand('scale', {serviceName, serviceScale});
 }
 
@@ -142,6 +146,7 @@ const infraLogsHandler = event => {
     const infraName = event.target.dataset.infra;
     document.querySelector('section.logs > textarea').value = '';
     ws.send(`infra ${infraName}`);
+    notify(`Showing logs for infrastructure ${infraName}`, 'success');
 }
 
 // Container logs event handler.
@@ -149,24 +154,19 @@ const contrainerLogsHandler = event => {
     let containerName = event.target.dataset.container || event.target.parentElement.dataset.container;
     document.querySelector('section.logs > textarea').value = '';
     ws.send(`container ${containerName}`);
+    notify(`Showing logs for container ${containerName}`, 'success');
 }
 
 // WebSocket for logs.
-const ws = new WebSocket(`ws://${window.location.hostname}:3000/api/logs`);
+const ws = new WebSocket(`ws://${BASE_PATH}:3000/api/logs`);
 
 ws.onopen = () => {
-    console.log('WebSocket connection opened');
     ws.send('hello');
     ws.send(`infra dai-lab-http`);
 };
 
 ws.onerror = error => {
     console.error('WebSocket error:', error);
-};
-
-ws.onclose = () => {
-    ws.send('bye');
-    console.log('WebSocket connection closed');
 };
 
 ws.onmessage = event => {
@@ -199,6 +199,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Page unload handler to close the WebSocket.
-window.addEventListener('beforeunload', function(event) {
+window.addEventListener('beforeunload', () => {
     ws.close();
 });
