@@ -26,6 +26,16 @@ Dockerode doesn't support docker compose and recommends to use docker swarm inst
 infrastructures. It has been decided to **run docker compose commands** via the node `exec` function instead. This
 exposes the application to serious security risks.
 
+## API endpoints
+
+- `GET /api/status` returns an HTML fragment with the status of the infrastructure.
+- `GET /api/services`returns an HTML fragment with a table of all services.
+- `GET /api/containers` returns an HTML fragment with a list of all containers.
+- `WebSocket /api/logs` returns a WebSocket connection to the logs of a container. The server expects a command line in
+  the `container <container_name>` format. The server will then send the logs of the container to the client.
+
+Some demo requests are available in the [demo.http](./demo.http) file.
+
 ## Docker
 
 The application is ready to go as a Docker container. Run the following commands to build and run the container:
@@ -37,7 +47,8 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock dai-lab-http/management-
 
 > 💡 The host's Docker socket must be mounted as a volume for the UI to be able to control the infrastructure.
 
-A docker compose infrastructure must be present on the machine and the environment variables must be correctly set for the container to work as a stand-alone.
+A docker compose infrastructure must be present on the machine and the environment variables must be correctly set for
+the container to work as a stand-alone.
 
 ## Docker compose
 
