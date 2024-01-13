@@ -2,3 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+    @apply bg-gradient-to-r from-orange-400 to-amber-400 text-white;
+}
+
+body {
+    @apply container mx-auto py-4;
+}
+
+main {
+    @apply mb-8 mt-4 p-4 border rounded shadow-lg;
+
+
+}
+
+h1 {
+    @apply text-6xl font-bold my-8;
+}
+
+h2 {
+    @apply text-2xl font-bold mb-4;
+}
+
+h3 {
+    @apply text-xl font-bold mb-4;
+}

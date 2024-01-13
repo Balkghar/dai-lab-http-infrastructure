@@ -71,14 +71,21 @@ const notes = [
    }
 ];
 
-function loadData(){
-   notes.forEach(createDivElement);
-}
+// Pour chaque post, append à <main> :
+//     <article>
+//        <h2>Title</h2>
+//        <p>Loading...</p>
+//
+//        <h3>Comments</h3>
+//        <ul>
+//           <li>Loading... <span>Anon</span></li>
+//           <li>Loading... <span>Anon</span></li>
+//        </ul>
+//     </article>
 
 function createDivElement(note) {
-
    var h1 = document.createElement("h1");
-   var p =  document.createElement("p");
+   var p = document.createElement("p");
    var newContenth1 = document.createTextNode(note.title);
    var newContentp = document.createTextNode(note.content);
    p.appendChild(newContentp);
@@ -86,3 +93,7 @@ function createDivElement(note) {
    document.querySelector("#notes").append(h1)
    document.querySelector("#notes").append(p);
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+   notes.forEach(createDivElement);
+});
