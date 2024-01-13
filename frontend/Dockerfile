@@ -1,7 +1,9 @@
 FROM node:20 AS build
 WORKDIR /src
+COPY ./src/package.json .
+RUN npm install
 COPY ./src .
-RUN npm install && npm run build
+RUN npm run build
 
 FROM nginx
 COPY --from=build /src/static /usr/share/nginx/html
