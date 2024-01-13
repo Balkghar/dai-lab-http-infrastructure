@@ -11,19 +11,38 @@ body {
 }
 
 main {
-    @apply mb-8 mt-4 p-4 border rounded shadow-lg;
-
-
+    @apply mb-8 mt-4 p-4 border rounded shadow-lg bg-white text-gray-800;
 }
 
 h1 {
-    @apply text-6xl font-bold my-8;
+    @apply text-6xl font-bold my-8 text-center;
 }
 
 h2 {
-    @apply text-2xl font-bold mb-4;
+    @apply text-2xl font-bold mb-4 text-orange-600;
 }
 
 h3 {
-    @apply text-xl font-bold mb-4;
+    @apply text-xl font-bold mb-4 text-orange-500;
+}
+
+a {
+    @apply text-orange-500 underline;
+}
+
+ul {
+    @apply list-disc list-inside;
+}
+
+li {
+    @apply mb-2;
+}
+
+article {
+    @apply mb-8;
+}
+
+/* New styles for the comments section */
+article ul {
+    @apply p-4 mt-4 border rounded shadow-lg bg-gray-100;
 }
