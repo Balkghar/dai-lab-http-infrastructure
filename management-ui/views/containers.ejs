@@ -1,0 +1,8 @@
+<ul>
+    <% containers.forEach(container => { %>
+        <li data-container="<%= container.Name %>" onclick="contrainerLogsHandler(event)">
+            <span><%= container.Name %></span>
+            <span><%= container.State %></span>
+        </li>
+    <% }); %>
+</ul>

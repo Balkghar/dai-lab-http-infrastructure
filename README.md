@@ -37,13 +37,17 @@ The following environment variables are required to run the API and the database
 - `MONGO_INITDB_DATABASE`: the name of the database to use.
 - `MONGO_INITDB_ROOT_HOST`: the host of the MongoDB database.
 - `DATABASE_URI`: the URI of the MongoDB database.
+- `COMPOSE_NAME`: the name of the docker compose infrastructure.
+- `COMPOSE_SERVICES`: the services that may be managed by the UI.
+- `COMPOSE_MAX_SCALE`: the maximum scale of the services of the infrastructure.
 
 A [example](.env.example) `.env` file is provided with default values for the project.
 
 ## Docker compose
 
 The project uses docker-compose to deploy the different components based on their respective Dockerfiles.
-The stack is named `dai-lab-http`. The [docker-compose](./docker-compose.yaml) file is located at the root of the project.
+The stack is named `dai-lab-http`. The [docker-compose](./docker-compose.yaml) file is located at the root of the
+project.
 
 The following services are defined:
 
@@ -67,7 +71,8 @@ docker compose down
 
 ## Traefik
 
-Traefik is used as a reverse proxy for the project. Further documentation about reverse proxies can be found in the [related README file](./reverse-proxy/README.md).
+Traefik is used as a reverse proxy for the project. Further documentation about reverse proxies can be found in
+the [related README file](./reverse-proxy/README.md).
 
 The Traefik configuration is the following:
 
@@ -78,18 +83,35 @@ Furthermore, the Traefik dashboard is available at [localhost:8080](http://local
 
 ## Scalability and load-balancing
 
-The application is set up to use 5 instances of each service using the `replicas` attribute in the [docker-compose](./docker-compose.yaml) configuration.
+The application is set up to use 5 instances of each service using the `replicas` attribute in
+the [docker-compose](./docker-compose.yaml) configuration.
 
 Further information about scalability and load balancing may be found in the [documentation](./reverse-proxy/README.md).
 
-## Round Robin and sticky sessions
+## Round-robin and sticky sessions
 
-Round robin is a load-balencing strategy that distributes the charge of a service equally between all available instances.
-Sticky sessions allow a client to always communicate with the same container.
-Both are implemented using Traefik in the docker-compose file.
+Round robin is a load-balencing strategy that distributes the charge of a service equally between all available
+instances. Sticky sessions allow a client to always communicate with the same container. Both are implemented using Traefik in the docker-compose file.
+
 See at [round robin and sticky session](./doc/round-robin_sticky-session.md) how to configure it.
 
-## HTTPS with traefik.me
+## Securing Traefik with HTTPS
 
-[Traefik.me](https://traefik.me) allows to have a valid certificate on a LAN network without the need of generating one. The dns server of traefik.me resolve all request to *.traefik.me to 127.0.0.1. If you want another to resolve to another IP adress, you need to add it to the url like this 10.0.0.1.traefik.me.
-See at [https-with-traefik.me](./doc/https-with-traefik.me.md) how to deploy it.
+[Traefik.me](https://traefik.me) allows to have a valid certificate on a LAN network without the need of generating one.
+The dns server of traefik.me resolve all request to *.traefik.me to 127.0.0.1. If you want another to resolve to another
+IP adress, you need to add it to the url like this 10.0.0.1.traefik.me.
+
+See [https-with-traefik.me](./doc/https-with-traefik.me.md) for detailed deployment instructions.
+
+## Management UI
+
+The project comes with a homemade management UI. The UI allows to restart and rebuild the infrastructure, start, stop
+and scale containers. It also displays container logs using a WebSocket.
+
+The UI is set to be accessible on the `mgmt` subdomain by default. The containers that need to be managed must be
+allow-listed in the .env file.
+
+> ⚠️ This project may contain vulnerabilities. Use at your own risk.
+
+More information about the use and configuration of management UI can be found in its
+own [README](./management-ui/README.md).

@@ -79,7 +79,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml
       - ./tls.yml:/etc/traefik/tls.yml
@@ -91,6 +90,28 @@ services:
     command: sh -c "cd /etc/ssl/traefik && wget traefik.me/cert.pem -O cert.pem && wget traefik.me/privkey.pem -O privkey.pem"
     volumes:
       - certs:/etc/ssl/traefik
+
+  management-ui:
+    env_file:
+      - .env
+    build:
+      context: ./management-ui
+      dockerfile: Dockerfile
+      args:
+        - COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME
+        - COMPOSE_SERVICES=$COMPOSE_SERVICES
+        - COMPOSE_MAX_SCALE=$COMPOSE_MAX_SCALE
+    privileged: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mgmt.rule=Host(`mgmt.traefik.me`)"
+      - "traefik.http.services.mgmt.loadbalancer.server.port=3000"
+      - "traefik.http.services.mgmt.loadBalancer.sticky.cookie=true"
+      - "traefik.http.services.mgmt.loadBalancer.sticky.cookie.name=mgmt-session"
+      - "traefik.http.routers.mgmt.tls=true"
+    volumes:
+      - /:/host:ro
+      - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
   certs:

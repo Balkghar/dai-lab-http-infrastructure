@@ -1,0 +1,15 @@
+FROM docker:dind
+
+ARG COMPOSE_NAME
+ARG COMPOSE_SERVICES
+ARG COMPOSE_MAX_SCALE
+
+ENV COMPOSE_NAME ${COMPOSE_NAME}
+ENV COMPOSE_SERVICES ${COMPOSE_SERVICES}
+ENV COMPOSE_MAX_SCALE ${COMPOSE_MAX_SCALE}
+
+WORKDIR /usr/src/app
+COPY . .
+RUN apk add --no-cache nodejs npm && npm install && npm run build
+EXPOSE 3000
+CMD [ "npm", "start" ]

@@ -1,0 +1,39 @@
+### Status
+GET localhost:3000/status
+
+### Services
+GET localhost:3000/services
+
+### All containers
+GET localhost:3000/containers
+
+### Start a service
+POST localhost:3000/start
+Content-Type: application/json
+
+{
+  "serviceName": "web"
+}
+
+### Stop a service
+POST localhost:3000/stop
+Content-Type: application/json
+
+{
+  "serviceName": "api"
+}
+
+### Scale a service
+POST localhost:3000/scale
+Content-Type: application/json
+
+{
+  "serviceName": "api",
+  "serviceScale": 5
+}
+
+### Restart the infrastructure
+POST localhost:3000/restart
+
+### Rebuid the infrastructure
+POST localhost:3000/rebuild

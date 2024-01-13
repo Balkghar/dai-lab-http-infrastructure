@@ -1,0 +1,24 @@
+<table>
+    <thead>
+        <tr>
+            <th>Service</th>
+            <th>Replicas</th>
+            <th>Start</th>
+            <th>Stop</th>
+            <th>Add</th>
+            <th>Remove</th>
+        </tr>
+    </thead>
+    <tbody>
+    <% for(const serviceName in services) { %>
+    <tr>
+        <td><%= serviceName %></td>
+        <td><%= services[serviceName] %></td>
+        <td><button class="start-service" data-service="<%= serviceName %>" onclick="startHandler(event)">Start</button></td>
+        <td><button class="stop-service" data-service="<%= serviceName %>" onclick="stopHandler(event)">Stop</button></td>
+        <td><button class="add-service" data-service="<%= serviceName %>" data-scale="<%= services[serviceName] %>" onclick="addHandler(event)">Add</button></td>
+        <td><button class="remove-service" data-service="<%= serviceName %>" data-scale="<%= services[serviceName] %>" onclick="removeHandler(event)">Remove</button></td>
+    </tr>
+    <% } %>
+    </tbody>
+</table>
