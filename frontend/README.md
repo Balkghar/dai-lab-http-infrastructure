@@ -17,5 +17,5 @@ docker run -d -p 80:80 web-image
 ```
 
 If you want to change the images' name, modifiy the argument "web-image" on the building command.
-If you want to change the content of the website, feel free to modifiy the content of the [src](./src/) folder.
+If you want to change the content of the website, feel free to modifiy the content of the [src](src/) folder.
 The configuration of NGINX can be modified at [nginx.conf](./conf/nginx.conf).
