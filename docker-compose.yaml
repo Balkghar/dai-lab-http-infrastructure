@@ -79,7 +79,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml
       - ./tls.yml:/etc/traefik/tls.yml
@@ -105,8 +104,10 @@ services:
     privileged: true
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.mgmt.rule=Host(`mgmt.traefik.me`) && PathPrefix(`/`)"
+      - "traefik.http.routers.mgmt.rule=Host(`mgmt.traefik.me`)"
       - "traefik.http.services.mgmt.loadbalancer.server.port=3000"
+      - "traefik.http.services.mgmt.loadBalancer.sticky.cookie=true"
+      - "traefik.http.services.mgmt.loadBalancer.sticky.cookie.name=mgmt-session"
       - "traefik.http.routers.mgmt.tls=true"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
