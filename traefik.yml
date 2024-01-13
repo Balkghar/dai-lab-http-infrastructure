@@ -1,4 +1,6 @@
-logLevel: INFO
+logLevel: DEBUG
+
+accessLog: {}
 
 api:
   insecure: true
