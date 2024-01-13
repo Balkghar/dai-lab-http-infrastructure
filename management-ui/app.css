@@ -38,6 +38,8 @@ section {
             @apply bg-gray-200 text-gray-700 p-4 rounded shadow-lg;
 
             span {
+                @apply flex;
+
                 &:first-child {
                     @apply font-bold;
                 }
