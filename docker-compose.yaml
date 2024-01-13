@@ -60,8 +60,7 @@ services:
       - mongo
 
   reverse-proxy:
-    image: traefik:v2.11
-    command: --providers.docker=true
+    image: traefik:v2.10
     labels:
       - "traefik.http.services.traefik.loadbalancer.server.port=8080"
       - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
