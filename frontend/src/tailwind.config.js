@@ -1,5 +1,5 @@
 module.exports = {
-    content: ['./script.js', './index.html'], darkMode: 'class', theme: {
+    content: ['./script.js', './index.html', './index.css'], darkMode: 'class', theme: {
         extend: {},
     }, plugins: [{
         tailwindcss: {}, autoprefixer: {},
