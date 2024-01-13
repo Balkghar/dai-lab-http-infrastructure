@@ -12,7 +12,7 @@ POST localhost:3000/start
 Content-Type: application/json
 
 {
-  "serviceName": "web",
+  "serviceName": "web"
 }
 
 ### Stop a service
