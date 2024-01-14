@@ -47,6 +47,7 @@ function createDivElement(blog, includeLink = true) {
   p.appendChild(newContentp);
   h2.appendChild(newContenth2);
   var article = document.createElement("article");
+  article.dataset.id = blog._id; // Add the blog post's id as a data attribute
   article.appendChild(h2);
   article.appendChild(p);
   
@@ -66,9 +67,51 @@ function createDivElement(blog, includeLink = true) {
   
   fetchComments(blog._id, ul);
 
-  // Return the created article element instead of appending it to the "main" element
+  // Create the Edit button
+  var editButton = document.createElement("button");
+  editButton.textContent = "Edit";
+  article.appendChild(editButton);
+
+  // Create the Edit form
+  var editForm = document.createElement("form");
+  var titleInput = document.createElement("input");
+  var contentInput = document.createElement("textarea");
+  var submitButton = document.createElement("button");
+
+  titleInput.placeholder = "New Blog Title";
+  contentInput.placeholder = "New Blog Content";
+  submitButton.textContent = "Update Blog";
+
+  editForm.appendChild(titleInput);
+  editForm.appendChild(contentInput);
+  editForm.appendChild(submitButton);
+  editForm.style.display = "none"; // Hide the form by default
+
+  article.appendChild(editForm);
+
+  // Add an event listener to the Edit button
+  editButton.addEventListener("click", function() {
+    fetchBlogData(blog._id).then(updatedBlog => {
+      // Populate the form with the updated blog details
+      titleInput.value = updatedBlog.title;
+      contentInput.value = updatedBlog.content;
+
+      editForm.style.display = "block"; // Show the form when the Edit button is clicked
+    });
+  });
+
+  // Add an event listener to the Edit form
+  editForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    updateBlog(blog._id, titleInput.value, contentInput.value);
+    titleInput.value = '';
+    contentInput.value = '';
+    editForm.style.display = "none"; // Hide the form after submission
+  });
+
   return article;
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
   // Get the query parameters from the URL
@@ -160,4 +203,33 @@ function createNewBlog(title, content) {
   .catch((error) => {
       console.error('Error:', error);
   });
+}
+function updateBlog(blogId, newTitle, newContent) {
+  fetch(`https://api.traefik.me/api/blogs/${blogId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      title: newTitle,
+      content: newContent,
+    }),
+  })
+  .then(response => response.json())
+  .then(updatedBlog => {
+    // Update the blog post in the DOM with the updated blog details
+    const blogElement = document.querySelector(`article[data-id="${blogId}"]`);
+    blogElement.querySelector("h2").textContent = updatedBlog.title;
+    blogElement.querySelector("p").textContent = updatedBlog.content;
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+}
+function fetchBlogData(blogId) {
+  return fetch(`https://api.traefik.me/api/blogs/${blogId}`)
+    .then(response => response.json())
+    .catch((error) => {
+      console.error('Error:', error);
+    });
 }

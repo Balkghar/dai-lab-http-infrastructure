@@ -60,3 +60,8 @@ form textarea {
 form button {
     @apply bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow mt-6 cursor-pointer;
 }
+
+/* Styles for the Edit button */
+button {
+    @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow cursor-pointer;
+}
