@@ -10,7 +10,9 @@ First you need to build the docker images with this command:
 docker build -t dai/frontend .
 ```
 
-Then you can run the images:
+Before running the image, you need to launch to the API, see at [README.md](../api/README.md) how to do it.
+
+Then you can run the image:
 
 ```bash
 docker run -d -p 80:80 dai/frontend

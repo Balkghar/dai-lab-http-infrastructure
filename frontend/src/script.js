@@ -10,7 +10,7 @@ function createCommentElement(comment) {
 }
 
 function fetchComments(blogId, ul) {
-    fetch(`https://api.traefik.me/api/blogs/${blogId}/comments`)
+    fetch(`${window._env_.URL}/api/blogs/${blogId}/comments`)
         .then((response) => {
             if (!response.ok) {
                 // Check if the response was not ok
@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
         fetchSinglePost(id);
     } else {
         // If no id parameter is present, fetch all blog posts
-        fetch("https://api.traefik.me/api/blogs")
+        fetch(`${window._env_.URL}/api/blogs`)
             .then((response) => response.json())
             .then((blogs) =>
                 blogs.forEach((blog) => {
@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function fetchSinglePost(blogId) {
-    fetch(`https://api.traefik.me/api/blogs/${blogId}`)
+    fetch(`${window._env_.URL}/api/blogs/${blogId}`)
         .then((response) => response.json())
         .then((blog) => {
             const blogElement = createDivElement(blog, false);
@@ -198,7 +198,7 @@ function createNewBlog(title, content) {
         content: content,
     };
 
-    fetch("https://api.traefik.me/api/blogs", {
+    fetch(`${window._env_.URL}/api/blogs`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -218,7 +218,7 @@ function createNewBlog(title, content) {
         });
 }
 function updateBlog(blogId, newTitle, newContent) {
-    fetch(`https://api.traefik.me/api/blogs/${blogId}`, {
+    fetch(`${window._env_.URL}/api/blogs/${blogId}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
@@ -242,14 +242,14 @@ function updateBlog(blogId, newTitle, newContent) {
         });
 }
 function fetchBlogData(blogId) {
-    return fetch(`https://api.traefik.me/api/blogs/${blogId}`)
+    return fetch(`${window._env_.URL}/api/blogs/${blogId}`)
         .then((response) => response.json())
         .catch((error) => {
             console.error("Error:", error);
         });
 }
 function deleteBlog(blogId) {
-    fetch(`https://api.traefik.me/api/blogs/${blogId}`, {
+    fetch(`${window._env_.URL}/api/blogs/${blogId}`, {
         method: "DELETE",
     })
         .then((response) => {
@@ -268,7 +268,7 @@ function deleteBlog(blogId) {
         });
 }
 function addComment(blogId, author, content) {
-    fetch(`https://api.traefik.me/api/blogs/${blogId}/comments`, {
+    fetch(`${window._env_.URL}/api/blogs/${blogId}/comments`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
