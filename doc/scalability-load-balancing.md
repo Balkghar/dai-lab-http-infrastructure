@@ -2,7 +2,7 @@
 
 ## Scalability
 
-Scalability allows to add or remove resources dynamically to meet a variying demand and allow for reliablity and performance. This application uses a horizontal type of scaling where the workload is distributed between multiple instances of the same service. This achieved using docker and Traefik together.
+Scalability allows to add or remove resources dynamically to meet a varying demand and allow for reliability and performance. This application uses a horizontal type of scaling where the workload is distributed between multiple instances of the same service. This achieved using docker and Traefik together.
 
 The docker compose configuration accepts the `replicas` attribute which specifies the initial amount of clones of a service that should be created. New instances of each service may then be created by using the command `docker compose up -d --scale <instance_name>=<count>`. Note that the docker services can not use the `container_name` attributes if they want to have replicas.
 
@@ -17,6 +17,12 @@ api:
   deploy:
     replicas: 5
 ```
+
+Additionnaly, you can adapt the number of replicas from the CLI, like that:
+```bash
+ docker compose up --scale web=2 -d
+```
+The field `web` is the service to scale.
 
 Traefik will then automatically detect the multiple instances of a same service.
 
