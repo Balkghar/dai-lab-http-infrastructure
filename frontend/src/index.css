@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+    @apply bg-gradient-to-r from-orange-400 to-amber-400 text-white;
+}
+
+body {
+    @apply container mx-auto py-4;
+}
+
+main {
+    @apply mb-8 mt-4 p-4 border rounded shadow-lg bg-white text-gray-800;
+}
+
+h1 {
+    @apply text-6xl font-bold my-8 text-center;
+}
+
+h2 {
+    @apply text-2xl font-bold mb-4 text-orange-600;
+}
+
+h3 {
+    @apply text-xl font-bold mb-4 text-orange-500;
+}
+
+a {
+    @apply text-orange-500 underline;
+}
+
+ul {
+    @apply list-disc list-inside;
+}
+
+li {
+    @apply mb-2;
+}
+
+article {
+    @apply mb-8;
+}
+
+/* New styles for the comments section */
+article ul {
+    @apply p-4 border rounded shadow-lg bg-gray-100 my-4;
+}
+
+/* New styles for the form */
+form {
+    @apply bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-auto mx-auto w-4/5 max-w-xl;
+}
+
+form input[type="text"],
+form textarea {
+    @apply shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow my-4;
+}
+
+form button {
+    @apply bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 mr-2 rounded focus:outline-none focus:shadow mt-6 cursor-pointer;
+}
+
+/* Styles for the Edit button */
+button {
+    @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mr-2 rounded focus:outline-none focus:shadow cursor-pointer;
+}
