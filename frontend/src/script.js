@@ -67,6 +67,14 @@ function createDivElement(blog, includeLink = true) {
   
   fetchComments(blog._id, ul);
 
+    // Create the Delete button
+    var deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.addEventListener("click", function() {
+      deleteBlog(blog._id);
+    });
+    article.appendChild(deleteButton);
+
   // Create the Edit button
   var editButton = document.createElement("button");
   editButton.textContent = "Edit";
@@ -232,4 +240,21 @@ function fetchBlogData(blogId) {
     .catch((error) => {
       console.error('Error:', error);
     });
+}
+function deleteBlog(blogId) {
+  fetch(`https://api.traefik.me/api/blogs/${blogId}`, {
+    method: 'DELETE',
+  })
+  .then(response => {
+    if (response.ok) {
+      // If the response was OK, remove the blog post from the DOM
+      const blogElement = document.querySelector(`article[data-id="${blogId}"]`);
+      blogElement.remove();
+    } else {
+      console.error('Error:', response.statusText);
+    }
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 }
