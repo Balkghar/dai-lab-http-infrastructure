@@ -20,11 +20,17 @@ const APP_PORT = 3000;
 const COMPOSE_PROJECT_NAME = env.COMPOSE_NAME || 'dai-lab-http';
 const COMPOSE_SERVICES = env.COMPOSE_SERVICES.split(',');
 const COMPOSE_MAX_SCALE = env.COMPOSE_MAX_SCALE || 10;
+const COMPOSE_DEFAULT_SCALE = env.COMPOSE_DEFAULT_SCALE || 1;
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
+
+let servicesScale = {}
+COMPOSE_SERVICES.forEach(service => {
+  servicesScale[service] = COMPOSE_DEFAULT_SCALE;
+});
 
 // Check if the service name is in the allowed list.
 const isValidServiceName = service => {
@@ -148,8 +154,13 @@ app.post('/api/scale', async (req, res) => {
         return res.status(400).send(`Invalid scale number: ${serviceScale}`);
     }
 
-    const command = `chroot /host /bin/bash -c "docker compose -f $(docker compose ls | sed -n '2p' | awk '{print $3}') up -d --scale ${serviceName}=${serviceScale}"`
-    // Execute docker compose scale <serviceName>=<scaleNumber>
+    servicesScale[serviceName] = serviceScale;
+
+    // Create a string that contains --scale <serviceName>=<scaleNumber> for each entry of servicesScale. Scaling
+    // a single service with --scale would result in losing the scale of the remaining services.
+    const scaleParams = Object.entries(servicesScale).map(([key, value]) => `--scale ${key}=${value}`).join(' ');
+
+    const command = `chroot /host /bin/bash -c "docker compose -f $(docker compose ls | sed -n '2p' | awk '{print $3}') up -d ${scaleParams}"`
     exec(command, (err) => {
         if (err) {
             console.error(err);
@@ -174,7 +185,7 @@ app.post('/api/restart', async (req, res) => {
 
 // Rebuild the infrastructure.
 app.post('/api/rebuild', async (req, res) => {
-    exec(`docker compose -p ${COMPOSE_PROJECT_NAME} up -d --build`, (err) => {
+    exec(`chroot /host /bin/bash -c "docker compose -f $(docker compose ls | sed -n '2p' | awk '{print $3}') up -d --build"`, (err) => {
         if (err) {
             console.error(err);
             return res.status(500).send('An error occurred while rebuilding the infrastructure');
