@@ -18,6 +18,12 @@ Then you can run the image:
 docker run -d -p 80:80 dai/frontend
 ```
 
+The API's URL can be modified through the environment variable 'URL'. If not specified, it defaults to "https://api.traefik.me":
+
+```bash
+docker run -e "URL=http://example.com" -d -p 80:80 dai/frontend
+```
+
 The images is build in two stages. This method is called [multi-stage builds](https://docs.docker.com/build/building/multi-stage/).
 The first stage uses [Node.js](https://nodejs.org/en) to build the CSS for the website using [TailwindCSS](https://tailwindcss.com/). Through PostCSS, Tailwind tailors the final stylesheet to include only what actually is used in the [index.css](./src/index.css) file. This build stage also copies all the files to the `static` folder.
 
