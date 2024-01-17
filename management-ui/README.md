@@ -65,8 +65,6 @@ management-ui:
       - COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME
       - COMPOSE_SERVICES=$COMPOSE_SERVICES
       - COMPOSE_MAX_SCALE=$COMPOSE_MAX_SCALE
-      - PORT=$MGMT_PORT
-      - URL=$MGMT_URL
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
 ```
