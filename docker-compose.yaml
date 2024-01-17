@@ -12,6 +12,8 @@ services:
       - "traefik.http.routers.static.tls=true"
     env_file:
       - .env
+    args:
+      - URL=$URL
     deploy:
       replicas: 1
 
