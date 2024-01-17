@@ -1,14 +1,14 @@
 ### Status
-GET localhost:3000/status
+GET mgmt.traefik.me/status
 
 ### Services
-GET localhost:3000/services
+GET mgmt.traefik.me/services
 
 ### All containers
-GET localhost:3000/containers
+GET mgmt.traefik.me/containers
 
 ### Start a service
-POST localhost:3000/start
+POST mgmt.traefik.me/start
 Content-Type: application/json
 
 {
@@ -16,7 +16,7 @@ Content-Type: application/json
 }
 
 ### Stop a service
-POST localhost:3000/stop
+POST mgmt.traefik.me/stop
 Content-Type: application/json
 
 {
@@ -24,7 +24,7 @@ Content-Type: application/json
 }
 
 ### Scale a service
-POST localhost:3000/scale
+POST mgmt.traefik.me/scale
 Content-Type: application/json
 
 {
@@ -33,7 +33,7 @@ Content-Type: application/json
 }
 
 ### Restart the infrastructure
-POST localhost:3000/restart
+POST mgmt.traefik.me/restart
 
 ### Rebuid the infrastructure
-POST localhost:3000/rebuild
+POST mgmt.traefik.me/rebuild
