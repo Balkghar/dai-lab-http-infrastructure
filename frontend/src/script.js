@@ -131,27 +131,38 @@ document.addEventListener("DOMContentLoaded", () => {
     // Get the id parameter
     const id = urlParams.get("id");
 
-    if (id) {
-        // If an id parameter is present, fetch the corresponding blog post and its comments
-        fetchSinglePost(id);
-    } else {
-        // If no id parameter is present, fetch all blog posts
-        fetch(`${window._env_.URL}/api/blogs`)
-            .then((response) => response.json())
-            .then((blogs) =>
-                blogs.forEach((blog) => {
-                    const blogElement = createDivElement(blog, true);
-                    document.querySelector("main").appendChild(blogElement);
+    // Function to fetch and display blog posts
+    const fetchAndDisplayPosts = () => {
+        if (id) {
+            // If an id parameter is present, fetch the corresponding blog post and its comments
+            fetchSinglePost(id);
+        } else {
+            // If no id parameter is present, fetch all blog posts
+            fetch(`${window._env_.URL}/api/blogs`)
+                .then((response) => response.json())
+                .then((blogs) => {
+                    // Clear the main element
+                    document.querySelector("main").innerHTML = '';
+                    blogs.forEach((blog) => {
+                        const blogElement = createDivElement(blog, true);
+                        document.querySelector("main").appendChild(blogElement);
+                    });
                 })
-            )
-            .catch((error) => {
-                console.error("Error:", error);
-            })
-            .finally(() => {
-                // Create the blog form after all blogs have been fetched and displayed
-                createBlogForm();
-            });
-    }
+                .catch((error) => {
+                    console.error("Error:", error);
+                })
+                .finally(() => {
+                    // Create the blog form after all blogs have been fetched and displayed
+                    createBlogForm();
+                });
+        }
+    };
+
+    // Fetch and display posts initially
+    fetchAndDisplayPosts();
+
+    // Update the website every 10 seconds
+    setInterval(fetchAndDisplayPosts, 10000);
 });
 
 function fetchSinglePost(blogId) {
