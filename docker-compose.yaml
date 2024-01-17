@@ -4,25 +4,26 @@ name: dai-lab-http
 
 services:
   web:
-    build: ./frontend
+    env_file:
+      - .env
+    build:
+      context: ./frontend
+      args:
+        - APIURL=$API_URL
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.static.rule=Host(`static.traefik.me`) && PathPrefix(`/`)"
       - "traefik.http.services.static.loadbalancer.server.port=80"
       - "traefik.http.routers.static.tls=true"
-    env_file:
-      - .env
-    args:
-      - APIURL=$APIURL
-    deploy:
-      replicas: 1
 
   mongo:
     container_name: mongodb
     image: mongo:latest
     env_file:
       - .env
-    ports:
+    volumes:
+      - db:/data/db
+    expose:
       - "27017:27017"
 
   mongo-seed:
@@ -58,9 +59,6 @@ services:
       - "traefik.http.services.api2.loadBalancer.sticky.cookie.name=api"
       - "traefik.http.routers.api2.tls=true"
       - "traefik.http.routers.api2.middlewares=cors"
-
-    deploy:
-      replicas: 1
     depends_on:
       - mongo
 
@@ -73,15 +71,12 @@ services:
       - "traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`)"
       - "traefik.http.routers.http_catchall.entrypoints=http"
       - "traefik.http.routers.http_catchall.middlewares=https_redirect"
-
       - "traefik.http.routers.dashboard.rule=Host(`traefik.traefik.me`)"
       - "traefik.http.routers.dashboard.service=dashboard@internal"
       - "traefik.http.routers.dashboard.tls=true"
-
       - "traefik.http.routers.api.rule=Host(`traefik.traefik.me`) && PathPrefix(`/api`)"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.tls=true"
-
       - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=*"
       - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=GET,POST,PUT,DELETE,PATCH,OPTIONS"
       - "traefik.http.middlewares.cors.headers.accesscontrolallowheaders=Content-Type"
@@ -126,3 +121,4 @@ services:
 
 volumes:
   certs:
+  db:

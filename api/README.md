@@ -93,3 +93,8 @@ Further example requests can be found in the [demo](./demo) folder.
 
 The API uses HTTP status codes to indicate the success or failure of a request. In case of an error, a JSON response is
 returned with a message detailing the error.
+
+## Database
+
+The application uses MongoDB as its primary database, which is containerized using Docker. The MongoDB instance is configured through environment variables.
+The data is persisted across restarts using a Docker volume. The database is seeded with [dummy data](../db/blog_data.json) using another Docker container.
