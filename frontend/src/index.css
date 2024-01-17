@@ -44,7 +44,7 @@ article {
 
 /* New styles for the comments section */
 article ul {
-    @apply p-4 mt-4 border rounded shadow-lg bg-gray-100;
+    @apply p-4 border rounded shadow-lg bg-gray-100 my-4;
 }
 
 /* New styles for the form */
@@ -54,14 +54,14 @@ form {
 
 form input[type="text"],
 form textarea {
-    @apply shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow mb-8;
+    @apply shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow my-4;
 }
 
 form button {
-    @apply bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow mt-6 cursor-pointer;
+    @apply bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 mr-2 rounded focus:outline-none focus:shadow mt-6 cursor-pointer;
 }
 
 /* Styles for the Edit button */
 button {
-    @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow cursor-pointer;
+    @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mr-2 rounded focus:outline-none focus:shadow cursor-pointer;
 }
