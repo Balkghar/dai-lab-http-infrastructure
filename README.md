@@ -81,6 +81,8 @@ The API supports the following operations:
 The API depends on a MongoDB database to store the application data. Some environment variables are also required to be
 set in the `.env` file in order to connect to the database.
 
+The API is unit tested using JUnit and Mockito. The tests are located in the [./api/src/test](./api/src/test) directory.
+
 See the [API documentation](./api/README.md) for a detailed description of the API.
 
 ## Environment variables
