@@ -91,8 +91,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./traefik.yml:/etc/traefik/traefik.yml
-      - ./tls.yml:/etc/traefik/tls.yml
+      - ./reverse-proxy/traefik.yml:/etc/traefik/traefik.yml
+      - ./reverse-proxy/tls.yml:/etc/traefik/tls.yml
       - /var/run/docker.sock:/var/run/docker.sock
       - certs:/etc/ssl/traefik
 
