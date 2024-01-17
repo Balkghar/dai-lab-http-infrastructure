@@ -5,6 +5,8 @@ name: dai-lab-http
 services:
   web:
     restart: unless-stopped
+    deploy:
+      replicas: 3
     env_file:
       - .env
     build:
@@ -43,6 +45,8 @@ services:
       - mongo
 
   api:
+    deploy:
+      replicas: 3
     restart: unless-stopped
     env_file:
       - .env
