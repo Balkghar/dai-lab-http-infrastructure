@@ -13,7 +13,7 @@ services:
     env_file:
       - .env
     args:
-      - URL=$URL
+      - APIURL=$APIURL
     deploy:
       replicas: 1
 

@@ -18,10 +18,10 @@ Then you can run the image:
 docker run -d -p 80:80 dai/frontend
 ```
 
-The API's URL can be modified through the environment variable 'URL'. If not specified, it defaults to "https://api.traefik.me":
+The API's URL can be modified through the environment variable 'APIURL'. If not specified, it defaults to "https://api.traefik.me":
 
 ```bash
-docker run -e "URL=http://example.com" -d -p 80:80 dai/frontend
+docker run -e "APIURL=http://example.com" -d -p 80:80 dai/frontend
 ```
 
 The images is build in two stages. This method is called [multi-stage builds](https://docs.docker.com/build/building/multi-stage/).

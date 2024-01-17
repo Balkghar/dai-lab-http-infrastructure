@@ -6,7 +6,7 @@ COPY ./src .
 RUN npm run build
 
 FROM nginx
-ENV URL="https://api.traefik.me"
+ENV APIURL="https://api.traefik.me"
 COPY --from=build /src/static /usr/share/nginx/html
 COPY conf /etc/nginx
 VOLUME /usr/share/nginx/html
