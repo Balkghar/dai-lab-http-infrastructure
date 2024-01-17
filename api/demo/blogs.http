@@ -1,11 +1,11 @@
 ### Get all blogs
-GET localhost/api/blogs
+GET api.traefik.me/api/blogs
 
 ### Get a single blog
-GET localhost/api/blogs/62737b1b-df87-4f79-a225-be5e0778df46
+GET api.traefik.me/api/blogs/62737b1b-df87-4f79-a225-be5e0778df46
 
 ### Post a blog
-POST localhost/api/blogs
+POST api.traefik.me/api/blogs
 Content-Type: application/json
 
 {
@@ -14,7 +14,7 @@ Content-Type: application/json
 }
 
 ### Patch a blog
-PATCH localhost/api/blogs/62737b1b-df87-4f79-a225-be5e0778df46
+PATCH api.traefik.me/api/blogs/62737b1b-df87-4f79-a225-be5e0778df46
 Content-Type: application/json
 
 {
@@ -23,4 +23,4 @@ Content-Type: application/json
 }
 
 ### Delete a blog
-DELETE localhost/api/blogs/62737b1b-df87-4f79-a225-be5e0778df46
+DELETE api.traefik.me/api/blogs/62737b1b-df87-4f79-a225-be5e0778df46
