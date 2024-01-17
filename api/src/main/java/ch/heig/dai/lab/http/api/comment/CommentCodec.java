@@ -68,8 +68,11 @@ public class CommentCodec implements CollectibleCodec<Comment> {
     @Override
     public Comment decode(BsonReader reader, DecoderContext decoderContext) {
         Document document = documentCodec.decode(reader, decoderContext);
-        return new Comment(document.getString("_id"), document.getString("_blogId"), document.getString("content"),
-                           document.getString("author"), document.getString("createdAt"),
+        return new Comment(document.getString("_id"),
+                           document.getString("_blogId"),
+                           document.getString("author"),
+                           document.getString("content"),
+                           document.getString("createdAt"),
                            document.getString("updatedAt"));
     }
 

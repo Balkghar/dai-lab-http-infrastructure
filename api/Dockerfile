@@ -1,4 +1,5 @@
-FROM maven:3.9-eclipse-temurin-21-jammy
+# Stage 1: Build
+FROM maven:3.9-eclipse-temurin-21-jammy AS build
 
 ARG MONGODB_USERNAME
 ARG MONGODB_PASSWORD
@@ -13,6 +14,10 @@ COPY . /app
 
 RUN mvn clean install
 
-EXPOSE 7000
+# Stage 2: Deployment
+FROM eclipse-temurin:21-jammy
 
-ENTRYPOINT java -jar target/*-SNAPSHOT-jar-with-dependencies.jar
+WORKDIR /app
+COPY --from=build /app/target/*-SNAPSHOT-jar-with-dependencies.jar /app/app.jar
+EXPOSE 7000
+ENTRYPOINT java -jar /app/app.jar
