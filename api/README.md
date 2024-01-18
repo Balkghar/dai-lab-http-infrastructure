@@ -44,16 +44,21 @@ available:
 - Java 21 and Maven 3.9.1 to build the project.
 - A MongoDB database to store the application data. You can run `docker run mongo:latest` to get a fresh instance of
   MongoDB going. Refer to the [official guide](https://www.mongodb.com/compatibility/docker) for further instructions.
+- Setting the environment variables in your IDE/terminal. If you want to use Docker, you should copy the `.env.example`
+  file to `.env` and modify it.
 
 ### Setup
 
-You can run the API either locally or in a docker container. Note that the server requires the
-[environment variables](../.env.example) to be set in order to connect to the database.
+You can run the API either locally or using Docker.
 
-1. Clone the repository.
-2. Navigate to the project directory.
-3. Run `mvn clean install` to build the project.
-4. Run `java -jar target/httpapi-1.0-SNAPSHOT-jar-with-dependencies.jar` to start the server.
+#### Standalone
+
+The API can be run as a standalone application. To do so, follow these steps:
+
+1. Navigate to the `api` directory.
+2. Run `mvn clean install` to build the project.
+3. Run `java -jar target/httpapi-1.0-SNAPSHOT-jar-with-dependencies.jar` to start the server.
+4. The API is now available at [http://localhost:7000](http://localhost:7000).
 
 If you need to specify the environment variables on the command line, you can do so in the following way :
 
@@ -65,6 +70,27 @@ MONGO_INITDB_ROOT_HOST=mongodb:27017     \
 DATABASE_URI=mongodb://mongodb:27017/dai \
 java -jar target/httpapi-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
+
+#### Docker
+
+The API can also be run as a Docker container. To do so, follow these steps:
+
+1. Navigate to the `api` directory.
+2. Run `docker build . -t dai-lab-http/api` to build the Docker image.
+3. Run `docker run -p 7000:7000 dai-lab-http/api` to start the container.
+4. The API is now available at [http://localhost:7000](http://localhost:7000).
+
+#### Docker compose
+
+The project uses docker-compose to deploy the different components based on their respective Dockerfiles.
+The stack is named `dai-lab-http`. The [docker-compose](../docker-compose.yaml) file is located at the root of the
+repository.
+
+To run the whole stack including the API, do the following:
+
+1. Navigate to the project root directory.
+2. Run `docker compose up -d --build` to build and run the stack.
+3. The API is now available at [http://api.traefik.me](http://api.traefik.me).
 
 ## Examples
 
@@ -96,5 +122,7 @@ returned with a message detailing the error.
 
 ## Database
 
-The application uses MongoDB as its primary database, which is containerized using Docker. The MongoDB instance is configured through environment variables.
-The data is persisted across restarts using a Docker volume. The database is seeded with [dummy data](../db/blog_data.json) using another Docker container.
+The application uses MongoDB as its primary database, which is containerized using Docker. The MongoDB instance is
+configured through environment variables.
+The data is persisted across restarts using a Docker volume. The database is seeded
+with [dummy data](../db/blog_data.json) using another Docker container.

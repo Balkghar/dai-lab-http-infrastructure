@@ -1,6 +1,6 @@
-# Round Robin and sticky session
+# Round-robin and sticky session
 
-There is nothing to change at the previous configuration because round robin is the default strategy of the load balancer of Traefik. See at [Traefik documentation](https://doc.traefik.io/traefik/routing/services/#load-balancing).
+There is nothing to change at the previous configuration because round-robin is the default strategy of the load balancer of Traefik. See at [Traefik documentation](https://doc.traefik.io/traefik/routing/services/#load-balancing).
 
 To configure the sticky session for a Traefik service, we only need to add two lines at the [docker-compose.yaml](../docker-compose.yaml) at the labels of the service API.
 

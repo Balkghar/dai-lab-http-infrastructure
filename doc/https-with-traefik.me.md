@@ -1,12 +1,14 @@
 # HTTPS with traefik.me
 
-To configure the https, the [docker-compose.yaml](../docker-compose.yaml) file needs to be abjusted.
+To configure the https, the [docker-compose.yaml](../docker-compose.yaml) file needs to be adjusted.
 
-First, some labels are added to the reverse-proxy service, the first block redirect all http to https, the second enables https for the dashboard and the third allows the dashboard to reach the api to collects data.
+First, some labels are added to the reverse-proxy service, the first block redirect all http to https, the second
+enables https for the dashboard and the third allows the dashboard to reach the api to collects data.
+
+The labels used in the application are the following:
 
 ```yaml
     labels:
-      ...
       - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
       - "traefik.http.middlewares.https_redirect.redirectscheme.permanent=true"
       - "traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`)"
@@ -22,14 +24,16 @@ First, some labels are added to the reverse-proxy service, the first block redir
       - "traefik.http.routers.api.tls=true"
 ```
 
-Traefik has to have access to the certificate to use them. There is also two configuration file to configurate the https on traefik. The first one is the configuration file for traefik, the second one is the configuration file for the TLS. The third volume is where the certifiactes are stored.
+Traefik has to have access to the certificate to use them. There is also two configuration file to configurate the https
+on Traefik. The first one is the configuration file for Traefik, the second one is the configuration file for the TLS.
+The third volume is where the certificates are stored.
 
 ```yaml
 volumes:
-      ...
-      - ./traefik.yml:/etc/traefik/traefik.yml
-      - ./tls.yml:/etc/traefik/tls.yml
-      - certs:/etc/ssl/traefik
+  ...
+  - ./traefik.yml:/etc/traefik/traefik.yml
+  - ./tls.yml:/etc/traefik/tls.yml
+  - certs:/etc/ssl/traefik
 ```
 
 This service download the certificates and put them in the certs volume.
@@ -49,7 +53,7 @@ volumes:
   certs:
 ```
 
-The [tls.yml](../tls.yml) that configure the path to the certficiate for Traefik.
+The [tls.yml](../reverse-proxy/tls.yml) that configure the path to the certificate for Traefik.
 
 ```yaml
 tls:
@@ -63,7 +67,7 @@ tls:
       keyFile: /etc/ssl/traefik/privkey.pem
 ```
 
-The [traefik.yaml](../traefik.yml) that enables Traefik to use HTTPS.
+The [traefik.yaml](../reverse-proxy/traefik.yml) that enables Traefik to use HTTPS.
 
 ```yaml
 logLevel: INFO

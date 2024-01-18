@@ -1,6 +1,8 @@
 # Docker Management UI
 
-> ️⚠️ This application is only a proof-of-concept. Do NOT use it in production.
+> ️⚠️ This application is only a proof-of-concept. Do **NOT** use it in production.
+
+![Management UI screenshot](../figures/mgmt.png)
 
 ## Getting started
 
