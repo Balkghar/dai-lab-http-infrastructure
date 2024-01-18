@@ -45,7 +45,7 @@ The following services are defined in the Docker compose stack:
 - `api`: the RESTful API. Runs on port 7000. Accessible at [api.traefik.me](https://api.traefik.me)
 - `reverse-proxy`: the reverse proxy. Runs on port 8080. Accessible at [traefik.traefik.me](https://traefik.traefik.me).
 - `reverse-proxy-https-helper`: a service that download a certificate for the reverse proxy. One-shot container.
-- `management-ui`: the management UI. Runs on port 7001. Accessible at [mgmt.traefik.me](https://mgmt.traefik.me).
+- `management-ui`: the management UI. Runs on port 3000. Accessible at [mgmt.traefik.me](https://mgmt.traefik.me).
 
 To stop the stack, use the following command:
 
